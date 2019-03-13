@@ -2,7 +2,9 @@
 
 Fully featured chat module for Angular applications.
 
-Whastapp style theme, facebook chat heads
+Whastapp style theme, facebook chat heads.
+
+[Online demo](https://javiermarinros.github.io/ng-talk/)
 
 ## Development server
 
