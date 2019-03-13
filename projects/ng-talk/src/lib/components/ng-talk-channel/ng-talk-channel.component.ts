@@ -1,12 +1,25 @@
-import {Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
-import {ChatAdapter} from "../../models/chat-adapter";
-import {ChatChannel} from "../../models/chat-channel";
-import {ChatMessage, ChatMessageType} from "../../models/chat-message";
-import {ChatUser} from "../../models/chat-user";
-import {Subscription} from "rxjs";
-import {NgTalkSettings} from "../ng-talk-settings";
-import {isSameDay, nameof} from "../../utils/utils";
-import {InViewportDirective} from "../../directives/in-viewport.directive";
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges,
+    ViewChild
+} from '@angular/core';
+import {ChatAdapter} from '../../models/chat-adapter';
+import {ChatChannel} from '../../models/chat-channel';
+import {ChatMessage, ChatMessageType} from '../../models/chat-message';
+import {ChatUser} from '../../models/chat-user';
+import {Subscription} from 'rxjs';
+import {NgTalkSettings} from '../ng-talk-settings';
+import {isSameDay, nameof} from '../../utils/utils';
+import {InViewportDirective} from '../../directives/in-viewport.directive';
 
 interface ExtendedChatMessage extends ChatMessage {
     isDaySeparator: boolean;
@@ -23,7 +36,7 @@ interface ExtendedChatMessage extends ChatMessage {
         './styles/writing-animation.less'
     ]
 })
-export class NgTalkChannelComponent implements OnInit, OnChanges, OnDestroy {
+export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
 
     @Input() public user: ChatUser;
     @Input() public adapter: ChatAdapter;
@@ -80,11 +93,16 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
+    public ngAfterViewInit() {
+        this.scrollToBottom();
+    }
+
     public ngOnDestroy() {
         if (this._messagesSubscription) {
             this._messagesSubscription.unsubscribe();
         }
     }
+
 
     private _loadMessages(scrollToBottom = true) {
         if (this._messagesSubscription) {
@@ -96,9 +114,6 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, OnDestroy {
         this._messagesSubscription = this.adapter.getMessages(this.channel, 0, this._visibleMessages)
             .subscribe((messages: ExtendedChatMessage[]) => {
                 this.messages = messages;
-                if (scrollToBottom && !this.disableRendering) {
-                    this.scrollToBottom();
-                }
                 this.loading = false;
 
                 // Preprocess messages
@@ -119,11 +134,14 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, OnDestroy {
                     prevMessage = message;
                 }
 
+                if (scrollToBottom && !this.disableRendering) {
+                    this.scrollToBottom();
+                }
+
                 // Mark as read if component is focused
                 this.onFocus();
             });
     }
-
 
     @HostListener('focus')
     public onFocus() {

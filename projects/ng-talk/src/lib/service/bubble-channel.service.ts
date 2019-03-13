@@ -64,6 +64,12 @@ export class BubbleChannelService {
 
         return bubbleRef;
     }
+
+    public destroyAll() {
+        for (const ref of Object.values(this._activeInstances)) {
+            ref.destroy();
+        }
+    }
 }
 
 export class BubbleChannelRef {
