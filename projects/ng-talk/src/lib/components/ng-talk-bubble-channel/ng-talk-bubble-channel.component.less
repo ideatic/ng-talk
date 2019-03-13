@@ -1,0 +1,134 @@
+// Bubble
+.bubble {
+  width: 55px;
+  height: 55px;
+
+  @media (min-width: 768px) {
+    width: 75px;
+    height: 75px;
+  }
+
+  cursor: pointer;
+  border-radius: 50%;
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.19), 0 0px 6px rgba(0, 0, 0, 0.23);
+  background: #fff;
+  background-size: cover;
+  transition: all .3s;
+
+  &:hover, &:active {
+    transform: scale(1.1);
+  }
+
+  &.cdk-drag-dragging {
+    transition: none;
+  }
+}
+
+.unread-badge {
+  display: inline-block;
+  float: right;
+  background-color: #09d261;
+  border-radius: 12px;
+  padding: 0px 5px 0px 5px;
+  text-align: center;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  height: 19px;
+  line-height: 19px;
+  min-width: 19px;
+  vertical-align: top;
+}
+
+.fadeOut {
+  opacity: 0;
+}
+
+// Channel
+ng-talk-channel {
+  position: fixed;
+  z-index: 9999;
+  width: 400px;
+  height: 400px;
+  max-width: 100%;
+  top: 150px;
+  background: white;
+  border-radius: 10px;
+  transform: scale(0);
+  box-shadow: 0 5px 60px 10px rgba(0, 0, 0, 0.12);
+}
+
+.bounceIn {
+  animation: bounceIn 0.4s ease-out forwards 0.2s;
+}
+
+.bounceOut {
+  animation: bounceOut 0.25s ease-out forwards !important;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0);
+  }
+  60% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bounceOut {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+// Close
+.close-bubble {
+  position: fixed;
+  font-size: 50px;
+  z-index: 9999;
+  left: 45%;
+  bottom: 10px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  line-height: 40px;
+  border: 1px solid white;
+  color: white;
+  background: rgba(0, 0, 0, 0.18);
+
+  animation: bounceInUp 0.5s;
+
+  &.active {
+    background: rgba(0, 0, 0, 0.35);
+  }
+}
+
+@keyframes bounceInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 3000px, 0);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translate3d(0, -20px, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}

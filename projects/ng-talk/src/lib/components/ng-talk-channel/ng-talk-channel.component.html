@@ -1,0 +1,59 @@
+<ng-container *ngIf="!disableRendering">
+    <div class="chat" #chatBox>
+        <!-- Loader -->
+        <div *ngIf="loading" style="height: 20px">
+            <div class="chat-loader"></div>
+        </div>
+
+        <!-- Load more -->
+        <ng-container *ngIf="scrollWatcherEnabled && settings.allowLoadOldMessages">
+            <div *ngIf="viewportDetectionAvailable; else noViewportDetectionAvailable" inViewport (inViewportChange)="watcherInViewportChanged($event)"></div>
+            <ng-template #noViewportDetectionAvailable>
+                <div class="load-more">
+                    <button (click)="loadOldMessages()">{{ settings.loadMoreText}}</button>
+                </div>
+            </ng-template>
+        </ng-container>
+
+        <!-- Messages -->
+        <ng-container *ngFor="let message of messages; trackBy: trackMessage">
+            <div *ngIf="message.isDaySeparator" class="day-separator">
+                <span>{{ message.date | formatDate : settings }}</span>
+            </div>
+
+            <div class="message" [ngClass]="message.className">
+                <div *ngIf="settings.showAvatars && message.showAuthor" class="avatar">
+                    <img [src]="message.from.avatar || settings.defaultAvatar" (click)="userClicked.emit(message.from)"/>
+                </div>
+                <div class="speech-balloon">
+                    <div *ngIf="settings.showNames  && message.showAuthor" class="author" [ngStyle]="{color: message.from.color }"
+                         (click)="userClicked.emit(message.from)">{{ message.from.name }}</div>
+                    <ng-container [ngSwitch]="message.type">
+                        <!-- Text message -->
+                        <ng-container *ngSwitchCase="MessageType.Text">
+                            <div class="message-content">{{ message.content }}</div>
+                            <div class="date">{{ message.date | date:settings.datePipe }}</div>
+                        </ng-container>
+
+                        <!-- Writing animation -->
+                        <div *ngSwitchCase="MessageType.Writing" class="writing-bubbles">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+
+    <!-- Submit form -->
+    <form *ngIf="!settings.sendMessageComponent; else customSendMessage" (ngSubmit)="sendMessage()">
+        <input #textInput class="input" [(ngModel)]="newMessage" name="newMessage" maxlength="1000" autocomplete="off"
+               [placeholder]="settings.writePlaceholder" (focus)="onInputFocus()"/>
+        <i class="send-icon fas fa-paper-plane" (click)="sendMessage()"></i>
+    </form>
+    <ng-template #customSendMessage>
+        <ng-container *ngComponentOutlet="settings.sendMessageComponent"></ng-container>
+    </ng-template>
+</ng-container>

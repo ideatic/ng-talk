@@ -1,0 +1,147 @@
+:host {
+  display: block; // if flex not supported
+  display: flex;
+  flex-direction: column;
+}
+
+.chat {
+  overflow-y: scroll;
+  height: 100%;
+  width: 100%;
+  padding: 20px 5px;
+  overflow-anchor: auto; // keep scroll position when inserting new elements
+
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.message {
+  clear: both;
+  max-width: 75%;
+  text-align: left;
+  margin-bottom: 15px;
+
+  &.narrow {
+    margin-bottom: 3px;
+  }
+
+  &.received {
+    float: left;
+  }
+
+  &.sent {
+    float: right;
+  }
+}
+
+.avatar {
+  float: left;
+
+  img {
+    max-width: 32px;
+    max-height: 32px;
+    border-radius: 50%;
+  }
+
+  .message.sent & {
+    float: right;
+  }
+}
+
+.day-separator {
+  clear: both;
+  text-align: center;
+  margin-bottom: 15px;
+
+  & > span {
+    text-transform: uppercase;
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 7.5px;
+    padding: 5px 12px 6px 12px;
+    color: white;
+    font-weight: 600;
+  }
+}
+
+.speech-balloon {
+  border-radius: 7.5px;
+  padding: 6px 7px 8px 9px;
+  color: #6a6c6f;
+
+  .author {
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .message-content {
+    margin-right: 40px;
+    word-break: break-word;
+  }
+
+  .message.sent & {
+    background: #dcf8c6;
+    border-top-right-radius: 0;
+  }
+
+  .message.received & {
+    background: #f1f1f1;
+    border-top-left-radius: 0;
+  }
+
+  .message.sent.with-avatar & {
+    margin-right: 35px;
+  }
+
+  .message.received.with-avatar & {
+    margin-left: 35px;
+  }
+}
+
+.date {
+  float: right;
+  margin: -10px 0 -5px 4px;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+form {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+
+
+  input {
+    background-color: #fff;
+    border-color: #dbdbdb;
+    color: #363636;
+    box-shadow: inset 0 1px 2px rgba(10, 10, 10, .1);
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .send-icon {
+    cursor: pointer;
+    padding: 0 10px;
+    font-size: 20px;
+  }
+}
+
+.load-more {
+  text-align: center;
+}

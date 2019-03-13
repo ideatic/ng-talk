@@ -1,0 +1,61 @@
+<div *ngIf="!activeChannel || displayMode == 'desktop'" class="channel-list">
+    <!-- Filter -->
+    <div *ngIf="settings.showFilter" class="filter">
+        <label>
+            <i *ngIf="settings.searchIconClass" [ngClass]="settings.searchIconClass"></i>
+            <input type="text" [placeholder]="settings.filterPlaceholder" [(ngModel)]="filterQuery"/>
+        </label>
+    </div>
+
+    <!-- Channel list -->
+    <ul>
+        <li *ngFor="let channel of channels | filterChannels: filterQuery; trackBy: trackChannel" [ngClass]="{active: activeChannel && channel.id == activeChannel.id}">
+            <a *ngIf="settings.channelMessagesLoading == MessagesLoading.lazy" (click)="selectChannel(channel)"
+               inViewport (inViewportChange)="inViewportChangedChannel(channel, $event)">
+                <ng-template [ngTemplateOutlet]="channelTemplate" [ngTemplateOutletContext]="{$implicit: channel}"></ng-template>
+            </a>
+            <a *ngIf="settings.channelMessagesLoading != MessagesLoading.lazy" (click)="selectChannel(channel)">
+                <ng-template [ngTemplateOutlet]="channelTemplate" [ngTemplateOutletContext]="{$implicit: channel}"></ng-template>
+            </a>
+        </li>
+    </ul>
+
+    <ng-template #channelTemplate let-channel>
+        <img *ngIf="settings.showChannelsIcons" [src]="channel.icon || settings.defaultChannelIcon">
+        <div>
+            <div class="channel-name">{{ channel.name }}</div>
+            <div class="channel-status">
+                <div class="last-message">
+                    <ng-container *ngIf="channel.lastMessage?.from && channel.type == ChannelType.Group">{{ channel.lastMessage.from.name }}:</ng-container>
+                    {{ channel.lastMessage?.content }}
+                </div>
+
+                <div *ngIf="channel.unread > 0 && !(activeChannel && channel.id == activeChannel.id)" class="unread-badge">
+                    {{ channel.unread }}
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>
+
+<!-- Single channel -->
+<div *ngIf="displayMode == 'desktop' || activeChannel" class="active-channel">
+    <ng-container *ngIf="activeChannel">
+        <div *ngIf="!channelHeaderTemplate; else channelHeader" class="channel-header">
+            <a *ngIf="displayMode == 'mobile'" class="go-back" (click)="selectChannel(null)"><i class="fas fa-arrow-left"></i></a>
+            <img *ngIf="activeChannel.icon" [src]="activeChannel.icon">
+            <span style="flex-grow: 1">{{ activeChannel.name}}</span>
+            <a *ngIf="!bubbleChannelSvc.hasInstance(activeChannel)" class="open-bubble" (click)="openBubbleChat(activeChannel)"><i class="fas fa-external-link-square-alt"></i></a>
+        </div>
+        <ng-template #channelHeader [ngTemplateOutlet]="channelHeaderTemplate"
+                     [ngTemplateOutletContext]="{$implicit: activeChannel, channel: activeChannel, displayMode: displayMode}"></ng-template>
+    </ng-container>
+
+    <ng-talk-channel *ngIf="activeChannel"
+                     [adapter]="intermediateAdapter"
+                     [channel]="activeChannel"
+                     [user]="user"
+                     [settings]="settings"
+                     (userClicked)="userClicked.emit($event)" (messageSent)="messageSent.emit($event)"></ng-talk-channel>
+</div>
+
