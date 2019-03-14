@@ -89,11 +89,11 @@ export class DemoAdapter extends ChatAdapter {
         }));
     }
 
-    private _roomMessages: { [key: string]: BehaviorSubject<ChatMessage[]> } = {};
+    private _channelMessages: { [key: string]: BehaviorSubject<ChatMessage[]> } = {};
 
-    public getMessages(room: ChatChannel, count: number): Observable<ChatMessage[]> {
-        if (!this._roomMessages[room.id]) {
-            this._roomMessages[room.id] = new BehaviorSubject<ChatMessage[]>([]);
+    public getMessages(room: ChatChannel, count: number): BehaviorSubject<ChatMessage[]> {
+        if (!this._channelMessages[room.id]) {
+            this._channelMessages[room.id] = new BehaviorSubject<ChatMessage[]>([]);
 
             setTimeout(() => this._sendMessage(room, {
                 type: ChatMessageType.Writing,
@@ -103,7 +103,7 @@ export class DemoAdapter extends ChatAdapter {
 
             setTimeout(() => {
                 // Remove writing message
-                const messages = this._roomMessages[room.id].getValue();
+                const messages = this._channelMessages[room.id].getValue();
                 const index = messages.findIndex(m => m.type == ChatMessageType.Writing);
                 if (index >= 0) {
                     messages.splice(index, 1);
@@ -115,10 +115,10 @@ export class DemoAdapter extends ChatAdapter {
                 });
             }, 5000);
         } else { // Emit stored messages
-            setTimeout(() => this._roomMessages[room.id].next(this._roomMessages[room.id].getValue()), 10);
+            setTimeout(() => this._channelMessages[room.id].next(this._channelMessages[room.id].getValue()), 10);
         }
 
-        return this._roomMessages[room.id];
+        return this._channelMessages[room.id];
     }
 
     public sendMessage(room: ChatChannel, message: ChatMessage) {
@@ -140,9 +140,9 @@ export class DemoAdapter extends ChatAdapter {
             message.type = ChatMessageType.Text;
         }
 
-        const roomMessages = this._roomMessages[room.id].getValue();
+        const roomMessages = this._channelMessages[room.id].getValue();
         roomMessages.push(message);
-        this._roomMessages[room.id].next(roomMessages);
+        this._channelMessages[room.id].next(roomMessages);
     }
 
 

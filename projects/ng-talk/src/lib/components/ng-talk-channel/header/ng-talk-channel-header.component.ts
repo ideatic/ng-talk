@@ -24,7 +24,6 @@ export class NgTalkChannelHeaderComponent {
 
     }
 
-
     public openBubbleChat(channel: ChatChannel): BubbleChannelRef {
         if (channel && !this.bubbleChannelSvc.hasInstance(channel)) {
             const bubbleRef = this.bubbleChannelSvc.show(channel, this.chat.adapter, this.chat.user, this.chat.settings);

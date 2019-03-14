@@ -41,7 +41,7 @@
 <!-- Single channel -->
 <div *ngIf="displayMode == 'desktop' || activeChannel" class="active-channel">
     <ng-talk-channel *ngIf="activeChannel"
-                     [adapter]="intermediateAdapter"
+                     [adapter]="adapter"
                      [channel]="activeChannel"
                      [user]="user"
                      [settings]="settings"

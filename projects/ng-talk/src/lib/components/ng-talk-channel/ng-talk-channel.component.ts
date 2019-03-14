@@ -103,7 +103,6 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
         }
     }
 
-
     private _loadMessages(scrollToBottom = true) {
         if (this._messagesSubscription) {
             this._messagesSubscription.unsubscribe();
@@ -139,16 +138,10 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
                 }
 
                 // Mark as read if component is focused
-                this.onFocus();
+                if (this.channel && this.channel.unread > 0 && document.hasFocus()) {
+                    this.adapter.markAsRead(this.channel);
+                }
             });
-    }
-
-    @HostListener('focus')
-    public onFocus() {
-        // Mark as read if component is focused
-        if (this.channel && this.channel.unread > 0 && document.hasFocus()) {
-            this.adapter.markAsRead(this.channel);
-        }
     }
 
     public trackMessage(i, message: ChatMessage) {

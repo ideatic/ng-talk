@@ -1,25 +1,4 @@
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-
 export const nameof = <T>(name: keyof T) => name;
-
-
-export function observableToBehaviorSubject<T>(observable: Observable<T>, initValue: T): [BehaviorSubject<T>, Subscription] {
-    const subject = new BehaviorSubject(initValue);
-
-    const subscription = observable.subscribe(
-        (x: T) => {
-            subject.next(x);
-        },
-        (err: any) => {
-            subject.error(err);
-        },
-        () => {
-            subject.complete();
-        }
-    );
-
-    return [subject, subscription];
-}
 
 export function isSameDay(d1: Date, d2: Date) {
     return d1.getFullYear() === d2.getFullYear() &&

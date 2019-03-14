@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, OnDestroy, ViewChild} from '@angular/core';
 import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {ChatChannel} from '../../models/chat-channel';
 import {ChatAdapter} from '../../models/chat-adapter';
@@ -6,7 +6,7 @@ import {NgTalkSettings} from '../ng-talk-settings';
 import {ChatUser} from '../../models/chat-user';
 import {BubbleChannelRef} from '../../service/bubble-channel.service';
 import {NgTalkChannelComponent} from '../ng-talk-channel/ng-talk-channel.component';
-import {bindEvent} from "../../utils/utils";
+import {bindEvent} from '../../utils/utils';
 
 
 @Component({
@@ -119,8 +119,7 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
     }
 
     private _restoreBubblePosition() {
-        const container = document.querySelector(this.dragBoundarySelector) || document.documentElement;
-        const containerWidth = container.clientWidth;
+        const containerWidth = this._container.clientWidth;
 
         const bubbleStyles = this.bubbleElement.nativeElement.style;
 
@@ -153,14 +152,18 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
         }
     }
 
+    private get _container(): HTMLElement {
+        return document.querySelector(this.dragBoundarySelector) || document.documentElement;
+    }
+
     public open() {
         if (this.channelVisible) {
             return;
         }
 
-        const container = document.querySelector(this.dragBoundarySelector) || document.documentElement;
-        const containerWidth = container.clientWidth;
-        const bubbleWidth = this.bubbleElement.nativeElement.offsetWidth;
+        const containerWidth = this._container.clientWidth;
+
+        const bubbleSize = this.bubbleElement.nativeElement.offsetWidth;
 
         // Position channel
         const channelX = Math.max(containerWidth / 2 - 400 / 2, 0);
@@ -171,16 +174,21 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
             display: undefined
         };
 
-        // Position bubble
+        // Position bubble and channel
         const bubbleStyles = this.bubbleElement.nativeElement.style;
         bubbleStyles.transform = '';
 
-        if (containerWidth < 400 + 25 + bubbleWidth) {
-            bubbleStyles.top = (150 - bubbleWidth - 10) + 'px';
+        if (containerWidth < 400 + 25 + bubbleSize) {
+            bubbleStyles.top = '0px'; // Math.max(150 - bubbleWidth - 10, 0) + 'px';
+            this.channelStyle.top = (bubbleSize + 10) + 'px';
         } else {
-            bubbleStyles.top = 150 + 'px';
-            bubbleStyles.left = Math.max(channelX - bubbleWidth - 25, 0) + 'px';
+            this.channelStyle.top = '150px';
+            bubbleStyles.top = '150px';
+            bubbleStyles.left = Math.max(channelX - bubbleSize - 25, 0) + 'px';
         }
+
+        // Fix height
+        this.onResized();
 
         this.channelVisible = true;
 
@@ -188,6 +196,21 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
             this.ngTalkChannel.scrollToBottom();
             this._documentClickSubscription = bindEvent(document, 'click', (event) => this.onDocumentClick(event));
         }, 10);
+    }
+
+    @HostListener('window:resize')
+    @HostListener('window:deviceorientation')
+    @HostListener('window:scroll')
+    public onResized() {
+        const containerHeight = this._container.clientHeight;
+        const bubbleSize = this.bubbleElement.nativeElement.offsetWidth;
+
+        // Fix channel height
+        if (containerHeight < 600) {
+            this.channelStyle.height = Math.min(Math.max(200, containerHeight - bubbleSize - 10), 400) + 'px';
+        } else {
+            this.channelStyle.height = undefined;
+        }
     }
 
     public close() {
