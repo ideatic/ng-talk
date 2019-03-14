@@ -1,4 +1,6 @@
 import {Type} from "@angular/core";
+import {NgTalkChannelHeaderComponent} from "./ng-talk-channel/header/ng-talk-channel-header.component";
+import {NgTalkSendMessageComponent} from "./ng-talk-channel/send/ng-talk-send-message.component";
 
 export enum ChannelMessagesLoading {
     onlyActive,
@@ -26,7 +28,8 @@ export class NgTalkSettings {
     public pageSize = 20;
 
     public allowLoadOldMessages = true;
-    public sendMessageComponent: Type<any>;
+    public headerComponent: Type<any> = NgTalkChannelHeaderComponent;
+    public sendMessageComponent: Type<any> = NgTalkSendMessageComponent;
 
     /* i18n */
 

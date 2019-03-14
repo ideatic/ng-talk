@@ -27,9 +27,6 @@ export class NgTalkChannelsComponent implements OnChanges, OnDestroy {
     @Output() public messageSent: EventEmitter<ChatMessage> = new EventEmitter();
     @Output() public userClicked: EventEmitter<ChatUser> = new EventEmitter();
 
-    // Single channel header template
-    @ContentChild('channelHeader') public channelHeaderTemplate: TemplateRef<any>;
-
     @HostBinding('class')
     public displayMode: 'desktop' | 'mobile';
 
@@ -119,19 +116,6 @@ export class NgTalkChannelsComponent implements OnChanges, OnDestroy {
         }
     }
 
-    public openBubbleChat(channel: ChatChannel): BubbleChannelRef {
-        if (channel && !this.bubbleChannelSvc.hasInstance(channel)) {
-            const bubbleRef = this.bubbleChannelSvc.show(channel, this.intermediateAdapter, this.user, this.settings);
-
-            bubbleRef.onDestroyed.pipe(first()).subscribe(() => {
-                if (this._isDestroyed && this.bubbleChannelSvc.activeChannelIDs.length == 0) {
-                    this.intermediateAdapter.destroy();
-                }
-            });
-
-            return bubbleRef;
-        }
-    }
 }
 
 /**

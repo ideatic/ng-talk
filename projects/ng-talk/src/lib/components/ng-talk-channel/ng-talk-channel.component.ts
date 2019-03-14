@@ -155,20 +155,6 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
         return message.date.toString() + message.content;
     }
 
-    public sendMessage() {
-        if (this.newMessage) {
-            const message: ChatMessage = {
-                type: ChatMessageType.Text,
-                from: this.user,
-                content: this.newMessage
-            };
-            this.adapter.sendMessage(this.channel, message)
-                .then(() => this.messageSent.emit(message));
-
-            this.newMessage = '';
-        }
-    }
-
     public scrollToBottom() {
         if (this.chatBox) {
             window.setTimeout(() => {  // Wait until the new messages are drawn

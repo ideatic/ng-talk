@@ -1,11 +1,12 @@
-import {Component, ElementRef, HostListener, Input, NgZone, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {ChatChannel} from '../../models/chat-channel';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {NgTalkSettings} from '../ng-talk-settings';
 import {ChatUser} from '../../models/chat-user';
 import {BubbleChannelRef} from '../../service/bubble-channel.service';
-import {NgTalkChannelComponent} from "../ng-talk-channel/ng-talk-channel.component";
+import {NgTalkChannelComponent} from '../ng-talk-channel/ng-talk-channel.component';
+import {bindEvent} from "../../utils/utils";
 
 
 @Component({
@@ -36,7 +37,7 @@ import {NgTalkChannelComponent} from "../ng-talk-channel/ng-talk-channel.compone
     `,
     styleUrls: [`ng-talk-bubble-channel.component.less`]
 })
-export class NgTalkBubbleChannelComponent {
+export class NgTalkBubbleChannelComponent implements OnDestroy {
 
     @Input() public dragBoundarySelector = 'body';
     @Input() public channel: ChatChannel;
@@ -60,8 +61,9 @@ export class NgTalkBubbleChannelComponent {
     public isDragging = false;
     private _lastPosition: { x: number; y: number; };
 
-    constructor(private _host: ElementRef<HTMLElement>,
-                private _ngZone: NgZone) {
+    private _documentClickSubscription: () => void;
+
+    constructor(private _host: ElementRef<HTMLElement>) {
 
     }
 
@@ -181,9 +183,11 @@ export class NgTalkBubbleChannelComponent {
         }
 
         this.channelVisible = true;
-        this._ngZone.runOutsideAngular(() => setTimeout(() => {
+
+        setTimeout(() => {
             this.ngTalkChannel.scrollToBottom();
-        }, 10));
+            this._documentClickSubscription = bindEvent(document, 'click', (event) => this.onDocumentClick(event));
+        }, 10);
     }
 
     public close() {
@@ -195,9 +199,13 @@ export class NgTalkBubbleChannelComponent {
                 this.channelStyle = {display: 'none'};
             }, 300);
         }
+
+        if (this._documentClickSubscription) {
+            this._documentClickSubscription();
+            this._documentClickSubscription = null;
+        }
     }
 
-    @HostListener('document:click', ['$event'])
     public onDocumentClick($event) {
         if (!this.channelVisible) {
             return;
@@ -210,6 +218,12 @@ export class NgTalkBubbleChannelComponent {
 
             // Restore bubble position
             this._restoreBubblePosition();
+        }
+    }
+
+    public ngOnDestroy() {
+        if (this._documentClickSubscription) {
+            this._documentClickSubscription();
         }
     }
 }

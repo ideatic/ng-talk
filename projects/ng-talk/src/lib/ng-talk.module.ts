@@ -9,6 +9,8 @@ import {FormatDatePipe} from "./pipes/formatDate.pipe";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {BubbleChannelService} from "./service/bubble-channel.service";
 import {NgTalkBubbleChannelComponent} from "./components/ng-talk-bubble-channel/ng-talk-bubble-channel.component";
+import {NgTalkSendMessageComponent} from "./components/ng-talk-channel/send/ng-talk-send-message.component";
+import {NgTalkChannelHeaderComponent} from "./components/ng-talk-channel/header/ng-talk-channel-header.component";
 
 
 @NgModule({
@@ -26,6 +28,9 @@ import {NgTalkBubbleChannelComponent} from "./components/ng-talk-bubble-channel/
         NgTalkChannelsComponent,
         NgTalkBubbleChannelComponent,
 
+        NgTalkChannelHeaderComponent,
+        NgTalkSendMessageComponent,
+
         InViewportDirective,
         FilterChannelsPipe,
         FormatDatePipe
@@ -35,6 +40,8 @@ import {NgTalkBubbleChannelComponent} from "./components/ng-talk-bubble-channel/
         NgTalkChannelsComponent
     ],
     entryComponents: [
+        NgTalkChannelHeaderComponent,
+        NgTalkSendMessageComponent,
         NgTalkBubbleChannelComponent
     ]
 })

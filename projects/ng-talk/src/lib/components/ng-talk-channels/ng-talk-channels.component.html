@@ -40,22 +40,12 @@
 
 <!-- Single channel -->
 <div *ngIf="displayMode == 'desktop' || activeChannel" class="active-channel">
-    <ng-container *ngIf="activeChannel">
-        <div *ngIf="!channelHeaderTemplate; else channelHeader" class="channel-header">
-            <a *ngIf="displayMode == 'mobile'" class="go-back" (click)="selectChannel(null)"><i class="fas fa-arrow-left"></i></a>
-            <img *ngIf="activeChannel.icon" [src]="activeChannel.icon">
-            <span style="flex-grow: 1">{{ activeChannel.name}}</span>
-            <a *ngIf="!bubbleChannelSvc.hasInstance(activeChannel)" class="open-bubble" (click)="openBubbleChat(activeChannel)"><i class="fas fa-external-link-square-alt"></i></a>
-        </div>
-        <ng-template #channelHeader [ngTemplateOutlet]="channelHeaderTemplate"
-                     [ngTemplateOutletContext]="{$implicit: activeChannel, channel: activeChannel, displayMode: displayMode}"></ng-template>
-    </ng-container>
-
     <ng-talk-channel *ngIf="activeChannel"
                      [adapter]="intermediateAdapter"
                      [channel]="activeChannel"
                      [user]="user"
                      [settings]="settings"
-                     (userClicked)="userClicked.emit($event)" (messageSent)="messageSent.emit($event)"></ng-talk-channel>
+                     (userClicked)="userClicked.emit($event)"
+                     (messageSent)="messageSent.emit($event)"></ng-talk-channel>
 </div>
 

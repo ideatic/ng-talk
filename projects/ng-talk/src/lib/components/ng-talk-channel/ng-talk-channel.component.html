@@ -1,4 +1,8 @@
 <ng-container *ngIf="!disableRendering">
+    <ng-container *ngIf="settings.headerComponent">
+        <ng-container *ngComponentOutlet="settings.headerComponent"></ng-container>
+    </ng-container>
+
     <div class="chat" #chatBox>
         <!-- Loader -->
         <div *ngIf="loading" style="height: 20px">
@@ -48,12 +52,5 @@
     </div>
 
     <!-- Submit form -->
-    <form *ngIf="!settings.sendMessageComponent; else customSendMessage" (ngSubmit)="sendMessage()">
-        <input #textInput class="input" [(ngModel)]="newMessage" name="newMessage" maxlength="1000" autocomplete="off"
-               [placeholder]="settings.writePlaceholder" (focus)="onInputFocus()"/>
-        <i class="send-icon fas fa-paper-plane" (click)="sendMessage()"></i>
-    </form>
-    <ng-template #customSendMessage>
-        <ng-container *ngComponentOutlet="settings.sendMessageComponent"></ng-container>
-    </ng-template>
+    <ng-container *ngComponentOutlet="settings.sendMessageComponent"></ng-container>
 </ng-container>
