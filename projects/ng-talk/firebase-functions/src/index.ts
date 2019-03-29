@@ -18,10 +18,12 @@ export const archiveChats = functions
 
         if (!channel) {
             return null;
+        } else if (!channel.messages) {
+            channel.messages = [];
         }
 
-        const maxMessageCount = 200;
-        const maxContentSize = 10000;
+        const maxMessageCount = 250;
+        const maxContentSize = 100 * 1024; // 100 kB
 
         let messageCount = channel.messages.length;
         const originalCount = messageCount;
@@ -29,20 +31,17 @@ export const archiveChats = functions
 
         if (messageCount >= maxMessageCount || contentSize >= maxContentSize) {
             // Trim messages while conditions are true
-            let trimmedMessages: any[] = channel.messages;
-            while (messageCount >= maxMessageCount || contentSize >= maxContentSize) {
-                const deleteCount = messageCount - maxMessageCount - 10;
-                trimmedMessages = trimmedMessages.splice(0, Math.max(1, deleteCount));
-                
-                messageCount = trimmedMessages.length;
+            let trimmedMessages: any[] = channel.messages.slice();
+            while ((trimmedMessages.length >= (maxMessageCount - 10) || contentSize >= maxContentSize) && trimmedMessages.length > 5) {
+                trimmedMessages = trimmedMessages.slice(Math.max(trimmedMessages.length - maxMessageCount + 25, 1))
+
                 contentSize = JSON.stringify(trimmedMessages).length;
             }
 
             // Update
             const channelRef: DocumentReference = change.after.ref;
 
-            const kb = Math.round(contentSize / 1024);
-            console.log(`Trimmed '${change.after.id}' messages from ${originalCount} to ${trimmedMessages.length} (${kb}kb)`);
+            console.log(`Trimmed '${change.after.id}': from ${originalCount} messages to ${trimmedMessages.length} (${contentSize} bytes)`);
 
             return channelRef.set({
                 messages: trimmedMessages
