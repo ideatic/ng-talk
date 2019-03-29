@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnInit, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatUser} from '../../models/chat-user';
 import {ChannelMessagesLoading, NgTalkSettings} from '../ng-talk-settings';
@@ -15,7 +15,7 @@ import {BubbleChannelService} from '../../service/bubble-channel.service';
         './ng-talk-channels.component.less'
     ]
 })
-export class NgTalkChannelsComponent implements OnChanges, OnDestroy {
+export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() public user: ChatUser;
     @Input() public adapter: ChatAdapter;
@@ -44,6 +44,10 @@ export class NgTalkChannelsComponent implements OnChanges, OnDestroy {
 
     constructor(private _host: ElementRef<HTMLElement>,
                 public bubbleChannelSvc: BubbleChannelService) {
+    }
+
+    public ngOnInit() {
+        // Choose initial displayMode
         this.onResized();
     }
 

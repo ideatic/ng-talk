@@ -150,7 +150,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
 
     public scrollToBottom() {
         if (this.chatBox) {
-            window.setTimeout(() => {  // Wait until the new messages are drawn
+            window.setTimeout(() => {  // Wait until new messages are drawn
                 this.chatBox.nativeElement.scrollTop = this.chatBox.nativeElement.scrollHeight;
 
                 if (this.messages.length >= this._visibleMessages) { // Enable scroll watcher if there is more messages pending

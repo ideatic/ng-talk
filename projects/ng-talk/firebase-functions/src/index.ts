@@ -31,7 +31,9 @@ export const archiveChats = functions
             // Trim messages while conditions are true
             let trimmedMessages: any[] = channel.messages;
             while (messageCount >= maxMessageCount || contentSize >= maxContentSize) {
-                trimmedMessages = trimmedMessages.splice(Math.max(1, Math.min(trimmedMessages.length - 10, maxMessageCount - 10)));
+                const deleteCount = messageCount - maxMessageCount - 10;
+                trimmedMessages = trimmedMessages.splice(0, Math.max(1, deleteCount));
+                
                 messageCount = trimmedMessages.length;
                 contentSize = JSON.stringify(trimmedMessages).length;
             }

@@ -1,6 +1,9 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
-import {NgTalkChannelComponent} from "../ng-talk-channel.component";
-import {ChatMessage, ChatMessageType} from "../../../models/chat-message";
+import {Component, ElementRef, OnDestroy, Optional, ViewChild} from '@angular/core';
+import {NgTalkChannelComponent} from '../ng-talk-channel.component';
+import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
+import {NgTalkChannelsComponent} from '@projects/ng-talk/components/ng-talk-channels/ng-talk-channels.component';
+import {Subscription} from 'rxjs';
+import {ChatChannel} from '@projects/ng-talk/models/chat-channel';
 
 
 @Component({
@@ -13,20 +16,18 @@ import {ChatMessage, ChatMessageType} from "../../../models/chat-message";
     `,
     styleUrls: ['ng-talk-send-message.component.less']
 })
-export class NgTalkSendMessageComponent implements AfterViewInit {
+export class NgTalkSendMessageComponent implements OnDestroy {
 
     @ViewChild('textInput') public textInput: ElementRef<HTMLElement>;
     public newMessage: string;
 
-    constructor(public chat: NgTalkChannelComponent) {
+    private _channelChangedSubscription: Subscription;
 
+    constructor(public chat: NgTalkChannelComponent, @Optional() channelList: NgTalkChannelsComponent) {
+        if (channelList) { // Detectar cambio de canal si estamos en un listado
+            this._channelChangedSubscription = channelList.channelChanged.subscribe((c) => this._onChannelChanged(c));
+        }
     }
-
-
-    public ngAfterViewInit() {
-        this.focus();
-    }
-
 
     public sendMessage() {
         if (this.newMessage) {
@@ -52,6 +53,16 @@ export class NgTalkSendMessageComponent implements AfterViewInit {
         // Mark as read if component is focused
         if (this.chat.channel && this.chat.channel.unread > 0 && document.hasFocus()) {
             this.chat.adapter.markAsRead(this.chat.channel);
+        }
+    }
+
+    private _onChannelChanged(c: ChatChannel) {
+        this.focus();
+    }
+
+    public ngOnDestroy() {
+        if (this._channelChangedSubscription) {
+            this._channelChangedSubscription.unsubscribe();
         }
     }
 }
