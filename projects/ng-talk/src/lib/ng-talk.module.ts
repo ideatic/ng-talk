@@ -11,39 +11,41 @@ import {BubbleChannelService} from "./service/bubble-channel.service";
 import {NgTalkBubbleChannelComponent} from "./components/ng-talk-bubble-channel/ng-talk-bubble-channel.component";
 import {NgTalkSendMessageComponent} from "./components/ng-talk-channel/send/ng-talk-send-message.component";
 import {NgTalkChannelHeaderComponent} from "./components/ng-talk-channel/header/ng-talk-channel-header.component";
+import {FnPipe} from "./pipes/fn.pipe";
 
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        DragDropModule
-    ],
-    providers: [
-        DatePipe,
-        BubbleChannelService
-    ],
-    declarations: [
-        NgTalkChannelComponent,
-        NgTalkChannelsComponent,
-        NgTalkBubbleChannelComponent,
+  imports: [
+    CommonModule,
+    FormsModule,
+    DragDropModule
+  ],
+  providers: [
+    DatePipe,
+    BubbleChannelService
+  ],
+  declarations: [
+    NgTalkChannelComponent,
+    NgTalkChannelsComponent,
+    NgTalkBubbleChannelComponent,
 
-        NgTalkChannelHeaderComponent,
-        NgTalkSendMessageComponent,
+    NgTalkChannelHeaderComponent,
+    NgTalkSendMessageComponent,
 
-        InViewportDirective,
-        FilterChannelsPipe,
-        FormatDatePipe
-    ],
-    exports: [
-        NgTalkChannelComponent,
-        NgTalkChannelsComponent
-    ],
-    entryComponents: [
-        NgTalkChannelHeaderComponent,
-        NgTalkSendMessageComponent,
-        NgTalkBubbleChannelComponent
-    ]
+    InViewportDirective,
+    FilterChannelsPipe,
+    FormatDatePipe,
+    FnPipe
+  ],
+  exports: [
+    NgTalkChannelComponent,
+    NgTalkChannelsComponent
+  ],
+  entryComponents: [
+    NgTalkChannelHeaderComponent,
+    NgTalkSendMessageComponent,
+    NgTalkBubbleChannelComponent
+  ]
 })
 export class NgTalkModule {
 }

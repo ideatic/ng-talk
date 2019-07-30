@@ -46,9 +46,9 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
     @Input() public user: ChatUser;
     @Input() public selfRef: BubbleChannelRef;
 
-    @ViewChild('bubble') public bubbleElement: ElementRef<HTMLElement>;
-    @ViewChild('ngTalkChannel') public ngTalkChannel: NgTalkChannelComponent;
-    @ViewChild('closeButton') public closeButton: ElementRef<HTMLElement>;
+    @ViewChild('bubble', { static: true }) public bubbleElement: ElementRef<HTMLElement>;
+    @ViewChild('ngTalkChannel', { static: true }) public ngTalkChannel: NgTalkChannelComponent;
+    @ViewChild('closeButton', { static: false }) public closeButton: ElementRef<HTMLElement>;
 
     public bubbleClass = '';
 

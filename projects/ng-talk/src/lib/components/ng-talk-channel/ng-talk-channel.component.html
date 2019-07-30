@@ -1,8 +1,8 @@
 <ng-container *ngIf="!disableRendering">
-    <ng-container *ngIf="settings.headerComponent">
-        <ng-container *ngComponentOutlet="settings.headerComponent"></ng-container>
-    </ng-container>
+    <!-- Header -->
+    <ng-container *ngComponentOutlet="settings.headerComponent"></ng-container>
 
+    <!-- Chat list -->
     <div class="chat" #chatBox>
         <!-- Loader -->
         <div *ngIf="loading" style="height: 20px">
@@ -35,7 +35,7 @@
                     <ng-container [ngSwitch]="message.type">
                         <!-- Text message -->
                         <ng-container *ngSwitchCase="MessageType.Text">
-                            <div class="message-content">{{ message.content }}</div>
+                            <div class="message-content" [innerHTML]="message | fn:transformContent:this"></div>
                             <div class="date">{{ message.date | date:settings.datePipe }}</div>
                         </ng-container>
 
@@ -51,6 +51,6 @@
         </ng-container>
     </div>
 
-    <!-- Submit form -->
+    <!-- Send message form -->
     <ng-container *ngComponentOutlet="settings.sendMessageComponent"></ng-container>
 </ng-container>

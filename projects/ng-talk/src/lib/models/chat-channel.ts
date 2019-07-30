@@ -12,6 +12,7 @@ export interface ChatChannel {
     name: string;
     icon: string;
 
+    disabled?: boolean;
     unread?: number;
     lastMessage?: ChatMessage;
     data?: any;

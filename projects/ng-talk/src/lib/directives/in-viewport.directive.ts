@@ -17,7 +17,7 @@ import {AfterViewInit, Directive, ElementRef, EventEmitter, Input, OnDestroy, On
  * </p>
  * ```
  */
-// @dynamic
+
 @Directive({
     selector: '[inViewport]',
     exportAs: 'inViewport'

@@ -10,7 +10,8 @@ import {ChatChannel} from '@projects/ng-talk/models/chat-channel';
     template: `
         <form (ngSubmit)="sendMessage()">
             <input #textInput class="input" [(ngModel)]="newMessage" name="newMessage" maxlength="1000" autocomplete="off"
-                   [placeholder]="chat.settings.writePlaceholder" (focus)="onInputFocus()"/>
+                   [placeholder]="chat.settings.writePlaceholder" (focus)="onInputFocus()"
+                   [disabled]="!chat.channel || chat.channel.disabled"/>
             <i class="send-icon fas fa-paper-plane" (click)="sendMessage()"></i>
         </form>
     `,
@@ -18,7 +19,7 @@ import {ChatChannel} from '@projects/ng-talk/models/chat-channel';
 })
 export class NgTalkSendMessageComponent implements OnDestroy {
 
-    @ViewChild('textInput') public textInput: ElementRef<HTMLElement>;
+    @ViewChild('textInput', { static: true }) public textInput: ElementRef<HTMLElement>;
     public newMessage: string;
 
     private _channelChangedSubscription: Subscription;
@@ -30,7 +31,7 @@ export class NgTalkSendMessageComponent implements OnDestroy {
     }
 
     public sendMessage() {
-        if (this.newMessage) {
+        if (this.chat.channel && !this.chat.channel.disabled && this.newMessage) {
             const message: ChatMessage = {
                 type: ChatMessageType.Text,
                 from: this.chat.user,

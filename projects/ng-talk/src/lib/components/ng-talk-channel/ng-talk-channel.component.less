@@ -1,5 +1,5 @@
 :host {
-  display: block; // if flex not supported
+  display: table; // if flex not supported
   display: flex;
   flex-direction: column;
 }
@@ -90,6 +90,10 @@
   .message-content {
     margin-right: 50px;
     word-break: break-word;
+
+    ::ng-deep a {
+      color: #039be5;
+    }
   }
 
   .message.sent & {
