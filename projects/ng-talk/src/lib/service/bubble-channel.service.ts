@@ -8,81 +8,81 @@ import {first} from 'rxjs/operators';
 
 @Injectable()
 export class BubbleChannelService {
-    private _activeInstances: { [key: string]: BubbleChannelRef } = {};
+  private _activeInstances: { [key: string]: BubbleChannelRef } = {};
 
-    constructor(private _componentFactoryResolver: ComponentFactoryResolver,
-                private _appRef: ApplicationRef,
-                private _injector: Injector) {
+  constructor(private _componentFactoryResolver: ComponentFactoryResolver,
+              private _appRef: ApplicationRef,
+              private _injector: Injector) {
+  }
+
+  public get activeChannelIDs(): string[] {
+    return Object.keys(this._activeInstances);
+  }
+
+  public hasInstance(channel: ChatChannel) {
+    return !!this._activeInstances[channel.id];
+  }
+
+  public show(channel: ChatChannel, adapter: ChatAdapter, user: ChatUser, settings?: NgTalkSettings, initComponent?: (c: NgTalkBubbleChannelComponent) => void): BubbleChannelRef {
+    if (this._activeInstances[channel.id]) {
+      this._activeInstances[channel.id].componentRef.instance.open();
+      return this._activeInstances[channel.id];
     }
 
-    public get activeChannelIDs(): string[] {
-        return Object.keys(this._activeInstances);
+    // 1. Create a component reference from the component
+    const componentRef = this._componentFactoryResolver
+      .resolveComponentFactory(NgTalkBubbleChannelComponent)
+      .create(this._injector);
+
+    // Configure component
+    const componentInstance = componentRef.instance as NgTalkBubbleChannelComponent;
+    componentInstance.channel = channel;
+    componentInstance.adapter = adapter;
+    componentInstance.user = user;
+    if (settings) {
+      componentInstance.channelSettings = settings;
     }
 
-    public hasInstance(channel: ChatChannel) {
-        return !!this._activeInstances[channel.id];
+    if (initComponent) {
+      initComponent(componentInstance);
     }
 
-    public show(channel: ChatChannel, adapter: ChatAdapter, user: ChatUser, settings?: NgTalkSettings, initComponent?: (c: NgTalkBubbleChannelComponent) => void): BubbleChannelRef {
-        if (this._activeInstances[channel.id]) {
-            this._activeInstances[channel.id].componentRef.instance.open();
-            return this._activeInstances[channel.id];
-        }
+    const bubbleRef = this._activeInstances[channel.id] = new BubbleChannelRef(this._appRef, componentRef);
+    componentInstance.selfRef = bubbleRef;
 
-        // 1. Create a component reference from the component
-        const componentRef = this._componentFactoryResolver
-            .resolveComponentFactory(NgTalkBubbleChannelComponent)
-            .create(this._injector);
+    bubbleRef.onDestroyed.pipe(first()).subscribe(() => delete this._activeInstances[channel.id]);
 
-        // Configure component
-        const componentInstance = componentRef.instance as NgTalkBubbleChannelComponent;
-        componentInstance.channel = channel;
-        componentInstance.adapter = adapter;
-        componentInstance.user = user;
-        if (settings) {
-            componentInstance.channelSettings = settings;
-        }
+    // 2. Attach component to the appRef so that it's inside the ng component tree
+    this._appRef.attachView(componentRef.hostView);
 
-        if (initComponent) {
-            initComponent(componentInstance);
-        }
+    // 3. Get DOM element from component
+    const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
+      .rootNodes[0] as HTMLElement;
 
-        const bubbleRef = this._activeInstances[channel.id] = new BubbleChannelRef(this._appRef, componentRef);
-        componentInstance.selfRef = bubbleRef;
+    // 4. Append DOM element to the body
+    document.body.appendChild(domElem);
 
-        bubbleRef.onDestroyed.pipe(first()).subscribe(() => delete this._activeInstances[channel.id]);
+    return bubbleRef;
+  }
 
-        // 2. Attach component to the appRef so that it's inside the ng component tree
-        this._appRef.attachView(componentRef.hostView);
-
-        // 3. Get DOM element from component
-        const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
-            .rootNodes[0] as HTMLElement;
-
-        // 4. Append DOM element to the body
-        document.body.appendChild(domElem);
-
-        return bubbleRef;
+  public destroyAll() {
+    for (const ref of Object.values(this._activeInstances)) {
+      ref.destroy();
     }
-
-    public destroyAll() {
-        for (const ref of Object.values(this._activeInstances)) {
-            ref.destroy();
-        }
-    }
+  }
 }
 
 export class BubbleChannelRef {
-    public onDestroyed: EventEmitter<BubbleChannelRef> = new EventEmitter();
+  public onDestroyed: EventEmitter<BubbleChannelRef> = new EventEmitter();
 
-    constructor(private _appRef: ApplicationRef, public componentRef: ComponentRef<NgTalkBubbleChannelComponent>) {
+  constructor(private _appRef: ApplicationRef, public componentRef: ComponentRef<NgTalkBubbleChannelComponent>) {
 
-    }
+  }
 
-    public destroy() {
-        this._appRef.detachView(this.componentRef.hostView);
-        this.componentRef.destroy();
+  public destroy() {
+    this._appRef.detachView(this.componentRef.hostView);
+    this.componentRef.destroy();
 
-        this.onDestroyed.emit(this);
-    }
+    this.onDestroyed.emit(this);
+  }
 }

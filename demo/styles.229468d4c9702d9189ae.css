@@ -1,13 +1,1 @@
-body {
-    background-color: #fff
-}
-
-.content {
-    padding: 5vh;
-}
-
-.message {
-    background: 0 0;
-    border-radius: 0;
-    margin: 0
-}
+body{background-color:#fff}.content{display:flex;padding:5vh;align-items:center;justify-content:center;text-align:center}.message{background:transparent;border-radius:0;margin:0}

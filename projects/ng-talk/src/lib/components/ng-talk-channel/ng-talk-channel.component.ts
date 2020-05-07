@@ -1,16 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatChannel} from '../../models/chat-channel';
 import {ChatMessage, ChatMessageType} from '../../models/chat-message';
@@ -47,8 +35,8 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   @Output() public messageSent: EventEmitter<ChatMessage> = new EventEmitter();
   @Output() public userClicked: EventEmitter<ChatUser> = new EventEmitter();
 
-  @ViewChild('chatBox', {static: false}) public chatBox: ElementRef<HTMLElement>;
-  @ViewChild('textInput', {static: false}) public textInput: ElementRef<HTMLElement>;
+  @ViewChild('chatBox') public chatBox: ElementRef<HTMLElement>;
+  @ViewChild('textInput') public textInput: ElementRef<HTMLElement>;
 
   private _visibleMessages = 20;
   public messages: ExtendedChatMessage[] = [];
@@ -149,15 +137,15 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   public scrollToBottom() {
-    if (this.chatBox) {
-      window.setTimeout(() => {  // Wait until new messages are drawn
+    window.setTimeout(() => {  // Wait until new messages are drawn
+      if (this.chatBox) {
         this.chatBox.nativeElement.scrollTop = this.chatBox.nativeElement.scrollHeight;
 
         if (this.messages.length >= this._visibleMessages) { // Enable scroll watcher if there is more messages pending
           this.scrollWatcherEnabled = true;
         }
-      }, 10);
-    }
+      }
+    }, 10);
   }
 
   public onInputFocus() {
