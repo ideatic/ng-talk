@@ -3,12 +3,8 @@ body {
 }
 
 .content {
-  display: flex;
   padding: 5vh;
-  align-items: center;
-  justify-content: center;
   text-align: center;
-  flex-direction: column;
 }
 
 .message {
