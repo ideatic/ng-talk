@@ -1,37 +1,41 @@
-<h3>Settings</h3>
-<div>
+<div class="content">
+  <h1>NgTalk</h1>
+  <p>Fully featured chat module for Angular applications.</p>
+  <h3>Settings</h3>
+  <div>
     <label>
-        Adapter
-        <select [(ngModel)]="adapter" (ngModelChange)="adapterChanged()">
-            <option [ngValue]="demoAdapter">Demo</option>
-            <option [ngValue]="firestoreAdapter">Google firestore</option>
-        </select>
+      Adapter
+      <select [(ngModel)]="adapter" (ngModelChange)="adapterChanged()">
+        <option [ngValue]="demoAdapter">Demo</option>
+        <option [ngValue]="firestoreAdapter">Google firestore</option>
+      </select>
     </label>
-</div>
-<div>
+  </div>
+  <div>
     <label>
-        Show avatars
-        <input type="checkbox" [(ngModel)]="chatSettings.showAvatars"/>
+      Show avatars
+      <input type="checkbox" [(ngModel)]="chatSettings.showAvatars"/>
     </label>
-</div>
-<div>
+  </div>
+  <div>
     <label>
-        Show names
-        <input type="checkbox" [(ngModel)]="chatSettings.showNames"/>
+      Show names
+      <input type="checkbox" [(ngModel)]="chatSettings.showNames"/>
     </label>
-</div>
-<div>
+  </div>
+  <div>
     <label>
-        Message class
-        <select [(ngModel)]="chatSettings.messageClass">
-            <option value="">None</option>
-            <option value="animated fadeIn">fadeIn</option>
-            <option value="animated fadeInUp">fadeInUp</option>
-            <option value="animated zoomInUp">zoomInUp</option>
-            <option value="animated bounceInUp">bounceInUp</option>
-        </select>
+      Message class
+      <select [(ngModel)]="chatSettings.messageClass">
+        <option value="">None</option>
+        <option value="animated fadeIn">fadeIn</option>
+        <option value="animated fadeInUp">fadeInUp</option>
+        <option value="animated zoomInUp">zoomInUp</option>
+        <option value="animated bounceInUp">bounceInUp</option>
+      </select>
     </label>
-</div>
+  </div>
 
-<h3>Channels</h3>
-<ng-talk-channels [user]="user" [adapter]="adapter" [settings]="chatSettings"></ng-talk-channels>
+  <h3>Channels</h3>
+  <ng-talk-channels [user]="user" [adapter]="adapter" [settings]="chatSettings"></ng-talk-channels>
+</div>
