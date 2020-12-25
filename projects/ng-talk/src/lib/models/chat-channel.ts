@@ -6,7 +6,7 @@ export enum ChatChannelType {
 }
 
 
-export interface ChatChannel {
+export interface ChatChannel<T = any> {
   id: string;
   type: ChatChannelType;
   name: string;
@@ -16,5 +16,5 @@ export interface ChatChannel {
   blocked?: boolean;
   unread?: number;
   lastMessage?: ChatMessage;
-  data?: any;
+  data?: T;
 }

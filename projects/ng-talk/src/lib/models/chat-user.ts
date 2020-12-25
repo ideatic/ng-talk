@@ -7,11 +7,11 @@ export enum ChatUserStatus {
 }
 
 
-export interface ChatUser {
+export interface ChatUser<T = any> {
   id: any;
   name: string;
   avatar?: string;
   status?: ChatUserStatus;
   color?: string;
-  data?: any;
+  data?: T;
 }

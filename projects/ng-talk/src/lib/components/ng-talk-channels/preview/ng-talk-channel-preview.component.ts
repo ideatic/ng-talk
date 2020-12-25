@@ -1,0 +1,51 @@
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
+import {ChatAdapter} from '../../../models/chat-adapter';
+import {ChatUser} from '../../../models/chat-user';
+import {MessageLoadingMethod, NgTalkSettings} from '../../ng-talk-settings';
+import {ChatChannel, ChatChannelType} from '../../../models/chat-channel';
+import {Subscription} from 'rxjs';
+import {nameof} from '../../../utils/utils';
+import {ChatMessage} from '../../../models/chat-message';
+import {NgTalkChannelsComponent} from '../ng-talk-channels.component';
+
+@Component({
+  selector: 'ng-talk-channel-preview',
+  template:`
+    <img *ngIf="channels.settings.showChannelsIcons" [src]="channel.icon || channels.settings.defaultChannelIcon">
+    <div>
+      <div class="channel-name">{{ channel.name }}</div>
+      <div class="channel-status">
+        <div class="last-message">
+          <ng-container *ngIf="channel.lastMessage?.from && channel.type == ChannelType.Group">{{ channel.lastMessage.from.name }}:</ng-container>
+          {{ channel.lastMessage?.content }}
+        </div>
+
+        <div *ngIf="channel.unread > 0 && !(channels.activeChannel && channel.id == channels.activeChannel.id)" class="unread-badge">
+          {{ channel.unread }}
+        </div>
+      </div>
+    </div>`,
+  styleUrls: ['./ng-talk-channel-preview.component.less']
+})
+export class NgTalkChannelPreviewComponent  {
+
+  @Input() public channel: ChatChannel;
+
+  // Import types
+  public readonly ChannelType = ChatChannelType;
+
+  constructor(public channels: NgTalkChannelsComponent) {
+  }
+}

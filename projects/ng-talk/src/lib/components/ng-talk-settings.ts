@@ -3,10 +3,10 @@ import {NgTalkChannelHeaderComponent} from './ng-talk-channel/header/ng-talk-cha
 import {NgTalkSendMessageComponent} from './ng-talk-channel/send/ng-talk-send-message.component';
 import Autolinker from 'autolinker';
 
-export enum ChannelMessagesLoading {
-  onlyActive,
-  all,
-  lazy,
+export enum MessageLoadingMethod {
+  onChannelSelected,
+  allChannels,
+  lazy
 }
 
 export class NgTalkSettings {
@@ -18,7 +18,7 @@ export class NgTalkSettings {
   public showChannelsIcons = true;
   public defaultChannelIcon = '';
 
-  public channelMessagesLoading = ChannelMessagesLoading.lazy;
+  public channelMessagesLoading = MessageLoadingMethod.lazy;
 
   /* Single channel */
   public showAvatars = true;

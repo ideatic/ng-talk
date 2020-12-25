@@ -1,20 +1,8 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostBinding,
-  HostListener,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges
-} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatUser} from '../../models/chat-user';
-import {ChannelMessagesLoading, NgTalkSettings} from '../ng-talk-settings';
-import {ChatChannel, ChatChannelType} from '../../models/chat-channel';
+import {MessageLoadingMethod, NgTalkSettings} from '../ng-talk-settings';
+import {ChatChannel} from '../../models/chat-channel';
 import {Subscription} from 'rxjs';
 import {nameof} from '../../utils/utils';
 import {ChatMessage} from '../../models/chat-message';
@@ -48,8 +36,7 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
   public filterQuery: string;
 
   // Import types
-  public readonly ChannelType = ChatChannelType;
-  public readonly MessagesLoading = ChannelMessagesLoading;
+  public readonly MessagesLoading = MessageLoadingMethod;
 
   constructor(private _host: ElementRef<HTMLElement>) {
   }
@@ -73,12 +60,10 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
       this._channelsSubscription = this.adapter.getChannels(this.user).subscribe(channels => {
         this.channels = channels;
 
-        if (this.settings.channelMessagesLoading == ChannelMessagesLoading.all) {
-          for (const channel of channels) {
-            if (!this._channelMessagesSubscriptions.has(channel.id)) {
-              this._channelMessagesSubscriptions.set(channel.id, this.adapter.getMessages(channel, 0, this.settings.pageSize).subscribe());
-            }
-          }
+        if (this.settings.channelMessagesLoading == MessageLoadingMethod.allChannels) {
+          channels
+            .filter(channel => !this._channelMessagesSubscriptions.has(channel.id))
+            .forEach(channel => this._channelMessagesSubscriptions.set(channel.id, this.adapter.getMessages(channel, 0, this.settings.pageSize).subscribe()));
         }
 
         // Select current channel (when a message to a new channel is sent, the new channel is selected automatically)
@@ -120,7 +105,7 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public inViewportChangedChannel(channel: ChatChannel, isVisible: boolean) {
-    if (isVisible && this.settings.channelMessagesLoading == ChannelMessagesLoading.lazy) {
+    if (isVisible && this.settings.channelMessagesLoading == MessageLoadingMethod.lazy) {
       this.adapter.getMessages(channel, 0, this.settings.pageSize);
     }
   }

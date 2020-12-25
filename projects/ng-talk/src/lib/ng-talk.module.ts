@@ -12,6 +12,7 @@ import {NgTalkBubbleChannelComponent} from './components/ng-talk-bubble-channel/
 import {NgTalkSendMessageComponent} from './components/ng-talk-channel/send/ng-talk-send-message.component';
 import {NgTalkChannelHeaderComponent} from './components/ng-talk-channel/header/ng-talk-channel-header.component';
 import {FnPipe} from './pipes/fn.pipe';
+import {NgTalkChannelPreviewComponent} from './components/ng-talk-channels/preview/ng-talk-channel-preview.component';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import {FnPipe} from './pipes/fn.pipe';
   declarations: [
     NgTalkChannelComponent,
     NgTalkChannelsComponent,
+    NgTalkChannelPreviewComponent,
     NgTalkBubbleChannelComponent,
 
     NgTalkChannelHeaderComponent,

@@ -9,8 +9,9 @@ import {NgTalkChannelsComponent} from '../../ng-talk-channels/ng-talk-channels.c
     <a *ngIf="channelList" class="go-back" (click)="channelList.selectChannel(null)"><i class="fas fa-arrow-left"></i></a>
     <img *ngIf="chat.channel.icon" [src]="chat.channel.icon">
     <span style="flex-grow: 1">{{ chat.channel.name }}</span>
-    <a *ngIf="!bubbleChannelSvc.hasInstance(chat.channel)" class="open-bubble" (click)="openBubbleChat(chat.channel)"><i
-      class="fas fa-external-link-square-alt"></i></a>`,
+    <a *ngIf="!bubbleChannelSvc.hasInstance(chat.channel)" class="tool" (click)="openBubbleChat(chat.channel)"><i
+      class="fas fa-external-link-square-alt"></i></a>
+    <a  class="tool" (click)="toggleBlock()"><i class="fas" [ngClass]="chat.channel.blocked ? 'fa-unlock' : 'fa-ban'"></i></a>`,
   styleUrls: [
     './ng-talk-channel-header.component.less'
 
@@ -30,5 +31,10 @@ export class NgTalkChannelHeaderComponent {
 
       return bubbleRef;
     }
+  }
+
+  public toggleBlock() {
+    this.chat.adapter.toggleBlock(this.chat.channel)
+      .then(() => this.chat.reloadMessages());
   }
 }

@@ -68,7 +68,7 @@ export class InViewportDirective implements AfterViewInit, OnDestroy, OnInit {
     });
   }
 
-  public static intersectionObserverFeatureDetection() {
+  public static intersectionObserverFeatureDetection(): boolean {
     // Exits early if all IntersectionObserver and IntersectionObserverEntry
     // features are natively supported.
     if (
