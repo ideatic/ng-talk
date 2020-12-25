@@ -8,7 +8,7 @@ import {first} from 'rxjs/operators';
 
 @Injectable()
 export class BubbleChannelService {
-  private _activeInstances: { [key: string]: BubbleChannelRef } = {};
+  private static _activeInstances = new Map<string, BubbleChannelRef>();
 
   constructor(private _componentFactoryResolver: ComponentFactoryResolver,
               private _appRef: ApplicationRef,
@@ -16,25 +16,24 @@ export class BubbleChannelService {
   }
 
   public get activeChannelIDs(): string[] {
-    return Object.keys(this._activeInstances);
+    return Array.from(BubbleChannelService._activeInstances.keys());
   }
 
   public hasInstance(channel: ChatChannel) {
-    return !!this._activeInstances[channel.id];
+    return BubbleChannelService._activeInstances.has(channel.id);
   }
 
   public show(channel: ChatChannel, adapter: ChatAdapter, user: ChatUser, settings?: NgTalkSettings, initComponent?: (c: NgTalkBubbleChannelComponent) => void): BubbleChannelRef {
-    if (this._activeInstances[channel.id]) {
-      this._activeInstances[channel.id].componentRef.instance.open();
-      return this._activeInstances[channel.id];
+    if (BubbleChannelService._activeInstances.has(channel.id)) {
+      BubbleChannelService._activeInstances.get(channel.id).componentRef.instance.open();
+      return BubbleChannelService._activeInstances.get(channel.id);
     }
 
-    // 1. Create a component reference from the component
+    // 1. Create a component reference from the component type
     const componentRef = this._componentFactoryResolver
       .resolveComponentFactory(NgTalkBubbleChannelComponent)
       .create(this._injector);
 
-    // Configure component
     const componentInstance = componentRef.instance as NgTalkBubbleChannelComponent;
     componentInstance.channel = channel;
     componentInstance.adapter = adapter;
@@ -47,10 +46,11 @@ export class BubbleChannelService {
       initComponent(componentInstance);
     }
 
-    const bubbleRef = this._activeInstances[channel.id] = new BubbleChannelRef(this._appRef, componentRef);
+    const bubbleRef = new BubbleChannelRef(this._appRef, componentRef);
+    BubbleChannelService._activeInstances.set(channel.id, bubbleRef);
     componentInstance.selfRef = bubbleRef;
 
-    bubbleRef.onDestroyed.pipe(first()).subscribe(() => delete this._activeInstances[channel.id]);
+    bubbleRef.onDestroyed.pipe(first()).subscribe(() => BubbleChannelService._activeInstances.delete(channel.id));
 
     // 2. Attach component to the appRef so that it's inside the ng component tree
     this._appRef.attachView(componentRef.hostView);
@@ -66,16 +66,15 @@ export class BubbleChannelService {
   }
 
   public destroyAll() {
-    for (const ref of Object.values(this._activeInstances)) {
-      ref.destroy();
-    }
+    BubbleChannelService._activeInstances.forEach(ref => ref.destroy());
   }
 }
 
 export class BubbleChannelRef {
-  public onDestroyed: EventEmitter<BubbleChannelRef> = new EventEmitter();
+  public onDestroyed = new EventEmitter<BubbleChannelRef>();
 
-  constructor(private _appRef: ApplicationRef, public componentRef: ComponentRef<NgTalkBubbleChannelComponent>) {
+  constructor(private _appRef: ApplicationRef,
+              public componentRef: ComponentRef<NgTalkBubbleChannelComponent>) {
 
   }
 

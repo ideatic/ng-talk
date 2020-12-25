@@ -8,12 +8,15 @@ import {ChatChannel} from "../../../models/chat-channel";
 
 @Component({
   template: `
+    <p *ngIf="chat.channel?.blocked; else sendMessageForm" style="margin: 1em 0; text-align: center">{{ chat.settings.disabledMessage }}</p>
+    <ng-template #sendMessageForm>
         <form (ngSubmit)="sendMessage()">
             <input #textInput class="input" [(ngModel)]="newMessage" name="newMessage" maxlength="1000" autocomplete="off"
                    [placeholder]="chat.settings.writePlaceholder" (focus)="onInputFocus()"
                    [disabled]="!chat.channel || chat.channel.disabled"/>
             <i class="send-icon fas fa-paper-plane" (click)="sendMessage()"></i>
         </form>
+    </ng-template>
     `,
   styleUrls: ['ng-talk-send-message.component.less']
 })
@@ -24,7 +27,8 @@ export class NgTalkSendMessageComponent implements OnDestroy {
 
   private _channelChangedSubscription: Subscription;
 
-  constructor(public chat: NgTalkChannelComponent, @Optional() channelList: NgTalkChannelsComponent) {
+  constructor(public chat: NgTalkChannelComponent,
+              @Optional() channelList: NgTalkChannelsComponent) {
     if (channelList) { // Detectar cambio de canal si estamos en un listado
       this._channelChangedSubscription = channelList.channelChanged.subscribe((c) => this._onChannelChanged(c));
     }

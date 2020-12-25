@@ -39,6 +39,7 @@ export class NgTalkSettings {
   public loadMoreText = 'Load more';
   public todayText = 'Today';
   public yesterdayText = 'Yesterday';
+  public disabledMessage = 'Blocked conversation';
 
   constructor(params?: Partial<NgTalkSettings>) {
     if (params) {

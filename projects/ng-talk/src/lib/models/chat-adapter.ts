@@ -11,4 +11,6 @@ export abstract class ChatAdapter {
   public abstract sendMessage(channel: ChatChannel, message: ChatMessage): Promise<any>;
 
   public abstract markAsRead(channel: ChatChannel): Promise<any>;
+
+  public abstract toggleBlock?(channel: ChatChannel): Promise<boolean>;
 }

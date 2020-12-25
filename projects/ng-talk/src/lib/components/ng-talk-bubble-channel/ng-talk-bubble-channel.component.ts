@@ -217,7 +217,7 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
     if (this.channelVisible) {
       this.channelClass = 'bounceOut';
 
-      window.setTimeout(() => {
+      setTimeout(() => {
         this.channelVisible = false;
         this.channelStyle = {display: 'none'};
       }, 300);

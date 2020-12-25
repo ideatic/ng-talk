@@ -2,7 +2,8 @@
   "name": "ng-talk",
   "version": "0.0.1",
   "dependencies": {
-    "autolinker": "^3.0.0"
+    "autolinker": "^3.0.0",
+    "tslib": "^2.0.0"
   },
   "peerDependencies": {
     "@angular/common": "^7.2.0",

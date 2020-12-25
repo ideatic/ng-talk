@@ -3,7 +3,7 @@
     <div *ngIf="settings.showFilter" class="filter">
         <label>
             <i *ngIf="settings.searchIconClass" [ngClass]="settings.searchIconClass"></i>
-            <input type="text" [placeholder]="settings.filterPlaceholder" [(ngModel)]="filterQuery"/>
+            <input type="text" [placeholder]="settings.filterPlaceholder" [(ngModel)]="filterQuery" (ngModelChange)="search.emit($event)"/>
         </label>
     </div>
 
@@ -19,23 +19,6 @@
             </a>
         </li>
     </ul>
-
-    <ng-template #channelTemplate let-channel>
-        <img *ngIf="settings.showChannelsIcons" [src]="channel.icon || settings.defaultChannelIcon">
-        <div>
-            <div class="channel-name">{{ channel.name }}</div>
-            <div class="channel-status">
-                <div class="last-message">
-                    <ng-container *ngIf="channel.lastMessage?.from && channel.type == ChannelType.Group">{{ channel.lastMessage.from.name }}:</ng-container>
-                    {{ channel.lastMessage?.content }}
-                </div>
-
-                <div *ngIf="channel.unread > 0 && !(activeChannel && channel.id == activeChannel.id)" class="unread-badge">
-                    {{ channel.unread }}
-                </div>
-            </div>
-        </div>
-    </ng-template>
 </div>
 
 <!-- Single channel -->
@@ -49,3 +32,21 @@
                      (messageSent)="messageSent.emit($event)"></ng-talk-channel>
 </div>
 
+
+<!-- Templates -->
+<ng-template #channelTemplate let-channel>
+  <img *ngIf="settings.showChannelsIcons" [src]="channel.icon || settings.defaultChannelIcon">
+  <div>
+    <div class="channel-name">{{ channel.name }}</div>
+    <div class="channel-status">
+      <div class="last-message">
+        <ng-container *ngIf="channel.lastMessage?.from && channel.type == ChannelType.Group">{{ channel.lastMessage.from.name }}:</ng-container>
+        {{ channel.lastMessage?.content }}
+      </div>
+
+      <div *ngIf="channel.unread > 0 && !(activeChannel && channel.id == activeChannel.id)" class="unread-badge">
+        {{ channel.unread }}
+      </div>
+    </div>
+  </div>
+</ng-template>

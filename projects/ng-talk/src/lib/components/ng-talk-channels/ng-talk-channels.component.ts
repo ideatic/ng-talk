@@ -1,4 +1,16 @@
-import {Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatUser} from '../../models/chat-user';
 import {ChannelMessagesLoading, NgTalkSettings} from '../ng-talk-settings';
@@ -10,20 +22,19 @@ import {ChatMessage} from '../../models/chat-message';
 @Component({
   selector: 'ng-talk-channels',
   templateUrl: './ng-talk-channels.component.html',
-  styleUrls: [
-    './ng-talk-channels.component.less'
-  ]
+  styleUrls: ['./ng-talk-channels.component.less']
 })
 export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() public user: ChatUser;
   @Input() public adapter: ChatAdapter;
   @Input() public settings = new NgTalkSettings();
-  @Output() public channelChanged: EventEmitter<ChatChannel> = new EventEmitter();
+  @Output() public search = new EventEmitter<string>();
+  @Output() public channelChanged = new EventEmitter<ChatChannel>();
 
   // Forwarded events from single channel
-  @Output() public messageSent: EventEmitter<ChatMessage> = new EventEmitter();
-  @Output() public userClicked: EventEmitter<ChatUser> = new EventEmitter();
+  @Output() public messageSent = new EventEmitter<ChatMessage>();
+  @Output() public userClicked = new EventEmitter<ChatUser>();
 
   @HostBinding('class')
   public displayMode: 'desktop' | 'mobile';
@@ -32,7 +43,7 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
   private _channelsSubscription: Subscription;
   public channels: ChatChannel[];
 
-  private _channelMessagesSubscriptions: { [key: string]: Subscription } = {};
+  private _channelMessagesSubscriptions = new Map<string, Subscription>();
 
   public filterQuery: string;
 
@@ -50,8 +61,8 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes[nameof<NgTalkChannelsComponent>('adapter')]) {
-      Object.values(this._channelMessagesSubscriptions).forEach(s => s.unsubscribe());
-      this._channelMessagesSubscriptions = {};
+      this._channelMessagesSubscriptions.forEach(s => s.unsubscribe());
+      this._channelMessagesSubscriptions.clear();
     }
 
     if (changes[nameof<NgTalkChannelsComponent>('adapter')] || changes[nameof<NgTalkChannelsComponent>('user')]) {
@@ -64,8 +75,8 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
 
         if (this.settings.channelMessagesLoading == ChannelMessagesLoading.all) {
           for (const channel of channels) {
-            if (!this._channelMessagesSubscriptions[channel.id]) {
-              this._channelMessagesSubscriptions[channel.id] = this.adapter.getMessages(channel, 0, this.settings.pageSize).subscribe();
+            if (!this._channelMessagesSubscriptions.has(channel.id)) {
+              this._channelMessagesSubscriptions.set(channel.id, this.adapter.getMessages(channel, 0, this.settings.pageSize).subscribe());
             }
           }
         }
@@ -104,7 +115,8 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
       this._channelsSubscription.unsubscribe();
     }
 
-    Object.values(this._channelMessagesSubscriptions).forEach(s => s.unsubscribe());
+    this._channelMessagesSubscriptions.forEach(s => s.unsubscribe());
+    this._channelMessagesSubscriptions.clear();
   }
 
   public inViewportChangedChannel(channel: ChatChannel, isVisible: boolean) {

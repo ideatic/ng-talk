@@ -32,8 +32,8 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   @Input() public settings: NgTalkSettings;
   @Input() public disableRendering = false;
 
-  @Output() public messageSent: EventEmitter<ChatMessage> = new EventEmitter();
-  @Output() public userClicked: EventEmitter<ChatUser> = new EventEmitter();
+  @Output() public messageSent = new EventEmitter<ChatMessage>();
+  @Output() public userClicked = new EventEmitter<ChatUser>();
 
   @ViewChild('chatBox') public chatBox: ElementRef<HTMLElement>;
   @ViewChild('textInput') public textInput: ElementRef<HTMLElement>;
@@ -76,7 +76,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
       this._visibleMessages = this.settings.pageSize;
 
       if (this.adapter && this.channel) {
-        this._loadMessages();
+        this.reloadMessages();
       }
     }
   }
@@ -91,7 +91,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
     }
   }
 
-  private _loadMessages(scrollToBottom = true) {
+  public reloadMessages(scrollToBottom = true) {
     if (this._messagesSubscription) {
       this._messagesSubscription.unsubscribe();
     }
@@ -137,7 +137,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   public scrollToBottom() {
-    window.setTimeout(() => {  // Wait until new messages are drawn
+    setTimeout(() => {  // Wait until new messages are drawn
       if (this.chatBox) {
         this.chatBox.nativeElement.scrollTop = this.chatBox.nativeElement.scrollHeight;
 
@@ -190,7 +190,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
     this.scrollWatcherEnabled = false;
     this._visibleMessages += this.settings.pageSize;
 
-    this._loadMessages(false);
+    this.reloadMessages(false);
   }
 
   public watcherInViewportChanged(isVisible: boolean) {
