@@ -32,5 +32,6 @@
                    [user]="user"
                    [settings]="settings"
                    (userClicked)="userClicked.emit($event)"
-                   (messageSent)="messageSent.emit($event)"></ng-talk-channel>
+                   (messageSent)="messageSent.emit($event)"
+                   (deleted)="activeChannel = null"></ng-talk-channel>
 </div>

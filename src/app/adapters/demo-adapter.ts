@@ -1,6 +1,6 @@
 import {ChatAdapter} from '../../../projects/ng-talk/src/lib/models/chat-adapter';
 import {ChatUser, ChatUserStatus} from '../../../projects/ng-talk/src/lib/models/chat-user';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {ChatMessage, ChatMessageType} from '../../../projects/ng-talk/src/lib/models/chat-message';
 import {Injectable} from '@angular/core';
 import {ChatChannel, ChatChannelType} from '../../../projects/ng-talk/src/lib/models/chat-channel';
@@ -72,8 +72,11 @@ export class DemoAdapter extends ChatAdapter {
     }
   ];
 
+
+  private _channels$: BehaviorSubject<ChatChannel[]>;
+
   public getChannels(user: ChatUser): Observable<ChatChannel[]> {
-    return of(DemoAdapter.mockedUsers.map(user => {
+    return (this._channels$ ??= new BehaviorSubject<ChatChannel[]>(DemoAdapter.mockedUsers.map(user => {
       return {
         id: user.id,
         type: ChatChannelType.User,
@@ -87,7 +90,7 @@ export class DemoAdapter extends ChatAdapter {
         },
         unread: Math.floor(Math.random() * 10)
       } as ChatChannel;
-    }));
+    })));
   }
 
   private _channelMessages: { [key: string]: BehaviorSubject<ChatMessage[]> } = {};
@@ -153,5 +156,10 @@ export class DemoAdapter extends ChatAdapter {
 
   public toggleBlock(channel: ChatChannel): Promise<boolean> {
     return Promise.resolve(channel.blocked = !channel.blocked);
+  }
+
+  public deleteChannel(channel: ChatChannel): Promise<void> {
+    this._channels$.next(this._channels$.getValue().filter(u => u.id != channel.id));
+    return Promise.resolve();
   }
 }

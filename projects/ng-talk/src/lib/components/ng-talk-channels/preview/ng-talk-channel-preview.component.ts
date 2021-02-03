@@ -1,28 +1,10 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostBinding,
-  HostListener,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges
-} from '@angular/core';
-import {ChatAdapter} from '../../../models/chat-adapter';
-import {ChatUser} from '../../../models/chat-user';
-import {MessageLoadingMethod, NgTalkSettings} from '../../ng-talk-settings';
+import {Component, Input} from '@angular/core';
 import {ChatChannel, ChatChannelType} from '../../../models/chat-channel';
-import {Subscription} from 'rxjs';
-import {nameof} from '../../../utils/utils';
-import {ChatMessage} from '../../../models/chat-message';
 import {NgTalkChannelsComponent} from '../ng-talk-channels.component';
 
 @Component({
   selector: 'ng-talk-channel-preview',
-  template:`
+  template: `
     <img *ngIf="channels.settings.showChannelsIcons" [src]="channel.icon || channels.settings.defaultChannelIcon">
     <div>
       <div class="channel-name">{{ channel.name }}</div>
@@ -39,7 +21,7 @@ import {NgTalkChannelsComponent} from '../ng-talk-channels.component';
     </div>`,
   styleUrls: ['./ng-talk-channel-preview.component.less']
 })
-export class NgTalkChannelPreviewComponent  {
+export class NgTalkChannelPreviewComponent {
 
   @Input() public channel: ChatChannel;
 

@@ -53,27 +53,31 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     if (changes[nameof<NgTalkChannelsComponent>('adapter')] || changes[nameof<NgTalkChannelsComponent>('user')]) {
-      if (this._channelsSubscription) {
-        this._channelsSubscription.unsubscribe();
-      }
+      this._channelsSubscription?.unsubscribe();
 
-      this._channelsSubscription = this.adapter.getChannels(this.user).subscribe(channels => {
-        this.channels = channels;
+      this._channelsSubscription = this.adapter.getChannels(this.user)
+        .subscribe(channels => {
+          this.channels = channels;
 
-        if (this.settings.channelMessagesLoading == MessageLoadingMethod.allChannels) {
-          channels
-            .filter(channel => !this._channelMessagesSubscriptions.has(channel.id))
-            .forEach(channel => this._channelMessagesSubscriptions.set(channel.id, this.adapter.getMessages(channel, 0, this.settings.pageSize).subscribe()));
-        }
-
-        // Select current channel (when a message to a new channel is sent, the new channel is selected automatically)
-        if (this.activeChannel) {
-          const activeChannel = this.channels.find(c => c.id == this.activeChannel.id);
-          if (activeChannel && activeChannel != this.activeChannel) {
-            this.selectChannel(activeChannel);
+          // Subscribe to new received channels
+          if (this.settings.channelMessagesLoading == MessageLoadingMethod.allChannels) {
+            channels
+              .filter(channel => !this._channelMessagesSubscriptions.has(channel.id))
+              .forEach(channel => this._channelMessagesSubscriptions.set(channel.id, this.adapter.getMessages(channel, 0, this.settings.pageSize).subscribe()));
           }
-        }
-      });
+
+          // Select current channel (when a message to a new channel is sent, the new channel is selected automatically)
+          if (this.activeChannel) {
+            const activeChannel = this.channels.find(c => c.id == this.activeChannel.id);
+            if (activeChannel) {
+              if (activeChannel != this.activeChannel) {
+                this.selectChannel(activeChannel);
+              }
+            } else {
+              this.activeChannel = null;
+            }
+          }
+        });
     }
   }
 
@@ -96,9 +100,7 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this._channelsSubscription) {
-      this._channelsSubscription.unsubscribe();
-    }
+    this._channelsSubscription?.unsubscribe();
 
     this._channelMessagesSubscriptions.forEach(s => s.unsubscribe());
     this._channelMessagesSubscriptions.clear();

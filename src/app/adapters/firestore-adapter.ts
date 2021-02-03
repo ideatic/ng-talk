@@ -90,6 +90,13 @@ export class FirestoreAdapter extends ChatAdapter {
     return Promise.resolve();
   }
 
+  public deleteChannel(channel: ChatChannel): Promise<void> {
+    return this._firestore
+      .collection<FirestoreRoom>('rooms')
+      .doc(channel.id)
+      .delete();
+  }
+
   public toggleBlock(channel: ChatChannel): Promise<boolean> {
     return Promise.resolve(false);
   }

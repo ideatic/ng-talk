@@ -6,34 +6,35 @@ import {NgTalkSettings} from '../ng-talk-settings';
 import {ChatUser} from '../../models/chat-user';
 import {BubbleChannelRef} from '../../service/bubble-channel.service';
 import {NgTalkChannelComponent} from '../ng-talk-channel/ng-talk-channel.component';
-import {bindEvent} from '../../utils/utils';
+import {fromEvent, Subscription} from 'rxjs';
 
 
 @Component({
   selector: 'channel-bubble',
   template: `
-      <div #bubble class="bubble"
-           [title]="channel.name"
-           [ngStyle]="{backgroundImage: 'url( ' + (channel.icon || channelSettings.defaultChannelIcon) + ')'}"
-           [ngClass]="bubbleClass"
-           (click)="toggleChannel()"
-           cdkDrag [cdkDragBoundary]="dragBoundarySelector"
-           (cdkDragStarted)="onDragStart()"
-           (cdkDragMoved)="onDragMoved($event)"
-           (cdkDragEnded)="onDragEnded($event)">
-          <div *ngIf="!channelVisible && channel.unread > 0" class="unread-badge">{{ channel.unread | number }}</div>
-      </div>
+    <div #bubble class="bubble"
+         [title]="channel.name"
+         [ngStyle]="{backgroundImage: 'url( ' + (channel.icon || channelSettings.defaultChannelIcon) + ')'}"
+         [ngClass]="bubbleClass"
+         (click)="toggleChannel()"
+         cdkDrag [cdkDragBoundary]="dragBoundarySelector"
+         (cdkDragStarted)="onDragStart()"
+         (cdkDragMoved)="onDragMoved($event)"
+         (cdkDragEnded)="onDragEnded($event)">
+      <div *ngIf="!channelVisible && channel.unread > 0" class="unread-badge">{{ channel.unread | number }}</div>
+    </div>
 
-      <ng-talk-channel #ngTalkChannel
-                       [ngClass]="channelClass"
-                       [ngStyle]="channelStyle"
-                       [channel]="channel"
-                       [user]="user"
-                       [adapter]="adapter"
-                       [settings]="channelSettings"
-                       [disableRendering]="!channelVisible"></ng-talk-channel>
+    <ng-talk-channel #ngTalkChannel
+                     [ngClass]="channelClass"
+                     [ngStyle]="channelStyle"
+                     [channel]="channel"
+                     [user]="user"
+                     [adapter]="adapter"
+                     [settings]="channelSettings"
+                     [disableRendering]="!channelVisible"
+                     (deleted)="onChatDeleted()"></ng-talk-channel>
 
-      <div *ngIf="isDragging" #closeButton class="close-bubble" [ngClass]="closeButtonClass">&times;</div>
+    <div *ngIf="isDragging" #closeButton class="close-bubble" [ngClass]="closeButtonClass">&times;</div>
   `,
   styleUrls: [`ng-talk-bubble-channel.component.less`]
 })
@@ -61,7 +62,7 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
   public isDragging = false;
   private _lastPosition: { x: number; y: number; };
 
-  private _documentClickSubscription: () => void;
+  private _documentClickSubscription: Subscription;
 
   constructor(private _host: ElementRef<HTMLElement>) {
 
@@ -99,9 +100,7 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
       this.closeButtonClass = 'bounceOut';
       this.bubbleClass = 'fadeOut';
 
-      setTimeout(() => {
-        this.selfRef.destroy();
-      }, 250);
+      setTimeout(() => this.selfRef.destroy(), 250);
 
       return;
     }
@@ -194,8 +193,13 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
 
     setTimeout(() => {
       this.ngTalkChannel.scrollToBottom();
-      this._documentClickSubscription = bindEvent(document, 'click', (event) => this.onDocumentClick(event));
+      this._documentClickSubscription = fromEvent(document, 'click').subscribe(event => this.onDocumentClick(event));
     }, 10);
+  }
+
+  public onChatDeleted() {
+    this.close();
+    setTimeout(() => this.selfRef.destroy(), 250);
   }
 
   @HostListener('window:resize')
@@ -223,10 +227,8 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
       }, 300);
     }
 
-    if (this._documentClickSubscription) {
-      this._documentClickSubscription();
-      this._documentClickSubscription = null;
-    }
+    this._documentClickSubscription?.unsubscribe();
+    this._documentClickSubscription = null;
   }
 
   public onDocumentClick($event) {
@@ -245,8 +247,6 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this._documentClickSubscription) {
-      this._documentClickSubscription();
-    }
+    this._documentClickSubscription?.unsubscribe();
   }
 }

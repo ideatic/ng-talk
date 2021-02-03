@@ -2,8 +2,8 @@ import {Component, ElementRef, OnDestroy, Optional, ViewChild} from '@angular/co
 import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
 import {Subscription} from 'rxjs';
-import {NgTalkChannelsComponent} from "../../ng-talk-channels/ng-talk-channels.component";
-import {ChatChannel} from "../../../models/chat-channel";
+import {NgTalkChannelsComponent} from '../../ng-talk-channels/ng-talk-channels.component';
+import {ChatChannel} from '../../../models/chat-channel';
 
 
 @Component({
