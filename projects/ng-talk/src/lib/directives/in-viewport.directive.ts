@@ -1,4 +1,4 @@
-import {AfterViewInit, Directive, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 
 /**
  * From https://github.com/thisissoon/angular-inviewport
@@ -22,28 +22,19 @@ import {AfterViewInit, Directive, ElementRef, EventEmitter, Input, OnDestroy, On
   selector: '[inViewport]',
   exportAs: 'inViewport'
 })
-export class InViewportDirective implements AfterViewInit, OnDestroy, OnInit {
-  private _window: Window;
-  private _inViewport: boolean;
-  private _hasIntersectionObserver: boolean;
+export class InViewportDirective implements OnDestroy, OnInit {
   @Input() public inViewportOptions: IntersectionObserverInit;
   @Output() public inViewportChange = new EventEmitter<boolean>();
+
+  private _inViewport: boolean;
   public observer: IntersectionObserver;
 
-  constructor(private _host: ElementRef) {
-    this._window = window;
-    this._hasIntersectionObserver = InViewportDirective.intersectionObserverFeatureDetection();
+  constructor(private _host: ElementRef,
+              private _window: Window) {
   }
 
   public ngOnInit() {
-    if (!this._hasIntersectionObserver) {
-      this._inViewport = true;
-      this.inViewportChange.emit(this._inViewport);
-    }
-  }
-
-  public ngAfterViewInit() {
-    if (this._hasIntersectionObserver) {
+    if (InViewportDirective.intersectionObserverFeatureDetection()) {
       const IntersectionObserver = this._window['IntersectionObserver'];
       this.observer = new IntersectionObserver(
         this.intersectionObserverCallback.bind(this),
@@ -51,18 +42,21 @@ export class InViewportDirective implements AfterViewInit, OnDestroy, OnInit {
       );
 
       this.observer.observe(this._host.nativeElement);
+    } else {
+      this._inViewport = true;
+      this.inViewportChange.emit(this._inViewport);
     }
   }
 
   public ngOnDestroy() {
-    if (this.observer) {
-      this.observer.unobserve(this._host.nativeElement);
-    }
+    this.observer?.unobserve(this._host.nativeElement);
   }
 
   public intersectionObserverCallback(entries: IntersectionObserverEntry[]) {
     entries.forEach(entry => {
-      if (this._inViewport === entry.isIntersecting) return;
+      if (this._inViewport === entry.isIntersecting) {
+        return;
+      }
       this._inViewport = entry.isIntersecting;
       this.inViewportChange.emit(this._inViewport);
     });
