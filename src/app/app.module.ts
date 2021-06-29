@@ -1,10 +1,10 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
-import {NgTalkModule} from "../../projects/ng-talk/src/lib/ng-talk.module";
-import {FormsModule} from "@angular/forms";
-import {AngularFireModule} from "@angular/fire";
-import {AngularFirestoreModule} from "@angular/fire/firestore";
+import {NgTalkModule} from '../../projects/ng-talk/src/lib/ng-talk.module';
+import {FormsModule} from '@angular/forms';
+import {AngularFireModule} from '@angular/fire';
+import {AngularFirestoreModule} from '@angular/fire/firestore';
 
 
 // https://console.firebase.google.com/

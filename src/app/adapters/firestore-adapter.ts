@@ -1,12 +1,12 @@
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {ChatAdapter} from "../../../projects/ng-talk/src/lib/models/chat-adapter";
-import {ChatUser} from "../../../projects/ng-talk/src/lib/models/chat-user";
-import {ChatMessage} from "../../../projects/ng-talk/src/lib/models/chat-message";
-import {DemoAdapter} from "./demo-adapter";
-import {ChatChannel, ChatChannelType} from "../../../projects/ng-talk/src/lib/models/chat-channel";
+import {Injectable} from '@angular/core';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {ChatAdapter} from '../../../projects/ng-talk/src/lib/models/chat-adapter';
+import {ChatUser} from '../../../projects/ng-talk/src/lib/models/chat-user';
+import {ChatMessage} from '../../../projects/ng-talk/src/lib/models/chat-message';
+import {DemoAdapter} from './demo-adapter';
+import {ChatChannel, ChatChannelType} from '../../../projects/ng-talk/src/lib/models/chat-channel';
 
 interface FirestoreRoom {
   createdAt?: number;

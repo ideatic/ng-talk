@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {DemoAdapter} from "./adapters/demo-adapter";
-import {ChatUser, ChatUserStatus} from "../../projects/ng-talk/src/lib/models/chat-user";
-import {NgTalkSettings} from "../../projects/ng-talk/src/lib/components/ng-talk-settings";
-import {ChatAdapter} from "../../projects/ng-talk/src/lib/models/chat-adapter";
-import {FirestoreAdapter} from "./adapters/firestore-adapter";
+import {DemoAdapter} from './adapters/demo-adapter';
+import {ChatUser, ChatUserStatus} from '../../projects/ng-talk/src/lib/models/chat-user';
+import {NgTalkSettings} from '../../projects/ng-talk/src/lib/components/ng-talk-settings';
+import {ChatAdapter} from '../../projects/ng-talk/src/lib/models/chat-adapter';
+import {FirestoreAdapter} from './adapters/firestore-adapter';
 
 @Component({
     selector: 'app-root',
