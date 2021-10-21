@@ -130,7 +130,7 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
     }
 
     bubbleStyles.transform = '';
-    bubbleStyles.top = (this._lastPosition ? this._lastPosition.y : 0) + 'px';
+    bubbleStyles.top = (this._lastPosition ? this._lastPosition.y : 35) + 'px';
     bubbleStyles.left = x + 'px';
   }
 
