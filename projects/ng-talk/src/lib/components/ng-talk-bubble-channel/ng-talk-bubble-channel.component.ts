@@ -123,7 +123,7 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
     const bubbleStyles = this.bubbleElement.nativeElement.style;
 
     let x;
-    if (this._lastPosition && this._lastPosition.x > containerWidth / 2) { // Move to the right
+    if (this._lastPosition?.x > containerWidth / 2) { // Move to the right
       x = containerWidth - this.bubbleElement.nativeElement.offsetWidth;
     } else { // Move to the left
       x = 0;
@@ -236,7 +236,7 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
       return;
     }
 
-    const insideClick = $event && (this._host && this._host.nativeElement.contains($event.target));
+    const insideClick = $event && (this._host?.nativeElement.contains($event.target));
 
     if (!insideClick) {
       this.close();

@@ -118,7 +118,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
         }
 
         // Mark as read if component is focused
-        if (this.channel && this.channel.unread > 0 && document.hasFocus()) {
+        if (this.channel?.unread > 0 && document.hasFocus()) {
           this.adapter.markAsRead(this.channel);
         }
       });
