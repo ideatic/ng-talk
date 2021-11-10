@@ -11,8 +11,9 @@
   <ul>
     <li *ngFor="let channel of channels | filterChannels: filterQuery; trackBy: trackChannel"
         [class.active]="activeChannel && channel.id == activeChannel.id">
+      <!-- Wait 500ms to enable viewport observer while the component render -->
       <a *ngIf="settings.channelMessagesLoading == MessagesLoading.lazy; else renderActiveChannel"
-         (click)="selectChannel(channel)" inViewport (inViewportChange)="inViewportChangedChannel(channel, $event)">
+         (click)="selectChannel(channel)" inViewport [inViewportOptions]="{delay: 500}" (inViewportChange)="inViewportChangedChannel(channel, $event)">
         <ng-talk-channel-preview [channel]="channel"></ng-talk-channel-preview>
       </a>
       <ng-template #renderActiveChannel>
