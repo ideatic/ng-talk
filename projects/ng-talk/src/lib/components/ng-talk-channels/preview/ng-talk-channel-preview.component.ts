@@ -5,7 +5,7 @@ import {NgTalkChannelsComponent} from '../ng-talk-channels.component';
 @Component({
   selector: 'ng-talk-channel-preview',
   template: `
-    <img *ngIf="channels.settings.showChannelsIcons" [src]="channel.icon || channels.settings.defaultChannelIcon">
+    <img *ngIf="channels.settings.showChannelsIcons" [src]="channel.icon || channels.settings.defaultChannelIcon"  [attr.aria-label]="channel.name">
     <div>
       <div class="channel-name">{{ channel.name }}</div>
       <div class="channel-status">
