@@ -14,7 +14,7 @@ import {ChatChannel} from '../../../models/chat-channel';
             <input #textInput class="input" [(ngModel)]="newMessage" name="newMessage" maxlength="1000" autocomplete="off"
                    [placeholder]="chat.settings.writePlaceholder" (focus)="onInputFocus()"
                    [disabled]="!chat.channel || chat.channel.disabled"/>
-            <i class="send-icon fas fa-paper-plane" (click)="sendMessage()"></i>
+            <i role="button" class="send-icon fas fa-paper-plane" (click)="sendMessage()"></i>
         </form>
     </ng-template>
     `,
