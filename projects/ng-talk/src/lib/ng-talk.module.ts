@@ -16,38 +16,31 @@ import {NgTalkChannelPreviewComponent} from './components/ng-talk-channels/previ
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    DragDropModule
-  ],
-  providers: [
-    DatePipe,
-    BubbleChannelService
-  ],
-  declarations: [
-    NgTalkChannelComponent,
-    NgTalkChannelsComponent,
-    NgTalkChannelPreviewComponent,
-    NgTalkBubbleChannelComponent,
-
-    NgTalkChannelHeaderComponent,
-    NgTalkSendMessageComponent,
-
-    InViewportDirective,
-    FilterChannelsPipe,
-    FormatDatePipe,
-    FnPipe
-  ],
-  exports: [
-    NgTalkChannelComponent,
-    NgTalkChannelsComponent
-  ],
-  entryComponents: [
-    NgTalkChannelHeaderComponent,
-    NgTalkSendMessageComponent,
-    NgTalkBubbleChannelComponent
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        DragDropModule
+    ],
+    providers: [
+        DatePipe,
+        BubbleChannelService
+    ],
+    declarations: [
+        NgTalkChannelComponent,
+        NgTalkChannelsComponent,
+        NgTalkChannelPreviewComponent,
+        NgTalkBubbleChannelComponent,
+        NgTalkChannelHeaderComponent,
+        NgTalkSendMessageComponent,
+        InViewportDirective,
+        FilterChannelsPipe,
+        FormatDatePipe,
+        FnPipe
+    ],
+    exports: [
+        NgTalkChannelComponent,
+        NgTalkChannelsComponent
+    ]
 })
 export class NgTalkModule {
 }
