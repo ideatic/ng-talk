@@ -22,7 +22,7 @@ import {ChatChannel} from '../../../models/chat-channel';
 })
 export class NgTalkSendMessageComponent implements OnDestroy {
 
-  @ViewChild('textInput', {static: true}) public textInput: ElementRef<HTMLElement>;
+  @ViewChild('textInput', {static: true}) private _textInput: ElementRef<HTMLElement>;
   public newMessage: string;
 
   private _channelChangedSubscription: Subscription;
@@ -49,8 +49,8 @@ export class NgTalkSendMessageComponent implements OnDestroy {
   }
 
   public focus() {
-    if (this.textInput) {
-      this.textInput.nativeElement.focus();
+    if (this._textInput) {
+      this._textInput.nativeElement.focus();
     }
   }
 

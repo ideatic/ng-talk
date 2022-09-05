@@ -7,9 +7,11 @@ export enum ChatMessageType {
 
 
 export interface ChatMessage {
+  id?: number | string;
   type?: ChatMessageType;
   from: ChatUser;
   content: string;
   date?: Date;
+  replyTo?: ChatMessage;
   // dateSeen?: number;
 }

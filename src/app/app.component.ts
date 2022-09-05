@@ -3,7 +3,6 @@ import {DemoAdapter} from './adapters/demo-adapter';
 import {ChatUser, ChatUserStatus} from '../../projects/ng-talk/src/lib/models/chat-user';
 import {NgTalkSettings} from '../../projects/ng-talk/src/lib/components/ng-talk-settings';
 import {ChatAdapter} from '../../projects/ng-talk/src/lib/models/chat-adapter';
-import {FirestoreAdapter} from './adapters/firestore-adapter';
 
 @Component({
     selector: 'app-root',
@@ -23,7 +22,7 @@ export class AppComponent implements OnInit {
         status: ChatUserStatus.Online
     };
 
-    constructor(public demoAdapter: DemoAdapter, public  firestoreAdapter: FirestoreAdapter) {
+    constructor(public demoAdapter: DemoAdapter) {
         this.chatSettings = new NgTalkSettings({
             showAvatars: true,
             defaultAvatar: 'assets/unknown.png'

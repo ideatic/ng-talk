@@ -7,7 +7,6 @@ import {Subscription} from 'rxjs';
 import {NgTalkSettings} from '../ng-talk-settings';
 import {isSameDay, nameof} from '../../utils/utils';
 import {InViewportDirective} from '../../directives/in-viewport.directive';
-import Autolinker from 'autolinker';
 
 interface ExtendedChatMessage extends ChatMessage {
   isDaySeparator: boolean;
@@ -20,8 +19,7 @@ interface ExtendedChatMessage extends ChatMessage {
   templateUrl: './ng-talk-channel.component.html',
   styleUrls: [
     './ng-talk-channel.component.less',
-    './styles/loading-spinner.less',
-    './styles/writing-animation.less'
+    './styles/loading-spinner.less'
   ]
 })
 export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
@@ -36,14 +34,13 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   @Output() public userClicked = new EventEmitter<ChatUser>();
   @Output() public deleted = new EventEmitter<void>();
 
-  @ViewChild('chatBox') public chatBox: ElementRef<HTMLElement>;
-  @ViewChild('textInput') public textInput: ElementRef<HTMLElement>;
+  @ViewChild('chatBox') private _chatBox: ElementRef<HTMLElement>;
+  @ViewChild('textInput') private _textInput: ElementRef<HTMLElement>;
 
   private _visibleMessages = 20;
   public messages: ExtendedChatMessage[] = [];
 
   private _messagesSubscription: Subscription;
-  private _autoLinker: any;
 
   // UI
   public loading = false;
@@ -130,8 +127,8 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
 
   public scrollToBottom() {
     setTimeout(() => {  // Wait until new messages are drawn
-      if (this.chatBox) {
-        this.chatBox.nativeElement.scrollTop = this.chatBox.nativeElement.scrollHeight;
+      if (this._chatBox) {
+        this._chatBox.nativeElement.scrollTop = this._chatBox.nativeElement.scrollHeight;
 
         if (this.messages.length >= this._visibleMessages) { // Enable scroll watcher if there is more messages pending
           this.scrollWatcherEnabled = true;
@@ -141,39 +138,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   public onInputFocus() {
-    this.textInput.nativeElement.scrollIntoView();
-  }
-
-  public transformContent(message: ExtendedChatMessage): string {
-    let content = message.content;
-    if (this.settings.autoLinks) {
-      let linker;
-      if (this.settings.autoLinks instanceof Autolinker) {
-        linker = this.settings.autoLinks;
-      } else {
-        if (!this._autoLinker) {
-          this._autoLinker = new Autolinker({
-            urls: {
-              schemeMatches: true,
-              wwwMatches: true,
-              tldMatches: true
-            },
-            email: true,
-            phone: false,
-            mention: false,
-            hashtag: false,
-
-            stripPrefix: true,
-            stripTrailingSlash: true,
-            newWindow: true
-          });
-        }
-        linker = this._autoLinker;
-      }
-
-      content = linker.link(content);
-    }
-    return content;
+    this._textInput.nativeElement.scrollIntoView();
   }
 
   // Pagination & History

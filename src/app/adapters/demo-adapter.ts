@@ -125,24 +125,22 @@ export class DemoAdapter extends ChatAdapter {
     return this._channelMessages[room.id];
   }
 
-  public sendMessage(room: ChatChannel, message: ChatMessage) {
+  public sendMessage(room: ChatChannel, message: ChatMessage, replyTo?: ChatMessage): Promise<any> {
     this._sendMessage(room, message);
 
     setTimeout(() => this._sendMessage(room, {
       from: DemoAdapter.mockedUsers.find(u => u.id == room.id),
-      content: 'You have typed \'' + message.content + '\''
+      content: `You have typed '${message.content}'`,
+      replyTo: replyTo
     }), 2000);
 
     return Promise.resolve();
   }
 
   private _sendMessage(room: ChatChannel, message: ChatMessage) {
-    if (!message.date) {
-      message.date = new Date();
-    }
-    if (!message.type) {
-      message.type = ChatMessageType.Text;
-    }
+    message.id ??= Math.floor(Math.random() * 1000000);
+    message.date ??= new Date();
+    message.type ??= ChatMessageType.Text;
 
     const roomMessages = this._channelMessages[room.id].getValue();
     roomMessages.push(message);

@@ -43,7 +43,7 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnInit() {
     // Choose initial displayMode
-    this.onResized();
+    this._onResized();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -95,7 +95,7 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
   @HostListener('window:resize')
   @HostListener('window:deviceorientation')
   @HostListener('window:scroll')
-  public onResized() {
+  private _onResized() {
     this.displayMode = this._host.nativeElement.clientWidth < this.settings.mobileBreakpoint ? 'mobile' : 'desktop';
   }
 

@@ -13,34 +13,45 @@ import {NgTalkSendMessageComponent} from './components/ng-talk-channel/send/ng-t
 import {NgTalkChannelHeaderComponent} from './components/ng-talk-channel/header/ng-talk-channel-header.component';
 import {FnPipe} from './pipes/fn.pipe';
 import {NgTalkChannelPreviewComponent} from './components/ng-talk-channels/preview/ng-talk-channel-preview.component';
+import {MatMenuModule} from '@angular/material/menu';
+import {NgTalkChannelMessageRefComponent} from './components/ng-talk-channel/message/ref/ng-talk-channel-message-ref.component';
+import {NgTalkChannelMessageBodyComponent} from './components/ng-talk-channel/message/body/ng-talk-channel-message-body.component';
+import {AutoLinkerService} from './service/autolinker.service';
+import {NgTalkChannelMessageWritingComponent} from './components/ng-talk-channel/message/ng-talk-channel-message-writing.component';
 
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        DragDropModule
-    ],
-    providers: [
-        DatePipe,
-        BubbleChannelService
-    ],
-    declarations: [
-        NgTalkChannelComponent,
-        NgTalkChannelsComponent,
-        NgTalkChannelPreviewComponent,
-        NgTalkBubbleChannelComponent,
-        NgTalkChannelHeaderComponent,
-        NgTalkSendMessageComponent,
-        InViewportDirective,
-        FilterChannelsPipe,
-        FormatDatePipe,
-        FnPipe
-    ],
-    exports: [
-        NgTalkChannelComponent,
-        NgTalkChannelsComponent
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    DragDropModule,
+    MatMenuModule
+  ],
+  providers: [
+    DatePipe,
+    BubbleChannelService,
+    AutoLinkerService,
+    {provide: Window, useValue: window}
+  ],
+  declarations: [
+    NgTalkChannelComponent,
+    NgTalkChannelsComponent,
+    NgTalkChannelPreviewComponent,
+    NgTalkChannelMessageBodyComponent,
+    NgTalkChannelMessageRefComponent,
+    NgTalkChannelMessageWritingComponent,
+    NgTalkBubbleChannelComponent,
+    NgTalkChannelHeaderComponent,
+    NgTalkSendMessageComponent,
+    InViewportDirective,
+    FilterChannelsPipe,
+    FormatDatePipe,
+    FnPipe
+  ],
+  exports: [
+    NgTalkChannelComponent,
+    NgTalkChannelsComponent
+  ]
 })
 export class NgTalkModule {
 }

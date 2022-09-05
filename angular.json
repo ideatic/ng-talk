@@ -44,6 +44,7 @@
               "sourceMap": false,
               "namedChunks": false,
               "aot": true,
+              "inlineStyleLanguage": "less",
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -141,5 +142,8 @@
       }
     }
   },
-  "defaultProject": "ng-talk-demo"
+  "defaultProject": "ng-talk-demo",
+  "cli": {
+    "analytics": false
+  }
 }

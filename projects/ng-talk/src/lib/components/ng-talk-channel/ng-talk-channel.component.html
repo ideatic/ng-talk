@@ -30,22 +30,17 @@
           <img [src]="message.from.avatar || settings.defaultAvatar" (click)="userClicked.emit(message.from)"/>
         </div>
         <div class="speech-balloon">
+          <!-- Replied message -->
+          <ng-talk-channel-message-ref *ngIf="message.replyTo" [message]="message.replyTo"></ng-talk-channel-message-ref>
+
+          <!-- Author and body -->
           <div *ngIf="settings.showNames  && message.showAuthor" class="author" [ngStyle]="{color: message.from.color }"
                (click)="userClicked.emit(message.from)">{{ message.from.name }}</div>
-          <ng-container [ngSwitch]="message.type">
-            <!-- Text message -->
-            <ng-container *ngSwitchCase="MessageType.Text">
-              <div class="message-content" [innerHTML]="message | fn:transformContent:this"></div>
-              <div class="date">{{ message.date | date:settings.datePipe }}</div>
-            </ng-container>
 
-            <!-- Writing animation -->
-            <div *ngSwitchCase="MessageType.Writing" class="writing-bubbles">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </ng-container>
+          <ng-talk-channel-message-body [message]="message"></ng-talk-channel-message-body>
+
+          <div *ngIf="message.type != MessageType.Writing" class="date">{{ message.date | date:settings.datePipe }}</div>
+
         </div>
       </div>
     </ng-container>
