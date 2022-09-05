@@ -18,6 +18,7 @@ import {NgTalkChannelMessageRefComponent} from './components/ng-talk-channel/mes
 import {NgTalkChannelMessageBodyComponent} from './components/ng-talk-channel/message/body/ng-talk-channel-message-body.component';
 import {AutoLinkerService} from './service/autolinker.service';
 import {NgTalkChannelMessageWritingComponent} from './components/ng-talk-channel/message/ng-talk-channel-message-writing.component';
+import {HostCreatedDirective} from './directives/host-created.directive';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import {NgTalkChannelMessageWritingComponent} from './components/ng-talk-channel
     NgTalkChannelHeaderComponent,
     NgTalkSendMessageComponent,
     InViewportDirective,
+    HostCreatedDirective,
     FilterChannelsPipe,
     FormatDatePipe,
     FnPipe

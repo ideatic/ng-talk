@@ -12,6 +12,8 @@ interface ExtendedChatMessage extends ChatMessage {
   isDaySeparator: boolean;
   showAuthor: boolean;
   className: string;
+  highlighted: boolean;
+  wrapper: ElementRef<HTMLElement>;
 }
 
 @Component({
@@ -41,6 +43,8 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   public messages: ExtendedChatMessage[] = [];
 
   private _messagesSubscription: Subscription;
+
+  public replyingTo: ChatMessage;
 
   // UI
   public loading = false;
@@ -154,5 +158,15 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
     if (isVisible) {
       this.loadOldMessages();
     }
+  }
+
+  public replyTo(message: ExtendedChatMessage) {
+    this.replyingTo = message;
+  }
+
+  public goToMessage(message: ExtendedChatMessage) {
+    message.wrapper?.nativeElement.scrollIntoView();
+    message.highlighted = true;
+    setTimeout(() => message.highlighted = false, 1000);
   }
 }

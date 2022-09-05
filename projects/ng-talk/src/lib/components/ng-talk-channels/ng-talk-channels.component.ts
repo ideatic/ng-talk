@@ -76,6 +76,8 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
             } else {
               this.activeChannel = null;
             }
+          } else if (this.settings.selectFirstChannelOnInit && this.channels.length > 0) {
+            this.selectChannel(this.channels[0]);
           }
         });
     }

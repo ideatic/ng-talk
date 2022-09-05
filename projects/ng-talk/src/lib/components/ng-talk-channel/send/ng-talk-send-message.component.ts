@@ -4,21 +4,33 @@ import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
 import {Subscription} from 'rxjs';
 import {NgTalkChannelsComponent} from '../../ng-talk-channels/ng-talk-channels.component';
 import {ChatChannel} from '../../../models/chat-channel';
+import {growAnimation} from './grow-animation';
 
 
 @Component({
   template: `
     <p *ngIf="chat.channel?.blocked; else sendMessageForm" style="margin: 1em 0; text-align: center">{{ chat.settings.disabledMessage }}</p>
     <ng-template #sendMessageForm>
-        <form (ngSubmit)="sendMessage()">
-            <input #textInput class="input" [(ngModel)]="newMessage" name="newMessage" maxlength="1000" autocomplete="off"
-                   [placeholder]="chat.settings.writePlaceholder" (focus)="onInputFocus()"
-                   [disabled]="!chat.channel || chat.channel.disabled"/>
-            <i role="button" class="send-icon fas fa-paper-plane" (click)="sendMessage()"></i>
-        </form>
+      <!-- Reply to message -->
+      <div *ngIf="chat.replyingTo" style="display: flex; align-items: center" [@grow]>
+        <ng-talk-channel-message-ref [message]="chat.replyingTo"></ng-talk-channel-message-ref>
+        <span style="cursor: pointer; padding: 0 15px" role="button" (click)="chat.replyingTo = null">
+          <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24" class="">
+            <path d="m19.1 17.2-5.3-5.3 5.3-5.3-1.8-1.8-5.3 5.4-5.3-5.3-1.8 1.7 5.3 5.3-5.3 5.3L6.7 19l5.3-5.3 5.3 5.3 1.8-1.8z"></path>
+          </svg>
+          </span>
+      </div>
+
+      <form (ngSubmit)="sendMessage()">
+        <input #textInput class="input" [(ngModel)]="newMessage" name="newMessage" maxlength="1000" autocomplete="off"
+               [placeholder]="chat.settings.writePlaceholder" (focus)="onInputFocus()"
+               [disabled]="!chat.channel || chat.channel.disabled"/>
+        <i role="button" class="send-icon fas fa-paper-plane" (click)="sendMessage()"></i>
+      </form>
     </ng-template>
-    `,
-  styleUrls: ['ng-talk-send-message.component.less']
+  `,
+  styleUrls: ['ng-talk-send-message.component.less'],
+  animations: [growAnimation]
 })
 export class NgTalkSendMessageComponent implements OnDestroy {
 
@@ -35,16 +47,18 @@ export class NgTalkSendMessageComponent implements OnDestroy {
   }
 
   public sendMessage() {
-    if (this.chat.channel && !this.chat.channel.disabled && this.newMessage) {
+    if (this.chat.channel && !this.chat.channel.disabled && this.newMessage?.trim().length > 0) {
       const message: ChatMessage = {
         type: ChatMessageType.Text,
         from: this.chat.user,
-        content: this.newMessage
+        content: this.newMessage,
+        replyTo: this.chat.replyingTo
       };
       this.chat.adapter.sendMessage(this.chat.channel, message)
         .then(() => this.chat.messageSent.emit(message));
 
       this.newMessage = '';
+      this.chat.replyingTo = null;
     }
   }
 

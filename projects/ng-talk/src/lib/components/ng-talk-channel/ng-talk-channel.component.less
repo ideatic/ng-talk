@@ -80,6 +80,8 @@
   border-radius: 7.5px;
   padding: 6px 7px 8px 9px;
   color: #6a6c6f;
+  overflow: hidden;
+  position: relative;
 
   .author {
     font-weight: bold;
@@ -107,12 +109,55 @@
   }
 }
 
-.date {
+.overlay {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  animation: fadeInOut 1s ease-out;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.action-menu {
   float: right;
-  margin: -10px 0 -5px 4px;
-  color: rgba(0, 0, 0, 0.45);
+  display: block;
+  transform: translateX(125%);
+  transition: transform .03s ease-out, opacity .05s ease-out;
+  padding: 3px;
+  opacity: .3;
+  cursor: pointer;
+}
+
+.message:hover .action-menu, .action-menu.opened {
+  transform: translateX(0%);
+  opacity: 1;
+}
+
+ng-talk-channel-message-ref {
+  cursor: pointer;
+}
+
+.date {
+  color: #00000073;
   font-size: 11px;
   white-space: nowrap;
+  position: absolute;
+  right: 10px;
+  bottom: 0;
 }
 
 .load-more {

@@ -25,15 +25,26 @@
         <span>{{ message.date | formatDate : settings }}</span>
       </div>
 
-      <div class="message" [ngClass]="message.className">
+      <div class="message" [ngClass]="message.className" (hostCreated)="message.wrapper = $event">
         <div *ngIf="settings.showAvatars && message.showAuthor" class="avatar">
           <img [src]="message.from.avatar || settings.defaultAvatar" (click)="userClicked.emit(message.from)"/>
         </div>
         <div class="speech-balloon">
-          <!-- Replied message -->
-          <ng-talk-channel-message-ref *ngIf="message.replyTo" [message]="message.replyTo"></ng-talk-channel-message-ref>
+          <!-- Actions menu -->
+          <span *ngIf="message.type != MessageType.Writing && settings.allowReplies" class="action-menu"  role="button"
+                #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="toolsMenu" [class.opened]="menuTrigger.menuOpen">
+            <svg viewBox="0 0 18 18" width="18" height="18" class=""><path fill="currentColor" d="M3.3 4.6 9 10.3l5.7-5.7 1.6 1.6L9 13.4 1.7 6.2l1.6-1.6z"></path></svg>
+          </span>
+          <mat-menu #toolsMenu>
+            <ng-template matMenuContent>
+              <button mat-menu-item (click)="replyTo(message)">{{ settings.replyBtn }}</button>
+            </ng-template>
+          </mat-menu>
 
-          <!-- Author and body -->
+          <!-- Replied message -->
+          <ng-talk-channel-message-ref *ngIf="message.replyTo" [message]="message.replyTo" role="button" (click)="goToMessage(message.replyTo)"></ng-talk-channel-message-ref>
+
+          <!-- Author, body and date -->
           <div *ngIf="settings.showNames  && message.showAuthor" class="author" [ngStyle]="{color: message.from.color }"
                (click)="userClicked.emit(message.from)">{{ message.from.name }}</div>
 
@@ -41,6 +52,7 @@
 
           <div *ngIf="message.type != MessageType.Writing" class="date">{{ message.date | date:settings.datePipe }}</div>
 
+          <div *ngIf="message.highlighted" class="overlay"></div>
         </div>
       </div>
     </ng-container>
