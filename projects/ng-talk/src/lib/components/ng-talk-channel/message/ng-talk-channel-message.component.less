@@ -1,0 +1,118 @@
+
+:host{
+  display: block;
+  clear: both;
+  max-width: 75%;
+  text-align: left;
+  margin-bottom: 15px;
+
+  &.narrow {
+    margin-bottom: 3px;
+  }
+
+  &.received {
+    float: left;
+  }
+
+  &.sent {
+    float: right;
+  }
+}
+
+.avatar {
+  float: left;
+
+  img {
+    max-width: 32px;
+    max-height: 32px;
+    border-radius: 50%;
+  }
+
+  :host.sent & {
+    float: right;
+  }
+}
+
+.speech-balloon {
+  border-radius: 7.5px;
+  padding: 6px 7px 8px 9px;
+  color: #6a6c6f;
+  overflow: hidden;
+  position: relative;
+
+  .author {
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  :host.sent & {
+    background: #dcf8c6;
+    border-top-right-radius: 0;
+  }
+
+  :host.received & {
+    background: #f1f1f1;
+    border-top-left-radius: 0;
+  }
+
+  :host.sent.with-avatar & {
+    margin-right: 35px;
+  }
+
+  :host.received.with-avatar & {
+    margin-left: 35px;
+  }
+}
+
+.overlay {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  animation: fadeInOut 1s ease-out;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.action-menu {
+  float: right;
+  display: block;
+  transform: translateX(125%);
+  transition: transform .03s ease-out, opacity .05s ease-out;
+  padding: 3px;
+  opacity: .3;
+  cursor: pointer;
+}
+
+:host:hover .action-menu, .action-menu.opened {
+  transform: translateX(0%);
+  opacity: 1;
+}
+
+ng-talk-channel-message-ref {
+  cursor: pointer;
+}
+
+.date {
+  color: #00000073;
+  font-size: 11px;
+  white-space: nowrap;
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+}

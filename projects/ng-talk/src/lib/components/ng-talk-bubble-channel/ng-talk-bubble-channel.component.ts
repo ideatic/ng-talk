@@ -7,6 +7,7 @@ import {ChatUser} from '../../models/chat-user';
 import {BubbleChannelRef} from '../../service/bubble-channel.service';
 import {NgTalkChannelComponent} from '../ng-talk-channel/ng-talk-channel.component';
 import {fromEvent, Subscription} from 'rxjs';
+import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
 
 
 @Component({
@@ -64,8 +65,8 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
 
   private _documentClickSubscription: Subscription;
 
-  constructor(private _host: ElementRef<HTMLElement>) {
-
+  constructor(private _host: ElementRef<HTMLElement>,
+              private _overlayContainer: OverlayContainer) {
   }
 
   /* Dragging */
@@ -236,7 +237,9 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
       return;
     }
 
-    const insideClick = $event && (this._host?.nativeElement.contains($event.target));
+    const insideClick = $event && (this._host?.nativeElement.contains($event.target))
+      // Click en un menú
+      || this._overlayContainer.getContainerElement()?.contains($event.target);
 
     if (!insideClick) {
       this.close();

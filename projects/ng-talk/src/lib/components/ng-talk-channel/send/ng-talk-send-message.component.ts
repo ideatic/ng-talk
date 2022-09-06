@@ -34,7 +34,7 @@ import {growAnimation} from './grow-animation';
 })
 export class NgTalkSendMessageComponent implements OnDestroy {
 
-  @ViewChild('textInput', {static: true}) private _textInput: ElementRef<HTMLElement>;
+  @ViewChild('textInput', {static: false}) private _textInput: ElementRef<HTMLElement>;
   public newMessage: string;
 
   private _channelChangedSubscription: Subscription;
@@ -44,6 +44,8 @@ export class NgTalkSendMessageComponent implements OnDestroy {
     if (channelList) { // Detectar cambio de canal si estamos en un listado
       this._channelChangedSubscription = channelList.channelChanged.subscribe((c) => this._onChannelChanged(c));
     }
+
+    chat.focus = () => this.focus();
   }
 
   public sendMessage() {
@@ -63,9 +65,7 @@ export class NgTalkSendMessageComponent implements OnDestroy {
   }
 
   public focus() {
-    if (this._textInput) {
-      this._textInput.nativeElement.focus();
-    }
+    this._textInput?.nativeElement.focus();
   }
 
   public onInputFocus() {

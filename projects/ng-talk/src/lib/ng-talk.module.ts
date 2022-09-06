@@ -17,8 +17,8 @@ import {MatMenuModule} from '@angular/material/menu';
 import {NgTalkChannelMessageRefComponent} from './components/ng-talk-channel/message/ref/ng-talk-channel-message-ref.component';
 import {NgTalkChannelMessageBodyComponent} from './components/ng-talk-channel/message/body/ng-talk-channel-message-body.component';
 import {AutoLinkerService} from './service/autolinker.service';
-import {NgTalkChannelMessageWritingComponent} from './components/ng-talk-channel/message/ng-talk-channel-message-writing.component';
-import {HostCreatedDirective} from './directives/host-created.directive';
+import {NgTalkChannelMessageWritingComponent} from './components/ng-talk-channel/message/body/ng-talk-channel-message-writing.component';
+import {NgTalkChannelMessageComponent} from './components/ng-talk-channel/message/ng-talk-channel-message.component';
 
 
 @NgModule({
@@ -38,6 +38,7 @@ import {HostCreatedDirective} from './directives/host-created.directive';
     NgTalkChannelComponent,
     NgTalkChannelsComponent,
     NgTalkChannelPreviewComponent,
+    NgTalkChannelMessageComponent,
     NgTalkChannelMessageBodyComponent,
     NgTalkChannelMessageRefComponent,
     NgTalkChannelMessageWritingComponent,
@@ -45,7 +46,6 @@ import {HostCreatedDirective} from './directives/host-created.directive';
     NgTalkChannelHeaderComponent,
     NgTalkSendMessageComponent,
     InViewportDirective,
-    HostCreatedDirective,
     FilterChannelsPipe,
     FormatDatePipe,
     FnPipe
