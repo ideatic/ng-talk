@@ -2,6 +2,7 @@ import {ChatUser} from './chat-user';
 
 export enum ChatMessageType {
   Text = 'text',
+  Image = 'image',
   Writing = 'writing'
 }
 

@@ -19,12 +19,16 @@ import {NgTalkChannelMessageBodyComponent} from './components/ng-talk-channel/me
 import {AutoLinkerService} from './service/autolinker.service';
 import {NgTalkChannelMessageWritingComponent} from './components/ng-talk-channel/message/body/ng-talk-channel-message-writing.component';
 import {NgTalkChannelMessageComponent} from './components/ng-talk-channel/message/ng-talk-channel-message.component';
+import {NgTalkSendEmojiComponent} from './components/ng-talk-channel/send/emoji/ng-talk-send-emoji.component';
+import {NgTalkSendGifComponent} from './components/ng-talk-channel/send/gif/ng-talk-send-gif.component';
+import {HttpClientModule} from '@angular/common/http';
 
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    HttpClientModule,
     DragDropModule,
     MatMenuModule
   ],
@@ -45,6 +49,8 @@ import {NgTalkChannelMessageComponent} from './components/ng-talk-channel/messag
     NgTalkBubbleChannelComponent,
     NgTalkChannelHeaderComponent,
     NgTalkSendMessageComponent,
+    NgTalkSendEmojiComponent,
+    NgTalkSendGifComponent,
     InViewportDirective,
     FilterChannelsPipe,
     FormatDatePipe,
