@@ -164,7 +164,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   public goToMessage(message: ChatMessage) {
-    const wrapper = this._messageComponents?.find(m => m.message === message);
+    const wrapper = this._messageComponents?.find(m => m.message === message || (m.message.id && message.id && m.message.id === message.id));
     wrapper?.highlight();
   }
 
