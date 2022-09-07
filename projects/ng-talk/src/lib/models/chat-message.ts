@@ -6,8 +6,7 @@ export enum ChatMessageType {
   Writing = 'writing'
 }
 
-
-export interface ChatMessage {
+export interface ChatMessage<T = any> {
   id?: number | string;
   type?: ChatMessageType;
   from: ChatUser;
@@ -15,4 +14,5 @@ export interface ChatMessage {
   date?: Date;
   replyTo?: ChatMessage;
   // dateSeen?: number;
+  data?: T;
 }
