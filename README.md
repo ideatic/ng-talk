@@ -4,7 +4,7 @@ Fully featured chat module for Angular applications.
 
 Whastapp style theme, draggable facebook-like chat heads.
 
-[Online demo](https://ideatic.github.io/ng-talk/)
+[Online demo](https://ideatic.github.io/ng-talk/demo/)
 
 ![Screenshot](screenshot.png?raw=true)
 
