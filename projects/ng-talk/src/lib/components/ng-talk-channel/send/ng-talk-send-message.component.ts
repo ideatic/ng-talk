@@ -127,7 +127,7 @@ export class NgTalkSendMessageComponent implements OnDestroy {
 
   public sendPhoto(url: string) {
     this._sendMessage({
-      type: ChatMessageType.Image,
+      type: ChatMessageType.Gif,
       content: url
     });
   }

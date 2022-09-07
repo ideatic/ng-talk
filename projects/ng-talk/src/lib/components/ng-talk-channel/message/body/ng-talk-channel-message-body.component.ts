@@ -12,6 +12,7 @@ import {AutoLinkerService} from '../../../../service/autolinker.service';
       <div class="text-message" *ngSwitchCase="MessageType.Text" [innerHTML]="message | fn:transformContent:this"></div>
 
       <img *ngSwitchCase="MessageType.Image" [src]="message.content" loading="lazy" style="margin-bottom: 8px" />
+      <img *ngSwitchCase="MessageType.Gif" [src]="message.content" loading="lazy" style="margin-bottom: 8px" />
 
       <!-- Writing animation -->
       <ng-talk-channel-message-writing *ngSwitchCase="MessageType.Writing"></ng-talk-channel-message-writing>
