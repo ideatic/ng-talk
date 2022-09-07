@@ -35,7 +35,6 @@ import {KeyValue} from '@angular/common';
       max-height: 200px;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: 0 4px;
       width: 100%;
       grid-template-columns: repeat(auto-fit, minmax(25px, 1fr));
     }

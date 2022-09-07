@@ -30,6 +30,7 @@ export class NgTalkSettings {
   public defaultAvatar;
   public pageSize = 20;
   public autoLinks: boolean | Autolinker = true;
+  public giphyApiKey = '...';
 
   public allowLoadOldMessages = true;
   public headerComponent: Type<any> = NgTalkChannelHeaderComponent;
