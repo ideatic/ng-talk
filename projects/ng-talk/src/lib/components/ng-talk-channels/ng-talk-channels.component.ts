@@ -36,7 +36,7 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
   public filterQuery: string;
 
   // Import types
-  public readonly MessagesLoading = MessageLoadingMethod;
+  protected readonly MessagesLoading = MessageLoadingMethod;
 
   constructor(private _host: ElementRef<HTMLElement>) {
   }

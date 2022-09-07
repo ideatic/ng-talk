@@ -61,10 +61,10 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   // UI
   public loading = false;
   public scrollWatcherEnabled = false;
-  public readonly viewportDetectionAvailable = InViewportDirective.intersectionObserverFeatureDetection();
+  protected readonly viewportDetectionAvailable = InViewportDirective.intersectionObserverFeatureDetection();
 
   // Import types and enums
-  public readonly MessageType = ChatMessageType;
+  protected readonly MessageType = ChatMessageType;
 
   public ngOnInit() {
     if (!this.user) {
