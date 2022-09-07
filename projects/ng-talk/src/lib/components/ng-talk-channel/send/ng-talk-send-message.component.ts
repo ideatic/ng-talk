@@ -13,6 +13,9 @@ import {growAnimation} from './grow-animation';
     <p *ngIf="chat.channel?.blocked; else sendMessageForm" style="margin: 1em 0; text-align: center">{{ chat.settings.disabledMessage }}</p>
 
     <ng-template #sendMessageForm>
+      <!-- Selector de emojis -->
+      <ng-talk-send-emoji *ngIf="showEmojiSelector" (emojiSelected)="newMessage = newMessage + $event" [@grow]></ng-talk-send-emoji>
+
       <!-- Reply to message -->
       <div *ngIf="chat.replyingTo" style="display: flex; align-items: center" [@grow]>
         <ng-talk-channel-message-ref [message]="chat.replyingTo"></ng-talk-channel-message-ref>
@@ -24,10 +27,16 @@ import {growAnimation} from './grow-animation';
       </div>
 
       <form (ngSubmit)="sendMessage()">
+        <span role="button" (click)="showEmojiSelector = !showEmojiSelector" class="emoji-btn" [style.color]="showEmojiSelector ? '#008069' : null">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor"
+                  d="M9.153 11.603c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962zm-3.204 1.362c-.026-.307-.131 5.218 6.063 5.551 6.066-.25 6.066-5.551 6.066-5.551-6.078 1.416-12.129 0-12.129 0zm11.363 1.108s-.669 1.959-5.051 1.959c-3.505 0-5.388-1.164-5.607-1.959 0 0 5.912 1.055 10.658 0zM11.804 1.011C5.609 1.011.978 6.033.978 12.228s4.826 10.761 11.021 10.761S23.02 18.423 23.02 12.228c.001-6.195-5.021-11.217-11.216-11.217zM12 21.354c-5.273 0-9.381-3.886-9.381-9.159s3.942-9.548 9.215-9.548 9.548 4.275 9.548 9.548c-.001 5.272-4.109 9.159-9.382 9.159zm3.108-9.751c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962z"></path>
+          </svg>
+        </span>
         <input #textInput class="input" [(ngModel)]="newMessage" name="newMessage" maxlength="1000" autocomplete="off"
                [placeholder]="chat.settings.writePlaceholder" (focus)="onInputFocus()"
                [disabled]="!chat.channel || chat.channel.disabled"/>
-        <span role="button" class="send-icon" [class.disabled]="!newMessage || !chat.channel || chat.channel.disabled" (click)="sendMessage()"
+        <span role="button" class="send-btn" [class.disabled]="!newMessage || !chat.channel || chat.channel.disabled" (click)="sendMessage()"
               [title]="chat.settings.sendBtnTitle">
           <svg viewBox="0 0 24 24" width="24" height="24">
             <path fill="currentColor" d="M1.101 21.757 23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"></path>
@@ -42,7 +51,9 @@ import {growAnimation} from './grow-animation';
 export class NgTalkSendMessageComponent implements OnDestroy {
 
   @ViewChild('textInput', {static: false}) private _textInput: ElementRef<HTMLElement>;
-  protected newMessage: string;
+
+  protected newMessage = '';
+  protected showEmojiSelector = false;
 
   private _channelChangedSubscription: Subscription;
 
@@ -67,6 +78,7 @@ export class NgTalkSendMessageComponent implements OnDestroy {
         .then(() => this.chat.messageSent.emit(message));
 
       this.newMessage = '';
+      this.showEmojiSelector = false;
       this.chat.replyingTo = null;
     }
   }

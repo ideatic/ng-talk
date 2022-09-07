@@ -43,6 +43,7 @@ export class NgTalkSettings {
   public disabledMessage = 'Blocked conversation';
   public sendBtnTitle = 'Send';
   public replyBtn = 'Reply';
+  public search = 'Search';
 
   constructor(params?: Partial<NgTalkSettings>) {
     if (params) {
