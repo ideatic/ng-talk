@@ -41,6 +41,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "deployUrl": "/ng-talk/demo/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,

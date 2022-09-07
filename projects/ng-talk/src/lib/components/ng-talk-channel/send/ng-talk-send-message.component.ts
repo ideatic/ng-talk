@@ -80,8 +80,6 @@ export class NgTalkSendMessageComponent implements OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this._channelChangedSubscription) {
-      this._channelChangedSubscription.unsubscribe();
-    }
+    this._channelChangedSubscription?.unsubscribe();
   }
 }
