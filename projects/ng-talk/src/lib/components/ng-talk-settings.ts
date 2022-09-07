@@ -42,7 +42,7 @@ export class NgTalkSettings {
   public todayText = 'Today';
   public yesterdayText = 'Yesterday';
   public disabledMessage = 'Blocked conversation';
-  public replyBtn = 'Responder';
+  public replyBtn = 'Reply';
 
   constructor(params?: Partial<NgTalkSettings>) {
     if (params) {

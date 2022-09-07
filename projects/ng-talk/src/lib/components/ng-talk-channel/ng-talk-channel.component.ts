@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatChannel} from '../../models/chat-channel';
-import {ChatMessage} from '../../models/chat-message';
+import {ChatMessage, ChatMessageType} from '../../models/chat-message';
 import {ChatUser} from '../../models/chat-user';
 import {Subscription} from 'rxjs';
 import {NgTalkSettings} from '../ng-talk-settings';
@@ -23,6 +23,9 @@ import {isSameDay, nameof} from '../../utils/utils';
 import {InViewportDirective} from '../../directives/in-viewport.directive';
 import {NgTalkChannelMessageComponent} from './message/ng-talk-channel-message.component';
 import {NgTalkSendMessageComponent} from './send/ng-talk-send-message.component';
+import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
+
+declare const ngDevMode: boolean;
 
 @Component({
   selector: 'ng-talk-channel',
@@ -60,6 +63,8 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   public scrollWatcherEnabled = false;
   public readonly viewportDetectionAvailable = InViewportDirective.intersectionObserverFeatureDetection();
 
+  // Import types and enums
+  public readonly MessageType = ChatMessageType;
 
   public ngOnInit() {
     if (!this.user) {
@@ -161,5 +166,23 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   public goToMessage(message: ChatMessage) {
     const wrapper = this._messageComponents?.find(m => m.message === message);
     wrapper?.highlight();
+  }
+
+  public onDrag(event: CdkDragMove) {
+    if (event.distance.x < 0) { // Solo permitir arrastrar hacia la derecha
+      event.source.reset();
+    }
+  }
+
+  protected onDragEnded(event: CdkDragEnd, message: ChatMessage) {
+    event.source.reset();
+
+    if (ngDevMode) {
+      console.log('Drag ended', event.distance);
+    }
+
+    if (event.distance.x > 50) {
+      this.replyTo(message);
+    }
   }
 }

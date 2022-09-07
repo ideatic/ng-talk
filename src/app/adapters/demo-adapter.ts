@@ -100,10 +100,15 @@ export class DemoAdapter extends ChatAdapter {
       this._channelMessages[room.id] = new BehaviorSubject<ChatMessage[]>([]);
 
       setTimeout(() => this._sendMessage(room, {
+        from: DemoAdapter.mockedUsers.find(u => u.id == room.id),
+        content: 'Hi there, just type any message bellow to test this Angular module.'
+      }), 1000);
+
+      setTimeout(() => this._sendMessage(room, {
         type: ChatMessageType.Writing,
         from: DemoAdapter.mockedUsers.find(u => u.id == room.id),
         content: ''
-      }), 100);
+      }), 1000);
 
       setTimeout(() => {
         // Remove writing message
@@ -115,7 +120,7 @@ export class DemoAdapter extends ChatAdapter {
 
         this._sendMessage(room, {
           from: DemoAdapter.mockedUsers.find(u => u.id == room.id),
-          content: 'Hi there, just type any message bellow to test this Angular module.'
+          content: 'How are you?'
         });
       }, 5000);
     } else { // Emit stored messages

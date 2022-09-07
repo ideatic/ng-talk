@@ -58,7 +58,7 @@ export class NgTalkChannelMessageComponent implements OnChanges {
     this._className = this.chat.settings.messageClass
       + (this.message.from.id == this.chat.user.id ? ' sent' : 'received')
       + (this.chat.settings.showAvatars ? ' with-avatar' : '')
-      + (!this.showAuthor && this.prevMessage ? ' narrow' : '');
+      + (this.showAuthor && this.prevMessage ? ' wide' : '');
   }
 
   public highlight() {
