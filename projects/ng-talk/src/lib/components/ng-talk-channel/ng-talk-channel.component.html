@@ -20,34 +20,15 @@
     </ng-container>
 
     <!-- Messages -->
-    <ng-container *ngFor="let message of messages; trackBy: trackMessage">
-      <div *ngIf="message.isDaySeparator" class="day-separator">
+    <ng-container *ngFor="let message of messages; trackBy: trackMessage; index as index">
+      <!-- Date separator -->
+      <div *ngIf="message | fn:isSeparatorVisible:this:messages[index - 1]" class="day-separator">
         <span>{{ message.date | formatDate : settings }}</span>
       </div>
 
-      <div class="message" [ngClass]="message.className">
-        <div *ngIf="settings.showAvatars && message.showAuthor" class="avatar">
-          <img [src]="message.from.avatar || settings.defaultAvatar" (click)="userClicked.emit(message.from)"/>
-        </div>
-        <div class="speech-balloon">
-          <div *ngIf="settings.showNames  && message.showAuthor" class="author" [ngStyle]="{color: message.from.color }"
-               (click)="userClicked.emit(message.from)">{{ message.from.name }}</div>
-          <ng-container [ngSwitch]="message.type">
-            <!-- Text message -->
-            <ng-container *ngSwitchCase="MessageType.Text">
-              <div class="message-content" [innerHTML]="message | fn:transformContent:this"></div>
-              <div class="date">{{ message.date | date:settings.datePipe }}</div>
-            </ng-container>
-
-            <!-- Writing animation -->
-            <div *ngSwitchCase="MessageType.Writing" class="writing-bubbles">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </ng-container>
-        </div>
-      </div>
+      <ng-talk-channel-message [message]="message" [prevMessage]="messages[index - 1]"
+                               cdkDrag cdkDragLockAxis="x" [cdkDragDisabled]="message.type == MessageType.Writing"
+                             (cdkDragMoved)="onDrag($event)"  (cdkDragEnded)="onDragEnded($event, message)"></ng-talk-channel-message>
     </ng-container>
   </div>
 

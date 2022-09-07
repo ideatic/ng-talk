@@ -1,25 +1,29 @@
-<h1>NgTalk</h1>
-<p>Fully featured chat module for Angular applications.</p>
-<h3>Settings</h3>
-<div>
-  <label>
-    Adapter
-    <select [(ngModel)]="adapter" (ngModelChange)="adapterChanged()">
-      <option [ngValue]="demoAdapter">Demo</option>
-      <option [ngValue]="firestoreAdapter">Google firestore</option>
-    </select>
-  </label>
-</div>
-<div>
-  <label>
-    Show avatars
-    <input type="checkbox" [(ngModel)]="chatSettings.showAvatars"/>
-  </label>
-</div>
-<div>
-  <label>
-    Show names
-    <input type="checkbox" [(ngModel)]="chatSettings.showNames"/>
+<div style="display: flex;align-items: center;justify-content: space-around;">
+  <div>
+    <h1>NgTalk</h1>
+    <p>Fully featured chat module for Angular applications.</p>
+  </div>
+  <div>
+    <h3>Settings</h3>
+    <div>
+      <label>
+        Adapter
+        <select [(ngModel)]="adapter" (ngModelChange)="adapterChanged()">
+          <option [ngValue]="demoAdapter">Demo</option>
+          <option>Google firestore (deprecated adapter!)</option>
+        </select>
+      </label>
+    </div>
+    <div>
+      <label>
+        Show avatars
+        <input type="checkbox" [(ngModel)]="chatSettings.showAvatars"/>
+      </label>
+    </div>
+    <div>
+      <label>
+        Show names
+        <input type="checkbox" [(ngModel)]="chatSettings.showNames"/>
   </label>
 </div>
 <div>
@@ -34,6 +38,7 @@
     </select>
   </label>
 </div>
-
+  </div>
+</div>
 <h3>Channels</h3>
 <ng-talk-channels [user]="user" [adapter]="adapter" [settings]="chatSettings"></ng-talk-channels>

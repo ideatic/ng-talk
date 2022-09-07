@@ -100,10 +100,15 @@ export class DemoAdapter extends ChatAdapter {
       this._channelMessages[room.id] = new BehaviorSubject<ChatMessage[]>([]);
 
       setTimeout(() => this._sendMessage(room, {
+        from: DemoAdapter.mockedUsers.find(u => u.id == room.id),
+        content: 'Hi there, just type any message bellow to test this Angular module.'
+      }), 1000);
+
+      setTimeout(() => this._sendMessage(room, {
         type: ChatMessageType.Writing,
         from: DemoAdapter.mockedUsers.find(u => u.id == room.id),
         content: ''
-      }), 100);
+      }), 1000);
 
       setTimeout(() => {
         // Remove writing message
@@ -115,7 +120,7 @@ export class DemoAdapter extends ChatAdapter {
 
         this._sendMessage(room, {
           from: DemoAdapter.mockedUsers.find(u => u.id == room.id),
-          content: 'Hi there, just type any message bellow to test this Angular module.'
+          content: 'How are you?'
         });
       }, 5000);
     } else { // Emit stored messages
@@ -125,24 +130,22 @@ export class DemoAdapter extends ChatAdapter {
     return this._channelMessages[room.id];
   }
 
-  public sendMessage(room: ChatChannel, message: ChatMessage) {
+  public sendMessage(room: ChatChannel, message: ChatMessage, replyTo?: ChatMessage): Promise<any> {
     this._sendMessage(room, message);
 
     setTimeout(() => this._sendMessage(room, {
       from: DemoAdapter.mockedUsers.find(u => u.id == room.id),
-      content: 'You have typed \'' + message.content + '\''
+      content: `You have typed '${message.content}'`,
+      replyTo: replyTo
     }), 2000);
 
     return Promise.resolve();
   }
 
   private _sendMessage(room: ChatChannel, message: ChatMessage) {
-    if (!message.date) {
-      message.date = new Date();
-    }
-    if (!message.type) {
-      message.type = ChatMessageType.Text;
-    }
+    message.id ??= Math.floor(Math.random() * 1000000);
+    message.date ??= new Date();
+    message.type ??= ChatMessageType.Text;
 
     const roomMessages = this._channelMessages[room.id].getValue();
     roomMessages.push(message);

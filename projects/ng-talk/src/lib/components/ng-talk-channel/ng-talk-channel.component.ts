@@ -1,4 +1,18 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  QueryList,
+  SimpleChanges,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatChannel} from '../../models/chat-channel';
 import {ChatMessage, ChatMessageType} from '../../models/chat-message';
@@ -7,21 +21,18 @@ import {Subscription} from 'rxjs';
 import {NgTalkSettings} from '../ng-talk-settings';
 import {isSameDay, nameof} from '../../utils/utils';
 import {InViewportDirective} from '../../directives/in-viewport.directive';
-import Autolinker from 'autolinker';
+import {NgTalkChannelMessageComponent} from './message/ng-talk-channel-message.component';
+import {NgTalkSendMessageComponent} from './send/ng-talk-send-message.component';
+import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 
-interface ExtendedChatMessage extends ChatMessage {
-  isDaySeparator: boolean;
-  showAuthor: boolean;
-  className: string;
-}
+declare const ngDevMode: boolean;
 
 @Component({
   selector: 'ng-talk-channel',
   templateUrl: './ng-talk-channel.component.html',
   styleUrls: [
     './ng-talk-channel.component.less',
-    './styles/loading-spinner.less',
-    './styles/writing-animation.less'
+    './styles/loading-spinner.less'
   ]
 })
 export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
@@ -36,14 +47,16 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   @Output() public userClicked = new EventEmitter<ChatUser>();
   @Output() public deleted = new EventEmitter<void>();
 
-  @ViewChild('chatBox') public chatBox: ElementRef<HTMLElement>;
-  @ViewChild('textInput') public textInput: ElementRef<HTMLElement>;
+  @ViewChild('chatBox') private _chatBox: ElementRef<HTMLElement>;
+  @ViewChild(NgTalkSendMessageComponent) private _sendMessageComponent: NgTalkSendMessageComponent;
+  @ViewChildren(NgTalkChannelMessageComponent) private _messageComponents: QueryList<NgTalkChannelMessageComponent>;
 
   private _visibleMessages = 20;
-  public messages: ExtendedChatMessage[] = [];
+  public messages: ChatMessage[] = [];
 
   private _messagesSubscription: Subscription;
-  private _autoLinker: any;
+
+  public replyingTo: ChatMessage;
 
   // UI
   public loading = false;
@@ -91,27 +104,9 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
     this.loading = true;
 
     this._messagesSubscription = this.adapter.getMessages(this.channel, 0, this._visibleMessages)
-      .subscribe((messages: ExtendedChatMessage[]) => {
+      .subscribe((messages: ChatMessage[]) => {
         this.messages = messages;
         this.loading = false;
-
-        // Preprocess messages
-        let prevMessage: ExtendedChatMessage;
-        for (const message of messages) {
-          message.className = this.settings.messageClass + ' ' + (message.from.id == this.user.id ? 'sent' : 'received') + ' ' + (this.settings.showAvatars ? 'with-avatar' : '');
-
-          if (!prevMessage || !isSameDay(prevMessage.date, message.date)) {
-            message.isDaySeparator = true;
-          }
-
-          message.showAuthor = !prevMessage || prevMessage.from.id != message.from.id || message.isDaySeparator;
-
-          if (!message.showAuthor && prevMessage) { //
-            prevMessage.className += ' narrow';
-          }
-
-          prevMessage = message;
-        }
 
         if (scrollToBottom && !this.disableRendering) {
           this.scrollToBottom();
@@ -124,14 +119,18 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
       });
   }
 
-  public trackMessage(i, message: ExtendedChatMessage) {
+  protected isSeparatorVisible(message: ChatMessage, prevMessage: ChatMessage | null): boolean {
+    return !prevMessage || !isSameDay(prevMessage.date, message.date);
+  }
+
+  public trackMessage(i, message: ChatMessage) {
     return message.date.toString() + message.content;
   }
 
   public scrollToBottom() {
     setTimeout(() => {  // Wait until new messages are drawn
-      if (this.chatBox) {
-        this.chatBox.nativeElement.scrollTop = this.chatBox.nativeElement.scrollHeight;
+      if (this._chatBox) {
+        this._chatBox.nativeElement.scrollTop = this._chatBox.nativeElement.scrollHeight;
 
         if (this.messages.length >= this._visibleMessages) { // Enable scroll watcher if there is more messages pending
           this.scrollWatcherEnabled = true;
@@ -140,40 +139,8 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
     }, 10);
   }
 
-  public onInputFocus() {
-    this.textInput.nativeElement.scrollIntoView();
-  }
-
-  public transformContent(message: ExtendedChatMessage): string {
-    let content = message.content;
-    if (this.settings.autoLinks) {
-      let linker;
-      if (this.settings.autoLinks instanceof Autolinker) {
-        linker = this.settings.autoLinks;
-      } else {
-        if (!this._autoLinker) {
-          this._autoLinker = new Autolinker({
-            urls: {
-              schemeMatches: true,
-              wwwMatches: true,
-              tldMatches: true
-            },
-            email: true,
-            phone: false,
-            mention: false,
-            hashtag: false,
-
-            stripPrefix: true,
-            stripTrailingSlash: true,
-            newWindow: true
-          });
-        }
-        linker = this._autoLinker;
-      }
-
-      content = linker.link(content);
-    }
-    return content;
+  public focus() {
+    this._sendMessageComponent?.focus();
   }
 
   // Pagination & History
@@ -188,6 +155,34 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   public watcherInViewportChanged(isVisible: boolean) {
     if (isVisible) {
       this.loadOldMessages();
+    }
+  }
+
+  public replyTo(message: ChatMessage) {
+    this.replyingTo = message;
+    this.focus();
+  }
+
+  public goToMessage(message: ChatMessage) {
+    const wrapper = this._messageComponents?.find(m => m.message === message);
+    wrapper?.highlight();
+  }
+
+  public onDrag(event: CdkDragMove) {
+    if (event.distance.x < 0) { // Solo permitir arrastrar hacia la derecha
+      event.source.reset();
+    }
+  }
+
+  protected onDragEnded(event: CdkDragEnd, message: ChatMessage) {
+    event.source.reset();
+
+    if (ngDevMode) {
+      console.log('Drag ended', event.distance);
+    }
+
+    if (event.distance.x > 50) {
+      this.replyTo(message);
     }
   }
 }

@@ -1,13 +1,4 @@
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {Injectable} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {ChatAdapter} from '../../../projects/ng-talk/src/lib/models/chat-adapter';
-import {ChatUser} from '../../../projects/ng-talk/src/lib/models/chat-user';
-import {ChatMessage} from '../../../projects/ng-talk/src/lib/models/chat-message';
-import {DemoAdapter} from './demo-adapter';
-import {ChatChannel, ChatChannelType} from '../../../projects/ng-talk/src/lib/models/chat-channel';
-
+/*
 interface FirestoreRoom {
   createdAt?: number;
   messages: FirestoreRoomMessage[];
@@ -26,13 +17,13 @@ const nameof = <T>(name: keyof T) => name;
   providedIn: 'root'
 })
 export class FirestoreAdapter extends ChatAdapter {
-  constructor(private _firestore: AngularFirestore) {
+  constructor(private _firestore: Firestore) {
     super();
   }
 
   public getChannels(user: ChatUser): Observable<ChatChannel[]> {
     return this._firestore
-      .collection<FirestoreRoom>('rooms'/*, ref => ref.where('uid', '==', user.id)*/)
+      .collection<FirestoreRoom>('rooms'/*, ref => ref.where('uid', '==', user.id)* /)
       .snapshotChanges()
       .pipe(
         map(rooms => rooms.map(room => {
@@ -101,3 +92,4 @@ export class FirestoreAdapter extends ChatAdapter {
     return Promise.resolve(false);
   }
 }
+*/

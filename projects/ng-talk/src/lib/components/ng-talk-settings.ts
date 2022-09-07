@@ -13,6 +13,7 @@ export class NgTalkSettings {
   /* Channel list */
   public showFilter = true;
   public filterPlaceholder = 'Search...';
+  public selectFirstChannelOnInit = false;
   public mobileBreakpoint = 700;
   public searchIconClass = '';
   public showChannelsIcons = true;
@@ -23,6 +24,7 @@ export class NgTalkSettings {
   /* Single channel */
   public showAvatars = true;
   public showNames = true;
+  public allowReplies = true;
   public datePipe = 'shortTime';
   public messageClass = '';
   public defaultAvatar;
@@ -40,6 +42,7 @@ export class NgTalkSettings {
   public todayText = 'Today';
   public yesterdayText = 'Yesterday';
   public disabledMessage = 'Blocked conversation';
+  public replyBtn = 'Reply';
 
   constructor(params?: Partial<NgTalkSettings>) {
     if (params) {
