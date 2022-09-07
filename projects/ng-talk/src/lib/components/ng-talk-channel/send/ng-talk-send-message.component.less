@@ -22,10 +22,20 @@ form {
     max-width: 100%;
     width: 100%;
   }
+}
 
-  .send-icon {
-    cursor: pointer;
-    padding: 0 10px;
-    font-size: 20px;
+.send-icon {
+  cursor: pointer;
+  padding: 0 10px;
+  padding-inline-end: 0;
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  transition: opacity .2s;
+
+  &.disabled {
+    cursor: default;
+    pointer-events: none;
+    opacity: .5;
   }
 }

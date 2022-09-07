@@ -8,24 +8,31 @@ import {growAnimation} from './grow-animation';
 
 
 @Component({
+  selector: 'ng-talk-send-message',
   template: `
     <p *ngIf="chat.channel?.blocked; else sendMessageForm" style="margin: 1em 0; text-align: center">{{ chat.settings.disabledMessage }}</p>
+
     <ng-template #sendMessageForm>
       <!-- Reply to message -->
       <div *ngIf="chat.replyingTo" style="display: flex; align-items: center" [@grow]>
         <ng-talk-channel-message-ref [message]="chat.replyingTo"></ng-talk-channel-message-ref>
         <span style="cursor: pointer; padding: 0 15px" role="button" (click)="chat.replyingTo = null">
-          <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24" class="">
+          <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24">
             <path d="m19.1 17.2-5.3-5.3 5.3-5.3-1.8-1.8-5.3 5.4-5.3-5.3-1.8 1.7 5.3 5.3-5.3 5.3L6.7 19l5.3-5.3 5.3 5.3 1.8-1.8z"></path>
           </svg>
-          </span>
+        </span>
       </div>
 
       <form (ngSubmit)="sendMessage()">
         <input #textInput class="input" [(ngModel)]="newMessage" name="newMessage" maxlength="1000" autocomplete="off"
                [placeholder]="chat.settings.writePlaceholder" (focus)="onInputFocus()"
                [disabled]="!chat.channel || chat.channel.disabled"/>
-        <i role="button" class="send-icon fas fa-paper-plane" (click)="sendMessage()"></i>
+        <span role="button" class="send-icon" [class.disabled]="!newMessage || !chat.channel || chat.channel.disabled" (click)="sendMessage()"
+              [title]="chat.settings.sendBtnTitle">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M1.101 21.757 23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"></path>
+          </svg>
+        </span>
       </form>
     </ng-template>
   `,
@@ -35,7 +42,7 @@ import {growAnimation} from './grow-animation';
 export class NgTalkSendMessageComponent implements OnDestroy {
 
   @ViewChild('textInput', {static: false}) private _textInput: ElementRef<HTMLElement>;
-  public newMessage: string;
+  protected newMessage: string;
 
   private _channelChangedSubscription: Subscription;
 
@@ -80,8 +87,6 @@ export class NgTalkSendMessageComponent implements OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this._channelChangedSubscription) {
-      this._channelChangedSubscription.unsubscribe();
-    }
+    this._channelChangedSubscription?.unsubscribe();
   }
 }

@@ -33,7 +33,6 @@ export class NgTalkSettings {
 
   public allowLoadOldMessages = true;
   public headerComponent: Type<any> = NgTalkChannelHeaderComponent;
-  public sendMessageComponent: Type<any> = NgTalkSendMessageComponent;
 
   /* i18n */
 
@@ -42,6 +41,7 @@ export class NgTalkSettings {
   public todayText = 'Today';
   public yesterdayText = 'Yesterday';
   public disabledMessage = 'Blocked conversation';
+  public sendBtnTitle = 'Send';
   public replyBtn = 'Reply';
 
   constructor(params?: Partial<NgTalkSettings>) {
