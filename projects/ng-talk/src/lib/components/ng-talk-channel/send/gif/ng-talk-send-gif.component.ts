@@ -76,6 +76,8 @@ export class NgTalkSendGifComponent implements OnInit {
   protected getGifURL(gif: any, fullSize = true) {
     if (!fullSize && gif.images?.fixed_height_small?.url) {
       return gif.images.fixed_height_small.url;
+    } else if (fullSize && gif.images?.downsized?.url) {
+      return gif.images.downsized.url;
     }
     return `https://i.giphy.com/media/${gif.id}/200h.gif`;
   }
