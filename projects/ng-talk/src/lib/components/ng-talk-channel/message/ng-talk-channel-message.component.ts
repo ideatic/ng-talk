@@ -1,7 +1,10 @@
-import {Component, ElementRef, HostBinding, Input, OnChanges} from '@angular/core';
+import {Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, ViewChild} from '@angular/core';
 import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
 import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {isSameDay} from '../../../utils/utils';
+import {fromEvent} from 'rxjs';
+import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {MatMenuTrigger} from '@angular/material/menu';
 
 @Component({
   selector: 'ng-talk-channel-message',
@@ -37,16 +40,21 @@ import {isSameDay} from '../../../utils/utils';
   `,
   styleUrls: ['ng-talk-channel-message.component.less']
 })
-export class NgTalkChannelMessageComponent implements OnChanges {
+export class NgTalkChannelMessageComponent implements OnChanges, OnDestroy {
   @Input() public message: ChatMessage;
   @Input() public prevMessage: ChatMessage;
+
+  @ViewChild(MatMenuTrigger, {static: false}) private _toolsMenu: MatMenuTrigger;
 
   @HostBinding('class') private _className: string;
   protected showAuthor = true;
   protected highlighted = false;
 
+  private _touchEventSubscription = fromEvent(this._host.nativeElement, 'touchstart', normalizePassiveListenerOptions({passive: true}) as any)
+    .subscribe(() => this._onTouchStart());
+
   // Import types and enums
-  public readonly MessageType = ChatMessageType;
+  protected readonly MessageType = ChatMessageType;
 
   constructor(protected chat: NgTalkChannelComponent,
               private _host: ElementRef<HTMLElement>) {
@@ -65,5 +73,22 @@ export class NgTalkChannelMessageComponent implements OnChanges {
     this._host.nativeElement.scrollIntoView();
     this.highlighted = true;
     setTimeout(() => this.highlighted = false, 1000);
+  }
+
+  private _showTimeout: ReturnType<typeof setTimeout>;
+
+  private _onTouchStart() {
+    this._touchEventSubscription.add(
+      fromEvent(this._host.nativeElement, 'touchend').subscribe(() => clearTimeout(this._showTimeout))
+    );
+    this._touchEventSubscription.add(
+      fromEvent(this._host.nativeElement, 'touchmove').subscribe(() => clearTimeout(this._showTimeout))
+    );
+
+    this._showTimeout = setTimeout(() => this._toolsMenu?.openMenu(), 1000);
+  }
+
+  public ngOnDestroy() {
+    this._touchEventSubscription?.unsubscribe();
   }
 }
