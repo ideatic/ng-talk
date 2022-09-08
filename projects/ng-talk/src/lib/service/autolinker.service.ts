@@ -10,7 +10,6 @@ export class AutoLinkerService {
     this._autoLinker ??= new Autolinker({
       urls: {
         schemeMatches: true,
-        wwwMatches: true,
         tldMatches: true
       },
       email: true,
