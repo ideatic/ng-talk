@@ -7,7 +7,7 @@ import {ChatUser} from '../../models/chat-user';
 import {BubbleChannelRef} from '../../service/bubble-channel.service';
 import {NgTalkChannelComponent} from '../ng-talk-channel/ng-talk-channel.component';
 import {fromEvent, Subscription} from 'rxjs';
-import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
+import {OverlayContainer} from '@angular/cdk/overlay';
 
 
 @Component({
@@ -56,7 +56,7 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
 
   public channelVisible = false;
   public channelClass = 'bounceIn';
-  public channelStyle: { [key: string]: string } = {display: 'none'};
+  public channelStyle: { [key: string]: string | number } = {display: 'none'};
 
   public closeButtonClass = '';
 
@@ -71,13 +71,13 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
 
   /* Dragging */
 
-  public onDragStart() {
+  protected onDragStart() {
     if (this.channelVisible) {
       this.close();
     }
   }
 
-  public onDragMoved(event: CdkDragMove) {
+  protected onDragMoved(event: CdkDragMove) {
     this.isDragging = true;
     this._lastPosition = event.pointerPosition;
 
@@ -96,7 +96,7 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
     return false;
   }
 
-  public onDragEnded(event: CdkDragEnd) {
+  protected onDragEnded(event: CdkDragEnd) {
     if (this.closeButtonClass == 'active') { // Close chat
       this.closeButtonClass = 'bounceOut';
       this.bubbleClass = 'fadeOut';
