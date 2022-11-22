@@ -24,6 +24,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {MatMenuModule} from '@angular/material/menu';
 
 
+/** @deprecated */
 @NgModule({
   imports: [
     CommonModule,
