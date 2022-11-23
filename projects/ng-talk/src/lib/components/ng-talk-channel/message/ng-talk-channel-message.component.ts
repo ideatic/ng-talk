@@ -1,13 +1,18 @@
-import {Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostBinding, Inject, Input, OnChanges, OnDestroy, ViewChild} from '@angular/core';
 import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
-import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {isSameDay} from '../../../utils/utils';
 import {fromEvent} from 'rxjs';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {MatMenuTrigger} from '@angular/material/menu';
+import {MatMenuModule, MatMenuTrigger} from "@angular/material/menu";
+import {DatePipe, NgIf, NgStyle} from "@angular/common";
+import {NgTalkChannelMessageRefComponent} from "./ref/ng-talk-channel-message-ref.component";
+import {NgTalkChannelMessageBodyComponent} from "./body/ng-talk-channel-message-body.component";
+import {NgTalkChannelComponent} from "../ng-talk-channel.component";
 
 @Component({
   selector: 'ng-talk-channel-message',
+  standalone: true,
+  imports: [NgIf, MatMenuModule, NgStyle, DatePipe, NgTalkChannelMessageRefComponent, NgTalkChannelMessageBodyComponent],
   template: `
     <div *ngIf="chat.settings.showAvatars && showAuthor" class="avatar">
       <img [src]="message.from.avatar || chat.settings.defaultAvatar" (click)="chat.userClicked.emit(message.from)"/>

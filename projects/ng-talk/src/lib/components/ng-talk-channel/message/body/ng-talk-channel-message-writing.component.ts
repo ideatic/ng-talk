@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 
 @Component({
   selector: 'ng-talk-channel-message-writing',
+  standalone: true,
   template: `
     <span></span>
     <span></span>

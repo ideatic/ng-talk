@@ -1,21 +1,27 @@
 import {Component, ElementRef, OnDestroy, Optional, ViewChild} from '@angular/core';
-import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
 import {Subscription} from 'rxjs';
-import {NgTalkChannelsComponent} from '../../ng-talk-channels/ng-talk-channels.component';
 import {ChatChannel} from '../../../models/chat-channel';
 import {growAnimation} from './grow-animation';
-
+import {CommonModule} from "@angular/common";
+import {FormsModule} from "@angular/forms";
+import {NgTalkSendEmojiComponent} from "./emoji/ng-talk-send-emoji.component";
+import {NgTalkSendGifComponent} from "./gif/ng-talk-send-gif.component";
+import {NgTalkChannelMessageRefComponent} from '../message/ref/ng-talk-channel-message-ref.component';
+import {NgTalkChannelComponent} from "../ng-talk-channel.component";
+import {NgTalkChannelListComponent} from "../../ng-talk-channel-list/ng-talk-channel-list.component";
 
 @Component({
   selector: 'ng-talk-send-message',
+  standalone: true,
+  imports: [CommonModule, FormsModule, NgTalkSendEmojiComponent, NgTalkSendGifComponent, NgTalkChannelMessageRefComponent, NgTalkSendEmojiComponent, NgTalkSendGifComponent],
   template: `
     <p *ngIf="chat.channel?.blocked; else sendMessageForm" style="margin: 1em 0; text-align: center">{{ chat.settings.disabledMessage }}</p>
 
     <ng-template #sendMessageForm>
       <!-- Selector de emojis -->
       <ng-talk-send-emoji *ngIf="showEmojiSelector" (emojiSelected)="newMessage = newMessage + $event" [@grow]></ng-talk-send-emoji>
-      <ng-talk-send-gif *ngIf="showGifSelector" (gifSelected)="sendPhoto($event)" [@grow]></ng-talk-send-gif>
+      <ng-talk-send-gif *ngIf="showGifSelector" (gifSelected)="sendGif($event)" [@grow]></ng-talk-send-gif>
 
       <!-- Reply to message -->
       <div *ngIf="chat.replyingTo" style="display: flex; align-items: center" [@grow]>
@@ -71,8 +77,8 @@ export class NgTalkSendMessageComponent implements OnDestroy {
 
   private _channelChangedSubscription: Subscription;
 
-  constructor(public chat: NgTalkChannelComponent,
-              @Optional() channelList: NgTalkChannelsComponent) {
+  constructor(protected chat: NgTalkChannelComponent,
+              @Optional() channelList: NgTalkChannelListComponent) {
     if (channelList) { // Detectar cambio de canal si estamos en un listado
       this._channelChangedSubscription = channelList.channelChanged.subscribe((c) => this._onChannelChanged(c));
     }
@@ -96,7 +102,7 @@ export class NgTalkSendMessageComponent implements OnDestroy {
     }
   }
 
-  public sendTextMessage() {
+  protected sendTextMessage() {
     if (this.newMessage?.trim().length > 0) {
       this._sendMessage({
         type: ChatMessageType.Text,
@@ -110,7 +116,7 @@ export class NgTalkSendMessageComponent implements OnDestroy {
     this._textInput?.nativeElement.focus();
   }
 
-  public onInputFocus() {
+  protected onInputFocus() {
     // Mark as read if component is focused
     if (this.chat.channel && this.chat.channel.unread > 0 && document.hasFocus()) {
       this.chat.adapter.markAsRead(this.chat.channel);
@@ -121,14 +127,14 @@ export class NgTalkSendMessageComponent implements OnDestroy {
     this.focus();
   }
 
-  public ngOnDestroy() {
-    this._channelChangedSubscription?.unsubscribe();
-  }
-
-  public sendPhoto(url: string) {
+  protected sendGif(url: string) {
     this._sendMessage({
       type: ChatMessageType.Gif,
       content: url
     });
+  }
+
+  public ngOnDestroy() {
+    this._channelChangedSubscription?.unsubscribe();
   }
 }

@@ -1,13 +1,17 @@
 import {Component, Optional} from '@angular/core';
-import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {ChatChannel} from '../../../models/chat-channel';
-import {BubbleChannelRef, BubbleChannelService} from '../../../service/bubble-channel.service';
-import {NgTalkChannelsComponent} from '../../ng-talk-channels/ng-talk-channels.component';
+import {BubbleChannelService} from '../../../service/bubble-channel.service';
+import {NgClass, NgIf} from "@angular/common";
+import {BubbleChannelRef} from "../../../service/bubble-channel-ref";
+import {NgTalkChannelComponent} from "../ng-talk-channel.component";
+import {NgTalkChannelListComponent} from "../../ng-talk-channel-list/ng-talk-channel-list.component";
 
 @Component({
+  standalone: true,
+  imports: [NgIf, NgClass],
   template: `
     <a *ngIf="channelList" class="go-back" (click)="channelList.selectChannel(null)"><i class="fas fa-arrow-left"></i></a>
-    <img *ngIf="chat.channel.icon" [src]="chat.channel.icon">
+    <img *ngIf="chat.channel.icon" [src]="chat.channel.icon"/>
     <span style="flex-grow: 1">{{ chat.channel.name }}</span>
     <a *ngIf="!bubbleChannelSvc.hasInstance(chat.channel)" class="tool" (click)="openBubbleChat(chat.channel)"><i class="fas fa-external-link-square-alt"></i></a>
     <a class="tool" (click)="toggleBlock()"><i class="fas" [ngClass]="chat.channel.blocked ? 'fa-unlock' : 'fa-ban'"></i></a>
@@ -17,11 +21,11 @@ import {NgTalkChannelsComponent} from '../../ng-talk-channels/ng-talk-channels.c
 export class NgTalkChannelHeaderComponent {
   constructor(public chat: NgTalkChannelComponent,
               public bubbleChannelSvc: BubbleChannelService,
-              @Optional() public channelList: NgTalkChannelsComponent) {
+              @Optional() public channelList: NgTalkChannelListComponent) {
 
   }
 
-  public openBubbleChat(channel: ChatChannel): BubbleChannelRef | void {
+  protected openBubbleChat(channel: ChatChannel): BubbleChannelRef | void {
     if (channel && !this.bubbleChannelSvc.hasInstance(channel)) {
       const bubbleRef = this.bubbleChannelSvc.show(channel, this.chat.adapter, this.chat.user, this.chat.settings);
 
@@ -29,12 +33,12 @@ export class NgTalkChannelHeaderComponent {
     }
   }
 
-  public toggleBlock() {
+  protected toggleBlock() {
     this.chat.adapter.toggleBlock(this.chat.channel)
       .then(() => this.chat.reloadMessages());
   }
 
-  public deleteChannel() {
+  protected deleteChannel() {
     this.chat.adapter.deleteChannel(this.chat.channel)
       .then(() => this.chat.deleted.emit());
   }

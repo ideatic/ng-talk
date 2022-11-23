@@ -1,18 +1,23 @@
 import {Component, Input} from '@angular/core';
 import {ChatMessage, ChatMessageType} from '../../../../models/chat-message';
 import type Autolinker from 'autolinker';
-import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
 import {AutoLinkerService} from '../../../../service/autolinker.service';
+import {NgSwitch, NgSwitchCase} from "@angular/common";
+import {FnPipe} from "../../../../pipes/fn.pipe";
+import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-writing.component";
+import {NgTalkChannelComponent} from "../../ng-talk-channel.component";
 
 @Component({
   selector: 'ng-talk-channel-message-body',
+  standalone: true,
+  imports: [NgSwitch, NgSwitchCase, FnPipe, NgTalkChannelMessageWritingComponent],
   template: `
     <ng-container [ngSwitch]="message.type">
       <!-- Text message -->
       <div class="text-message" *ngSwitchCase="MessageType.Text" [innerHTML]="message | fn:transformContent:this"></div>
 
-      <img *ngSwitchCase="MessageType.Image" [src]="message.content" loading="lazy" style="margin-bottom: 8px" />
-      <img *ngSwitchCase="MessageType.Gif" [src]="message.content" loading="lazy" style="margin-bottom: 8px" />
+      <img *ngSwitchCase="MessageType.Image" [src]="message.content" loading="lazy" style="margin-bottom: 8px"/>
+      <img *ngSwitchCase="MessageType.Gif" [src]="message.content" loading="lazy" style="margin-bottom: 8px"/>
 
       <!-- Writing animation -->
       <ng-talk-channel-message-writing *ngSwitchCase="MessageType.Writing"></ng-talk-channel-message-writing>

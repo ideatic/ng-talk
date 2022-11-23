@@ -1,18 +1,26 @@
 import {Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatUser} from '../../models/chat-user';
-import {MessageLoadingMethod, NgTalkSettings} from '../ng-talk-settings';
 import {ChatChannel} from '../../models/chat-channel';
 import {Subscription} from 'rxjs';
 import {nameof} from '../../utils/utils';
 import {ChatMessage} from '../../models/chat-message';
+import {CommonModule} from "@angular/common";
+import {FnPipe} from "../../pipes/fn.pipe";
+import {InViewportDirective} from "../../directives/in-viewport.directive";
+import {FormsModule} from "@angular/forms";
+import {NgTalkChannelComponent} from "../ng-talk-channel/ng-talk-channel.component";
+import {NgTalkChannelPreviewComponent} from "./preview/ng-talk-channel-preview.component";
+import {MessageLoadingMethod, NgTalkSettings} from "../ng-talk-settings";
 
 @Component({
-  selector: 'ng-talk-channels',
-  templateUrl: './ng-talk-channels.component.html',
-  styleUrls: ['./ng-talk-channels.component.less']
+  selector: 'ng-talk-channel-list',
+  standalone: true,
+  imports: [CommonModule, FormsModule, NgTalkChannelComponent, NgTalkChannelPreviewComponent, FnPipe, InViewportDirective],
+  templateUrl: './ng-talk-channel-list.component.html',
+  styleUrls: ['./ng-talk-channel-list.component.less']
 })
-export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
+export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() public user: ChatUser;
   @Input() public adapter: ChatAdapter;
@@ -25,15 +33,15 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
   @Output() public userClicked = new EventEmitter<ChatUser>();
 
   @HostBinding('class')
-  public displayMode: 'desktop' | 'mobile';
+  protected displayMode: 'desktop' | 'mobile';
 
   public activeChannel: ChatChannel;
   private _channelsSubscription: Subscription;
-  public channels: ChatChannel[];
+  protected channels: ChatChannel[];
 
   private _channelMessagesSubscriptions = new Map<string, Subscription>();
 
-  public filterQuery: string;
+  protected filterQuery: string;
 
   // Import types
   protected readonly MessagesLoading = MessageLoadingMethod;
@@ -47,12 +55,12 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes[nameof<NgTalkChannelsComponent>('adapter')]) {
+    if (changes[nameof<NgTalkChannelListComponent>('adapter')]) {
       this._channelMessagesSubscriptions.forEach(s => s.unsubscribe());
       this._channelMessagesSubscriptions.clear();
     }
 
-    if (changes[nameof<NgTalkChannelsComponent>('adapter')] || changes[nameof<NgTalkChannelsComponent>('user')]) {
+    if (changes[nameof<NgTalkChannelListComponent>('adapter')] || changes[nameof<NgTalkChannelListComponent>('user')]) {
       this._channelsSubscription?.unsubscribe();
 
       this._channelsSubscription = this.adapter.getChannels(this.user)
@@ -83,7 +91,7 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  public trackChannel(i: number, channel: ChatChannel) {
+  protected trackChannel(i: number, channel: ChatChannel) {
     return channel.id;
   }
 
@@ -101,16 +109,23 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
     this.displayMode = this._host.nativeElement.clientWidth < this.settings.mobileBreakpoint ? 'mobile' : 'desktop';
   }
 
+  protected inViewportChangedChannel(channel: ChatChannel, isVisible: boolean) {
+    if (isVisible && this.settings.channelMessagesLoading == MessageLoadingMethod.lazy) {
+      this.adapter.getMessages(channel, 0, this.settings.pageSize);
+    }
+  }
+
+  public filterChannels(channels: ChatChannel[], query: string): ChatChannel[] {
+    if (!query) {
+      return channels;
+    }
+    return channels.filter(c => c.name.toLocaleLowerCase().indexOf(query) >= 0);
+  }
+
   public ngOnDestroy() {
     this._channelsSubscription?.unsubscribe();
 
     this._channelMessagesSubscriptions.forEach(s => s.unsubscribe());
     this._channelMessagesSubscriptions.clear();
-  }
-
-  public inViewportChangedChannel(channel: ChatChannel, isVisible: boolean) {
-    if (isVisible && this.settings.channelMessagesLoading == MessageLoadingMethod.lazy) {
-      this.adapter.getMessages(channel, 0, this.settings.pageSize);
-    }
   }
 }

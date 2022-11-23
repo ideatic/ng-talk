@@ -1,11 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {DemoAdapter} from './adapters/demo-adapter';
-import {ChatUser, ChatUserStatus} from '../../projects/ng-talk/src/lib/models/chat-user';
-import {NgTalkSettings} from '../../projects/ng-talk/src/lib/components/ng-talk-settings';
-import {ChatAdapter} from '../../projects/ng-talk/src/lib/models/chat-adapter';
+import {ChatAdapter, ChatUser, ChatUserStatus, NgTalkChannelListComponent, NgTalkSettings} from "../../projects/ng-talk/src/public_api";
+import {CommonModule} from "@angular/common";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, FormsModule, NgTalkChannelListComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']
 })

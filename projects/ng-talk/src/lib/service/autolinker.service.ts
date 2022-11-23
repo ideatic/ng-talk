@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
 import Autolinker from 'autolinker';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AutoLinkerService {
 
   private _autoLinker: any;
@@ -10,7 +12,6 @@ export class AutoLinkerService {
     this._autoLinker ??= new Autolinker({
       urls: {
         schemeMatches: true,
-        wwwMatches: true,
         tldMatches: true
       },
       email: true,

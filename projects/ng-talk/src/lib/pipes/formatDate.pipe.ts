@@ -1,9 +1,12 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {daysDiff} from '../utils/utils';
-import {NgTalkSettings} from '../components/ng-talk-settings';
 import {DatePipe} from '@angular/common';
+import {NgTalkSettings} from "../components/ng-talk-settings";
 
-@Pipe({name: 'formatDate'})
+@Pipe({
+  name: 'formatDate',
+  standalone: true
+})
 export class FormatDatePipe implements PipeTransform {
 
   constructor(private _datePipe: DatePipe) {

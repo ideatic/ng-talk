@@ -1,17 +1,19 @@
 import {Component, ElementRef, HostListener, Input, OnDestroy, ViewChild} from '@angular/core';
-import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
+import {CdkDragEnd, CdkDragMove, DragDropModule} from '@angular/cdk/drag-drop';
 import {ChatChannel} from '../../models/chat-channel';
 import {ChatAdapter} from '../../models/chat-adapter';
-import {NgTalkSettings} from '../ng-talk-settings';
 import {ChatUser} from '../../models/chat-user';
-import {BubbleChannelRef} from '../../service/bubble-channel.service';
-import {NgTalkChannelComponent} from '../ng-talk-channel/ng-talk-channel.component';
 import {fromEvent, Subscription} from 'rxjs';
-import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
-
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {DecimalPipe, NgClass, NgStyle} from "@angular/common";
+import {BubbleChannelRef} from "../../service/bubble-channel-ref";
+import {NgTalkChannelComponent} from "../ng-talk-channel/ng-talk-channel.component";
+import {NgTalkSettings} from "../ng-talk-settings";
 
 @Component({
   selector: 'channel-bubble',
+  standalone: true,
+  imports: [NgStyle, NgClass, DragDropModule, NgTalkChannelComponent, DecimalPipe],
   template: `
     <div #bubble class="bubble"
          [title]="channel.name"
@@ -56,7 +58,7 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
 
   public channelVisible = false;
   public channelClass = 'bounceIn';
-  public channelStyle: { [key: string]: string } = {display: 'none'};
+  public channelStyle: { [key: string]: string | number } = {display: 'none'};
 
   public closeButtonClass = '';
 
@@ -71,13 +73,13 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
 
   /* Dragging */
 
-  public onDragStart() {
+  protected onDragStart() {
     if (this.channelVisible) {
       this.close();
     }
   }
 
-  public onDragMoved(event: CdkDragMove) {
+  protected onDragMoved(event: CdkDragMove) {
     this.isDragging = true;
     this._lastPosition = event.pointerPosition;
 
@@ -96,7 +98,7 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
     return false;
   }
 
-  public onDragEnded(event: CdkDragEnd) {
+  protected onDragEnded(event: CdkDragEnd) {
     if (this.closeButtonClass == 'active') { // Close chat
       this.closeButtonClass = 'bounceOut';
       this.bubbleClass = 'fadeOut';

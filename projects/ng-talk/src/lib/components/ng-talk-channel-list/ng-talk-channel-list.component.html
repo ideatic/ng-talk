@@ -9,7 +9,7 @@
 
   <!-- Channel list -->
   <ul>
-    <li *ngFor="let channel of channels | filterChannels: filterQuery; trackBy: trackChannel"
+    <li *ngFor="let channel of channels | fn:filterChannels:this:filterQuery ; trackBy: trackChannel"
         [class.active]="activeChannel && channel.id == activeChannel.id">
       <!-- Wait 500ms to enable viewport observer while the component render -->
       <a *ngIf="settings.channelMessagesLoading == MessagesLoading.lazy; else renderActiveChannel"
