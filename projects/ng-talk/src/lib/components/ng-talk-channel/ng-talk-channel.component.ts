@@ -18,22 +18,17 @@ import {ChatChannel} from '../../models/chat-channel';
 import {ChatMessage, ChatMessageType} from '../../models/chat-message';
 import {ChatUser} from '../../models/chat-user';
 import {Subscription} from 'rxjs';
+import {NgTalkSettings} from '../ng-talk-settings';
 import {isSameDay, nameof} from '../../utils/utils';
 import {InViewportDirective} from '../../directives/in-viewport.directive';
-import {CdkDragEnd, CdkDragMove, DragDropModule} from '@angular/cdk/drag-drop';
-import {FormatDatePipe} from "../../pipes/formatDate.pipe";
-import {NgIf} from "@angular/common";
-import {FnPipe} from "../../pipes/fn.pipe";
 import {NgTalkChannelMessageComponent} from './message/ng-talk-channel-message.component';
-import {NgTalkSendMessageComponent} from "./send/ng-talk-send-message.component";
-import {NgTalkSettings} from "../ng-talk-settings";
+import {NgTalkSendMessageComponent} from './send/ng-talk-send-message.component';
+import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 
 declare const ngDevMode: boolean;
 
 @Component({
   selector: 'ng-talk-channel',
-  standalone: true,
-  imports: [NgIf, FnPipe, DragDropModule, NgTalkChannelMessageComponent, NgTalkSendMessageComponent, FormatDatePipe, InViewportDirective],
   templateUrl: './ng-talk-channel.component.html',
   styleUrls: [
     './ng-talk-channel.component.less',
@@ -57,15 +52,15 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   @ViewChildren(NgTalkChannelMessageComponent) private _messageComponents: QueryList<NgTalkChannelMessageComponent>;
 
   private _visibleMessages = 20;
-  protected messages: ChatMessage[] = [];
+  public messages: ChatMessage[] = [];
 
   private _messagesSubscription: Subscription;
 
   public replyingTo: ChatMessage;
 
   // UI
-  protected loading = false;
-  protected scrollWatcherEnabled = false;
+  public loading = false;
+  public scrollWatcherEnabled = false;
   protected readonly viewportDetectionAvailable = InViewportDirective.intersectionObserverFeatureDetection();
 
   // Import types and enums
@@ -99,6 +94,10 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
     this.scrollToBottom();
   }
 
+  public ngOnDestroy() {
+    this._messagesSubscription?.unsubscribe();
+  }
+
   public reloadMessages(scrollToBottom = true) {
     this._messagesSubscription?.unsubscribe();
 
@@ -124,7 +123,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
     return !prevMessage || !isSameDay(prevMessage.date, message.date);
   }
 
-  protected trackMessage(i, message: ChatMessage) {
+  public trackMessage(i, message: ChatMessage) {
     return message.date.toString() + message.content;
   }
 
@@ -146,14 +145,14 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
 
   // Pagination & History
 
-  protected loadOldMessages() {
+  public loadOldMessages() {
     this.scrollWatcherEnabled = false;
     this._visibleMessages += this.settings.pageSize;
 
     this.reloadMessages(false);
   }
 
-  protected watcherInViewportChanged(isVisible: boolean) {
+  public watcherInViewportChanged(isVisible: boolean) {
     if (isVisible) {
       this.loadOldMessages();
     }
@@ -169,7 +168,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
     wrapper?.highlight();
   }
 
-  protected onDrag(event: CdkDragMove) {
+  public onDrag(event: CdkDragMove) {
     if (event.distance.x < 0) { // Solo permitir arrastrar hacia la derecha
       event.source.reset();
     }
@@ -185,9 +184,5 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
     if (event.distance.x > 50) {
       this.replyTo(message);
     }
-  }
-
-  public ngOnDestroy() {
-    this._messagesSubscription?.unsubscribe();
   }
 }

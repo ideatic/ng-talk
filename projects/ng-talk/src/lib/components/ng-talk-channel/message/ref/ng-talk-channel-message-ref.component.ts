@@ -1,11 +1,8 @@
 import {Component, Input} from '@angular/core';
 import {ChatMessage} from '../../../../models/chat-message';
-import {NgTalkChannelMessageBodyComponent} from "../body/ng-talk-channel-message-body.component";
 
 @Component({
   selector: 'ng-talk-channel-message-ref',
-  standalone: true,
-  imports: [NgTalkChannelMessageBodyComponent],
   template: `
     <strong>{{ message.from.name }}</strong>
     <ng-talk-channel-message-body [message]="message"></ng-talk-channel-message-body>
@@ -20,7 +17,7 @@ import {NgTalkChannelMessageBodyComponent} from "../body/ng-talk-channel-message
       border-inline-start: 5px solid #06cf9c;
     }
 
-    ng-talk-channel-message-body {
+    ng-talk-channel-message-body{
       display: block;
       max-height: 3em;
       overflow: hidden;

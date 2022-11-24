@@ -1,13 +1,10 @@
 import {Component, Input} from '@angular/core';
 import {ChatChannel, ChatChannelType} from '../../../models/chat-channel';
+import {NgTalkChannelsComponent} from '../ng-talk-channels.component';
 import {ChatMessageType} from '../../../models/chat-message';
-import {CommonModule} from "@angular/common";
-import {NgTalkChannelListComponent} from "../ng-talk-channel-list.component";
 
 @Component({
   selector: 'ng-talk-channel-preview',
-  standalone: true,
-  imports: [CommonModule],
   template: `
     <img *ngIf="channels.settings.showChannelsIcons" [src]="channel.icon || channels.settings.defaultChannelIcon" [attr.aria-label]="channel.name">
     <div>
@@ -43,6 +40,6 @@ export class NgTalkChannelPreviewComponent {
   protected readonly ChannelType = ChatChannelType;
   protected readonly MessageType = ChatMessageType;
 
-  constructor(protected channels: NgTalkChannelListComponent) {
+  constructor(public channels: NgTalkChannelsComponent) {
   }
 }

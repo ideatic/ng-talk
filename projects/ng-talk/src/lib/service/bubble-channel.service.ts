@@ -1,23 +1,18 @@
-import {ApplicationRef, ComponentFactoryResolver, EmbeddedViewRef, Injectable, Injector} from '@angular/core';
+import {ApplicationRef, ComponentFactoryResolver, ComponentRef, EmbeddedViewRef, EventEmitter, Injectable, Injector} from '@angular/core';
 import {ChatChannel} from '../models/chat-channel';
+import {NgTalkBubbleChannelComponent} from '../components/ng-talk-bubble-channel/ng-talk-bubble-channel.component';
 import {ChatAdapter} from '../models/chat-adapter';
 import {ChatUser} from '../models/chat-user';
+import {NgTalkSettings} from '../components/ng-talk-settings';
 import {first} from 'rxjs/operators';
-import {Overlay, OverlayConfig} from '@angular/cdk/overlay';
-import {BubbleChannelRef} from "./bubble-channel-ref";
-import {NgTalkSettings} from "../components/ng-talk-settings";
-import {NgTalkBubbleChannelComponent} from "../components/ng-talk-bubble-channel/ng-talk-bubble-channel.component";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class BubbleChannelService {
   private static _activeInstances = new Map<string, BubbleChannelRef>();
 
   constructor(private _componentFactoryResolver: ComponentFactoryResolver,
               private _appRef: ApplicationRef,
-              private _injector: Injector,
-              private _overlaySvc: Overlay) {
+              private _injector: Injector) {
   }
 
   public get activeChannelIDs(): string[] {
@@ -65,15 +60,7 @@ export class BubbleChannelService {
       .rootNodes[0] as HTMLElement;
 
     // 4. Append DOM element to the body
-    // document.body.appendChild(domElem);
-    const overlayConfig: OverlayConfig = {
-      hasBackdrop: false,
-      disposeOnNavigation: false,
-      scrollStrategy: this._overlaySvc.scrollStrategies.noop()
-    };
-
-    bubbleRef.overlayRef = this._overlaySvc.create(overlayConfig);
-    bubbleRef.overlayRef.overlayElement.appendChild(domElem);
+    document.body.appendChild(domElem);
 
     return bubbleRef;
   }
@@ -83,3 +70,18 @@ export class BubbleChannelService {
   }
 }
 
+export class BubbleChannelRef {
+  public onDestroyed = new EventEmitter<BubbleChannelRef>();
+
+  constructor(private _appRef: ApplicationRef,
+              public componentRef: ComponentRef<NgTalkBubbleChannelComponent>) {
+
+  }
+
+  public destroy() {
+    this._appRef.detachView(this.componentRef.hostView);
+    this.componentRef.destroy();
+
+    this.onDestroyed.emit(this);
+  }
+}

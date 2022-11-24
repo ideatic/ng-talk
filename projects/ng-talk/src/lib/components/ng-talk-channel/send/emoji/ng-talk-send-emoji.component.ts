@@ -1,14 +1,10 @@
-import {Component, EventEmitter, Inject, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import emoji from './emoji.json';
-import {CommonModule, KeyValue} from '@angular/common';
-import {FormsModule} from "@angular/forms";
-import {FnPipe} from "../../../../pipes/fn.pipe";
-import {NgTalkChannelComponent} from "../../ng-talk-channel.component";
+import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
+import {KeyValue} from '@angular/common';
 
 @Component({
   selector: 'ng-talk-send-emoji',
-  standalone: true,
-  imports: [CommonModule, FormsModule, FnPipe],
   template: `
     <input type="search" [(ngModel)]="searchQuery" [placeholder]="chat.settings.search"/>
     <div>
@@ -45,7 +41,6 @@ import {NgTalkChannelComponent} from "../../ng-talk-channel.component";
 
     span {
       font-size: 20px;
-      cursor: pointer;
     }
   `]
 })
@@ -55,11 +50,11 @@ export class NgTalkSendEmojiComponent {
   protected readonly emoji = emoji;
   protected searchQuery: string;
 
-  constructor(protected chat: NgTalkChannelComponent) {
+  constructor(public chat: NgTalkChannelComponent) {
 
   }
 
-  protected filter(entries: KeyValue<string, string>[], searchQuery: string): KeyValue<string, string>[] {
+  public filter(entries: KeyValue<string, string>[], searchQuery: string): KeyValue<string, string>[] {
     return (searchQuery
       ? entries.filter(pair => pair.key.toLowerCase().includes(searchQuery.toLowerCase()))
       : entries)
