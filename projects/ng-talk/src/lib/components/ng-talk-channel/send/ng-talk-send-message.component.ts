@@ -2,7 +2,7 @@ import {Component, ElementRef, OnDestroy, Optional, ViewChild} from '@angular/co
 import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
 import {Subscription} from 'rxjs';
-import {NgTalkChannelsComponent} from '../../ng-talk-channels/ng-talk-channels.component';
+import {NgTalkChannelListComponent} from '../../ng-talk-channel-list/ng-talk-channel-list.component';
 import {ChatChannel} from '../../../models/chat-channel';
 import {growAnimation} from './grow-animation';
 
@@ -72,7 +72,7 @@ export class NgTalkSendMessageComponent implements OnDestroy {
   private _channelChangedSubscription: Subscription;
 
   constructor(public chat: NgTalkChannelComponent,
-              @Optional() channelList: NgTalkChannelsComponent) {
+              @Optional() channelList: NgTalkChannelListComponent) {
     if (channelList) { // Detectar cambio de canal si estamos en un listado
       this._channelChangedSubscription = channelList.channelChanged.subscribe((c) => this._onChannelChanged(c));
     }

@@ -4,10 +4,10 @@ import {ChatChannel} from '../../models/chat-channel';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {NgTalkSettings} from '../ng-talk-settings';
 import {ChatUser} from '../../models/chat-user';
-import {BubbleChannelRef} from '../../service/bubble-channel.service';
 import {NgTalkChannelComponent} from '../ng-talk-channel/ng-talk-channel.component';
 import {fromEvent, Subscription} from 'rxjs';
-import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {BubbleChannelRef} from "../../service/bubble-channel-ref";
 
 
 @Component({

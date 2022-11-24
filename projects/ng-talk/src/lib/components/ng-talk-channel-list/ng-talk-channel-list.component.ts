@@ -8,11 +8,11 @@ import {nameof} from '../../utils/utils';
 import {ChatMessage} from '../../models/chat-message';
 
 @Component({
-  selector: 'ng-talk-channels',
-  templateUrl: './ng-talk-channels.component.html',
-  styleUrls: ['./ng-talk-channels.component.less']
+  selector: 'ng-talk-channel-list',
+  templateUrl: './ng-talk-channel-list.component.html',
+  styleUrls: ['./ng-talk-channel-list.component.less']
 })
-export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
+export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() public user: ChatUser;
   @Input() public adapter: ChatAdapter;
@@ -47,12 +47,12 @@ export class NgTalkChannelsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes[nameof<NgTalkChannelsComponent>('adapter')]) {
+    if (changes[nameof<NgTalkChannelListComponent>('adapter')]) {
       this._channelMessagesSubscriptions.forEach(s => s.unsubscribe());
       this._channelMessagesSubscriptions.clear();
     }
 
-    if (changes[nameof<NgTalkChannelsComponent>('adapter')] || changes[nameof<NgTalkChannelsComponent>('user')]) {
+    if (changes[nameof<NgTalkChannelListComponent>('adapter')] || changes[nameof<NgTalkChannelListComponent>('user')]) {
       this._channelsSubscription?.unsubscribe();
 
       this._channelsSubscription = this.adapter.getChannels(this.user)
