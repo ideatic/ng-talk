@@ -22,7 +22,7 @@ import {isSameDay, nameof} from '../../utils/utils';
 import {InViewportDirective} from '../../directives/in-viewport.directive';
 import {CdkDragEnd, CdkDragMove, DragDropModule} from '@angular/cdk/drag-drop';
 import {FormatDatePipe} from "../../pipes/formatDate.pipe";
-import {NgIf} from "@angular/common";
+import {NgFor, NgIf} from "@angular/common";
 import {FnPipe} from "../../pipes/fn.pipe";
 import {NgTalkChannelMessageComponent} from './message/ng-talk-channel-message.component';
 import {NgTalkSendMessageComponent} from "./send/ng-talk-send-message.component";
@@ -33,7 +33,7 @@ declare const ngDevMode: boolean;
 @Component({
   selector: 'ng-talk-channel',
   standalone: true,
-  imports: [NgIf, FnPipe, DragDropModule, NgTalkChannelMessageComponent, NgTalkSendMessageComponent, FormatDatePipe, InViewportDirective],
+  imports: [NgIf, NgFor, FnPipe, DragDropModule, NgTalkSendMessageComponent, FormatDatePipe, InViewportDirective, NgTalkChannelMessageComponent],
   templateUrl: './ng-talk-channel.component.html',
   styleUrls: [
     './ng-talk-channel.component.less',

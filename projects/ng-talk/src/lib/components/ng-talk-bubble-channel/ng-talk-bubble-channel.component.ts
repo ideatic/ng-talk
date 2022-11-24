@@ -5,7 +5,7 @@ import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatUser} from '../../models/chat-user';
 import {fromEvent, Subscription} from 'rxjs';
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {DecimalPipe, NgClass, NgStyle} from "@angular/common";
+import {DecimalPipe, NgClass, NgIf, NgStyle} from "@angular/common";
 import {BubbleChannelRef} from "../../service/bubble-channel-ref";
 import {NgTalkChannelComponent} from "../ng-talk-channel/ng-talk-channel.component";
 import {NgTalkSettings} from "../ng-talk-settings";
@@ -13,7 +13,7 @@ import {NgTalkSettings} from "../ng-talk-settings";
 @Component({
   selector: 'channel-bubble',
   standalone: true,
-  imports: [NgStyle, NgClass, DragDropModule, NgTalkChannelComponent, DecimalPipe],
+  imports: [NgStyle, NgClass, NgIf, DragDropModule, NgTalkChannelComponent, DecimalPipe],
   template: `
     <div #bubble class="bubble"
          [title]="channel.name"

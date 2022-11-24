@@ -31,15 +31,15 @@ export class NgTalkChannelMessageBodyComponent {
   // Import types and enums
   protected readonly MessageType = ChatMessageType;
 
-  constructor(protected chat: NgTalkChannelComponent,
+  constructor(private _chat: NgTalkChannelComponent,
               private _autoLinker: AutoLinkerService) {
   }
 
   protected transformContent(message: ChatMessage): string {
     let content = message.content;
-    if (this.chat.settings.autoLinks) {
-      if (typeof this.chat.settings.autoLinks === 'object') {
-        content = (this.chat.settings.autoLinks as Autolinker).link(content);
+    if (this._chat.settings.autoLinks) {
+      if (typeof this._chat.settings.autoLinks === 'object') {
+        content = (this._chat.settings.autoLinks as Autolinker).link(content);
       } else {
         content = this._autoLinker.link(content);
       }
