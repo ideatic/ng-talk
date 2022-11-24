@@ -4,7 +4,7 @@ import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {isSameDay} from '../../../utils/utils';
 import {fromEvent} from 'rxjs';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {MatMenuTrigger} from '@angular/material/menu';
+import {MatMenuTrigger} from "@angular/material/menu";
 
 @Component({
   selector: 'ng-talk-channel-message',

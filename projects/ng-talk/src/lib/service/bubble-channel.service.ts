@@ -5,6 +5,7 @@ import {ChatAdapter} from '../models/chat-adapter';
 import {ChatUser} from '../models/chat-user';
 import {NgTalkSettings} from '../components/ng-talk-settings';
 import {first} from 'rxjs/operators';
+import {Overlay, OverlayConfig} from '@angular/cdk/overlay';
 import {BubbleChannelRef} from "./bubble-channel-ref";
 
 @Injectable()
@@ -13,7 +14,8 @@ export class BubbleChannelService {
 
   constructor(private _componentFactoryResolver: ComponentFactoryResolver,
               private _appRef: ApplicationRef,
-              private _injector: Injector) {
+              private _injector: Injector,
+              private _overlaySvc: Overlay) {
   }
 
   public get activeChannelIDs(): string[] {
@@ -61,7 +63,15 @@ export class BubbleChannelService {
       .rootNodes[0] as HTMLElement;
 
     // 4. Append DOM element to the body
-    document.body.appendChild(domElem);
+    // document.body.appendChild(domElem);
+    const overlayConfig: OverlayConfig = {
+      hasBackdrop: false,
+      disposeOnNavigation: false,
+      scrollStrategy: this._overlaySvc.scrollStrategies.noop()
+    };
+
+    bubbleRef.overlayRef = this._overlaySvc.create(overlayConfig);
+    bubbleRef.overlayRef.overlayElement.appendChild(domElem);
 
     return bubbleRef;
   }

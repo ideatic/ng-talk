@@ -13,7 +13,6 @@ import {NgTalkSendMessageComponent} from './components/ng-talk-channel/send/ng-t
 import {NgTalkChannelHeaderComponent} from './components/ng-talk-channel/header/ng-talk-channel-header.component';
 import {FnPipe} from './pipes/fn.pipe';
 import {NgTalkChannelPreviewComponent} from './components/ng-talk-channel-list/preview/ng-talk-channel-preview.component';
-import {MatMenuModule} from '@angular/material/menu';
 import {NgTalkChannelMessageRefComponent} from './components/ng-talk-channel/message/ref/ng-talk-channel-message-ref.component';
 import {NgTalkChannelMessageBodyComponent} from './components/ng-talk-channel/message/body/ng-talk-channel-message-body.component';
 import {AutoLinkerService} from './service/autolinker.service';
@@ -22,6 +21,7 @@ import {NgTalkChannelMessageComponent} from './components/ng-talk-channel/messag
 import {NgTalkSendEmojiComponent} from './components/ng-talk-channel/send/emoji/ng-talk-send-emoji.component';
 import {NgTalkSendGifComponent} from './components/ng-talk-channel/send/gif/ng-talk-send-gif.component';
 import {HttpClientModule} from '@angular/common/http';
+import {MatMenuModule} from '@angular/material/menu';
 
 
 @NgModule({

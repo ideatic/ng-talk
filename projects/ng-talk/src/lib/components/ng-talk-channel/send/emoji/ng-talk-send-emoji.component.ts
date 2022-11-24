@@ -41,6 +41,7 @@ import {KeyValue} from '@angular/common';
 
     span {
       font-size: 20px;
+      cursor: pointer;
     }
   `]
 })
