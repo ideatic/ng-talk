@@ -1,11 +1,12 @@
-import {ApplicationRef, ComponentFactoryResolver, ComponentRef, EmbeddedViewRef, EventEmitter, Injectable, Injector} from '@angular/core';
+import {ApplicationRef, ComponentFactoryResolver, EmbeddedViewRef, Injectable, Injector} from '@angular/core';
 import {ChatChannel} from '../models/chat-channel';
 import {NgTalkBubbleChannelComponent} from '../components/ng-talk-bubble-channel/ng-talk-bubble-channel.component';
 import {ChatAdapter} from '../models/chat-adapter';
 import {ChatUser} from '../models/chat-user';
 import {NgTalkSettings} from '../components/ng-talk-settings';
 import {first} from 'rxjs/operators';
-import {Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
+import {Overlay, OverlayConfig} from '@angular/cdk/overlay';
+import {BubbleChannelRef} from "./bubble-channel-ref";
 
 @Injectable()
 export class BubbleChannelService {
@@ -80,21 +81,3 @@ export class BubbleChannelService {
   }
 }
 
-export class BubbleChannelRef {
-  public onDestroyed = new EventEmitter<BubbleChannelRef>();
-  public overlayRef: OverlayRef;
-
-  constructor(private _appRef: ApplicationRef,
-              public componentRef: ComponentRef<NgTalkBubbleChannelComponent>) {
-
-  }
-
-  public destroy() {
-    this._appRef.detachView(this.componentRef.hostView);
-    this.componentRef.destroy();
-    this.overlayRef.detach();
-    this.overlayRef.dispose();
-
-    this.onDestroyed.emit(this);
-  }
-}

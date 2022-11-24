@@ -1,8 +1,9 @@
 import {Component, Optional} from '@angular/core';
 import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {ChatChannel} from '../../../models/chat-channel';
-import {BubbleChannelRef, BubbleChannelService} from '../../../service/bubble-channel.service';
-import {NgTalkChannelsComponent} from '../../ng-talk-channels/ng-talk-channels.component';
+import {BubbleChannelService} from '../../../service/bubble-channel.service';
+import {NgTalkChannelListComponent} from '../../ng-talk-channel-list/ng-talk-channel-list.component';
+import {BubbleChannelRef} from "../../../service/bubble-channel-ref";
 
 @Component({
   template: `
@@ -17,7 +18,7 @@ import {NgTalkChannelsComponent} from '../../ng-talk-channels/ng-talk-channels.c
 export class NgTalkChannelHeaderComponent {
   constructor(public chat: NgTalkChannelComponent,
               public bubbleChannelSvc: BubbleChannelService,
-              @Optional() public channelList: NgTalkChannelsComponent) {
+              @Optional() public channelList: NgTalkChannelListComponent) {
 
   }
 

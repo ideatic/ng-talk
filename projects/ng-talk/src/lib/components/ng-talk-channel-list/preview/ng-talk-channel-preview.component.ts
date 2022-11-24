@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {ChatChannel, ChatChannelType} from '../../../models/chat-channel';
-import {NgTalkChannelsComponent} from '../ng-talk-channels.component';
+import {NgTalkChannelListComponent} from '../ng-talk-channel-list.component';
 import {ChatMessageType} from '../../../models/chat-message';
 
 @Component({
@@ -40,6 +40,6 @@ export class NgTalkChannelPreviewComponent {
   protected readonly ChannelType = ChatChannelType;
   protected readonly MessageType = ChatMessageType;
 
-  constructor(public channels: NgTalkChannelsComponent) {
+  constructor(public channels: NgTalkChannelListComponent) {
   }
 }

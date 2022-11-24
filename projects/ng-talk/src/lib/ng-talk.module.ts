@@ -3,7 +3,7 @@ import {NgTalkChannelComponent} from './components/ng-talk-channel/ng-talk-chann
 import {CommonModule, DatePipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {InViewportDirective} from './directives/in-viewport.directive';
-import {NgTalkChannelsComponent} from './components/ng-talk-channels/ng-talk-channels.component';
+import {NgTalkChannelListComponent} from './components/ng-talk-channel-list/ng-talk-channel-list.component';
 import {FilterChannelsPipe} from './pipes/filterChannels.pipe';
 import {FormatDatePipe} from './pipes/formatDate.pipe';
 import {DragDropModule} from '@angular/cdk/drag-drop';
@@ -12,7 +12,7 @@ import {NgTalkBubbleChannelComponent} from './components/ng-talk-bubble-channel/
 import {NgTalkSendMessageComponent} from './components/ng-talk-channel/send/ng-talk-send-message.component';
 import {NgTalkChannelHeaderComponent} from './components/ng-talk-channel/header/ng-talk-channel-header.component';
 import {FnPipe} from './pipes/fn.pipe';
-import {NgTalkChannelPreviewComponent} from './components/ng-talk-channels/preview/ng-talk-channel-preview.component';
+import {NgTalkChannelPreviewComponent} from './components/ng-talk-channel-list/preview/ng-talk-channel-preview.component';
 import {NgTalkChannelMessageRefComponent} from './components/ng-talk-channel/message/ref/ng-talk-channel-message-ref.component';
 import {NgTalkChannelMessageBodyComponent} from './components/ng-talk-channel/message/body/ng-talk-channel-message-body.component';
 import {AutoLinkerService} from './service/autolinker.service';
@@ -41,7 +41,7 @@ import {MatMenuModule} from '@angular/material/menu';
   ],
   declarations: [
     NgTalkChannelComponent,
-    NgTalkChannelsComponent,
+    NgTalkChannelListComponent,
     NgTalkChannelPreviewComponent,
     NgTalkChannelMessageComponent,
     NgTalkChannelMessageBodyComponent,
@@ -59,7 +59,7 @@ import {MatMenuModule} from '@angular/material/menu';
   ],
   exports: [
     NgTalkChannelComponent,
-    NgTalkChannelsComponent
+    NgTalkChannelListComponent
   ]
 })
 export class NgTalkModule {
