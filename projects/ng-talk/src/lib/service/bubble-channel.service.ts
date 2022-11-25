@@ -1,4 +1,4 @@
-import {ApplicationRef, ComponentFactoryResolver, EmbeddedViewRef, Injectable, Injector} from '@angular/core';
+import {ApplicationRef, createComponent, EmbeddedViewRef, Injectable, Injector} from '@angular/core';
 import {ChatChannel} from '../models/chat-channel';
 import {NgTalkBubbleChannelComponent} from '../components/ng-talk-bubble-channel/ng-talk-bubble-channel.component';
 import {ChatAdapter} from '../models/chat-adapter';
@@ -12,8 +12,7 @@ import {BubbleChannelRef} from "./bubble-channel-ref";
 export class BubbleChannelService {
   private static _activeInstances = new Map<string, BubbleChannelRef>();
 
-  constructor(private _componentFactoryResolver: ComponentFactoryResolver,
-              private _appRef: ApplicationRef,
+  constructor(private _appRef: ApplicationRef,
               private _injector: Injector,
               private _overlaySvc: Overlay) {
   }
@@ -33,9 +32,7 @@ export class BubbleChannelService {
     }
 
     // 1. Create a component reference from the component type
-    const componentRef = this._componentFactoryResolver
-      .resolveComponentFactory(NgTalkBubbleChannelComponent)
-      .create(this._injector);
+    const componentRef = createComponent(NgTalkBubbleChannelComponent, {environmentInjector: this._appRef.injector});
 
     const componentInstance = componentRef.instance as NgTalkBubbleChannelComponent;
     componentInstance.channel = channel;
