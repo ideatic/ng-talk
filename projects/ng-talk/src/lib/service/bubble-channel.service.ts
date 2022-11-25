@@ -13,7 +13,6 @@ export class BubbleChannelService {
   private static _activeInstances = new Map<string, BubbleChannelRef>();
 
   constructor(private _appRef: ApplicationRef,
-              private _injector: Injector,
               private _overlaySvc: Overlay) {
   }
 
