@@ -15,7 +15,7 @@ import {CommonModule} from "@angular/common";
 @Component({
   selector: 'ng-talk-send-message',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgTalkSendEmojiComponent,NgTalkChannelMessageRefComponent, NgTalkSendGifComponent, NgTalkSendEmojiComponent],
+  imports: [CommonModule, FormsModule, NgTalkSendEmojiComponent, NgTalkChannelMessageRefComponent, NgTalkSendGifComponent, NgTalkSendEmojiComponent],
   template: `
     <p *ngIf="chat.channel?.blocked; else sendMessageForm" style="margin: 1em 0; text-align: center">{{ chat.settings.disabledMessage }}</p>
 
@@ -103,7 +103,7 @@ export class NgTalkSendMessageComponent implements OnDestroy {
     }
   }
 
-  protected  sendTextMessage() {
+  protected sendTextMessage() {
     if (this.newMessage?.trim().length > 0) {
       this._sendMessage({
         type: ChatMessageType.Text,
@@ -117,7 +117,7 @@ export class NgTalkSendMessageComponent implements OnDestroy {
     this._textInput?.nativeElement.focus();
   }
 
-  protected  onInputFocus() {
+  protected onInputFocus() {
     // Mark as read if component is focused
     if (this.chat.channel && this.chat.channel.unread > 0 && document.hasFocus()) {
       this.chat.adapter.markAsRead(this.chat.channel);
@@ -128,7 +128,7 @@ export class NgTalkSendMessageComponent implements OnDestroy {
     this.focus();
   }
 
-  protected  sendPhoto(url: string) {
+  protected sendPhoto(url: string) {
     this._sendMessage({
       type: ChatMessageType.Gif,
       content: url
