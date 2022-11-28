@@ -1,17 +1,14 @@
 import {Component, Optional} from '@angular/core';
+import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {ChatChannel} from '../../../models/chat-channel';
 import {BubbleChannelService} from '../../../service/bubble-channel.service';
-import {NgClass, NgIf} from "@angular/common";
+import {NgTalkChannelListComponent} from '../../ng-talk-channel-list/ng-talk-channel-list.component';
 import {BubbleChannelRef} from "../../../service/bubble-channel-ref";
-import {NgTalkChannelComponent} from "../ng-talk-channel.component";
-import {NgTalkChannelListComponent} from "../../ng-talk-channel-list/ng-talk-channel-list.component";
 
 @Component({
-  standalone: true,
-  imports: [NgIf, NgClass],
   template: `
     <a *ngIf="channelList" class="go-back" (click)="channelList.selectChannel(null)"><i class="fas fa-arrow-left"></i></a>
-    <img *ngIf="chat.channel.icon" [src]="chat.channel.icon"/>
+    <img *ngIf="chat.channel.icon" [src]="chat.channel.icon">
     <span style="flex-grow: 1">{{ chat.channel.name }}</span>
     <a *ngIf="!bubbleChannelSvc.hasInstance(chat.channel)" class="tool" (click)="openBubbleChat(chat.channel)"><i class="fas fa-external-link-square-alt"></i></a>
     <a class="tool" (click)="toggleBlock()"><i class="fas" [ngClass]="chat.channel.blocked ? 'fa-unlock' : 'fa-ban'"></i></a>
@@ -25,7 +22,7 @@ export class NgTalkChannelHeaderComponent {
 
   }
 
-  protected openBubbleChat(channel: ChatChannel): BubbleChannelRef | void {
+  public openBubbleChat(channel: ChatChannel): BubbleChannelRef | void {
     if (channel && !this.bubbleChannelSvc.hasInstance(channel)) {
       const bubbleRef = this.bubbleChannelSvc.show(channel, this.chat.adapter, this.chat.user, this.chat.settings);
 
@@ -33,12 +30,12 @@ export class NgTalkChannelHeaderComponent {
     }
   }
 
-  protected toggleBlock() {
+  public toggleBlock() {
     this.chat.adapter.toggleBlock(this.chat.channel)
       .then(() => this.chat.reloadMessages());
   }
 
-  protected deleteChannel() {
+  public deleteChannel() {
     this.chat.adapter.deleteChannel(this.chat.channel)
       .then(() => this.chat.deleted.emit());
   }

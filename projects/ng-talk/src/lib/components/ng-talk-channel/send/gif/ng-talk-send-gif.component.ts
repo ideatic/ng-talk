@@ -1,15 +1,10 @@
-import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
 import {HttpClient} from '@angular/common/http';
 import {debounceTime, map, Observable, Subject} from 'rxjs';
-import {CommonModule} from "@angular/common";
-import {FormsModule} from "@angular/forms";
-import {FnPipe} from "../../../../pipes/fn.pipe";
-import {NgTalkChannelComponent} from "../../ng-talk-channel.component";
 
 @Component({
   selector: 'ng-talk-send-gif',
-  standalone: true,
-  imports: [CommonModule, FormsModule, FnPipe],
   template: `
     <div style="display: flex; align-items: center; margin-bottom: 10px">
       <input type="search" [(ngModel)]="searchQuery" [placeholder]="chat.settings.search" (ngModelChange)="searchGIFs($event)" style="flex-grow: 1"/>
@@ -64,7 +59,7 @@ export class NgTalkSendGifComponent implements OnInit {
 
   private _deBouncer: Subject<string>;
 
-  constructor(protected chat: NgTalkChannelComponent,
+  constructor(public chat: NgTalkChannelComponent,
               private _http: HttpClient) {
 
   }
@@ -88,7 +83,7 @@ export class NgTalkSendGifComponent implements OnInit {
   }
 
   //https://api.giphy.com/v1/gifs/trending?api_key=HmL1Rhx5T8GQj1FTPXuRspqYlnVNYApj
-  protected searchGIFs(query: string) {
+  public searchGIFs(query: string) {
     if (!this._deBouncer) {
       this._deBouncer = new Subject();
       this._deBouncer.pipe(debounceTime(500))

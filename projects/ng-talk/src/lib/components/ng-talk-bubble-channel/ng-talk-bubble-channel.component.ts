@@ -1,14 +1,15 @@
 import {Component, ElementRef, HostListener, Input, OnDestroy, ViewChild} from '@angular/core';
-import {CdkDragEnd, CdkDragMove, DragDropModule} from '@angular/cdk/drag-drop';
+import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {ChatChannel} from '../../models/chat-channel';
 import {ChatAdapter} from '../../models/chat-adapter';
+import {NgTalkSettings} from '../ng-talk-settings';
 import {ChatUser} from '../../models/chat-user';
+import {NgTalkChannelComponent} from '../ng-talk-channel/ng-talk-channel.component';
 import {fromEvent, Subscription} from 'rxjs';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {DecimalPipe, NgClass, NgIf, NgStyle} from "@angular/common";
 import {BubbleChannelRef} from "../../service/bubble-channel-ref";
-import {NgTalkChannelComponent} from "../ng-talk-channel/ng-talk-channel.component";
-import {NgTalkSettings} from "../ng-talk-settings";
+
 
 @Component({
   selector: 'channel-bubble',

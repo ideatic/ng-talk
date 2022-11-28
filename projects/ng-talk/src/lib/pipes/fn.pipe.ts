@@ -2,8 +2,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'fn',
-  pure: true,
-  standalone: true
+  pure: true
 })
 export class FnPipe implements PipeTransform {
 
