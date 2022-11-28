@@ -4,8 +4,11 @@ import {ChatChannel} from '../../../models/chat-channel';
 import {BubbleChannelService} from '../../../service/bubble-channel.service';
 import {NgTalkChannelListComponent} from '../../ng-talk-channel-list/ng-talk-channel-list.component';
 import {BubbleChannelRef} from "../../../service/bubble-channel-ref";
+import {NgClass, NgIf} from "@angular/common";
 
 @Component({
+  standalone: true,
+  imports: [NgIf, NgClass],
   template: `
     <a *ngIf="channelList" class="go-back" (click)="channelList.selectChannel(null)"><i class="fas fa-arrow-left"></i></a>
     <img *ngIf="chat.channel.icon" [src]="chat.channel.icon">
@@ -22,7 +25,7 @@ export class NgTalkChannelHeaderComponent {
 
   }
 
-  public openBubbleChat(channel: ChatChannel): BubbleChannelRef | void {
+  protected openBubbleChat(channel: ChatChannel): BubbleChannelRef | void {
     if (channel && !this.bubbleChannelSvc.hasInstance(channel)) {
       const bubbleRef = this.bubbleChannelSvc.show(channel, this.chat.adapter, this.chat.user, this.chat.settings);
 
@@ -30,12 +33,12 @@ export class NgTalkChannelHeaderComponent {
     }
   }
 
-  public toggleBlock() {
+  protected toggleBlock() {
     this.chat.adapter.toggleBlock(this.chat.channel)
       .then(() => this.chat.reloadMessages());
   }
 
-  public deleteChannel() {
+  protected deleteChannel() {
     this.chat.adapter.deleteChannel(this.chat.channel)
       .then(() => this.chat.deleted.emit());
   }

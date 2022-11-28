@@ -4,7 +4,6 @@ import {CommonModule, DatePipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {InViewportDirective} from './directives/in-viewport.directive';
 import {NgTalkChannelListComponent} from './components/ng-talk-channel-list/ng-talk-channel-list.component';
-import {FilterChannelsPipe} from './pipes/filterChannels.pipe';
 import {FormatDatePipe} from './pipes/formatDate.pipe';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {BubbleChannelService} from './service/bubble-channel.service';
@@ -31,15 +30,7 @@ import {MatMenuModule} from '@angular/material/menu';
     FormsModule,
     HttpClientModule,
     DragDropModule,
-    MatMenuModule
-  ],
-  providers: [
-    DatePipe,
-    BubbleChannelService,
-    AutoLinkerService,
-    {provide: Window, useValue: window}
-  ],
-  declarations: [
+    MatMenuModule,
     NgTalkChannelComponent,
     NgTalkChannelListComponent,
     NgTalkChannelPreviewComponent,
@@ -53,9 +44,14 @@ import {MatMenuModule} from '@angular/material/menu';
     NgTalkSendEmojiComponent,
     NgTalkSendGifComponent,
     InViewportDirective,
-    FilterChannelsPipe,
     FormatDatePipe,
     FnPipe
+  ],
+  providers: [
+    DatePipe,
+    BubbleChannelService,
+    AutoLinkerService,
+    {provide: Window, useValue: window}
   ],
   exports: [
     NgTalkChannelComponent,

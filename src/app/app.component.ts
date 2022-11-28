@@ -3,9 +3,14 @@ import {DemoAdapter} from './adapters/demo-adapter';
 import {ChatUser, ChatUserStatus} from '../../projects/ng-talk/src/lib/models/chat-user';
 import {NgTalkSettings} from '../../projects/ng-talk/src/lib/components/ng-talk-settings';
 import {ChatAdapter} from '../../projects/ng-talk/src/lib/models/chat-adapter';
+import {FormsModule} from "@angular/forms";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {NgTalkModule} from "../../projects/ng-talk/src/lib/ng-talk.module";
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [FormsModule, NgTalkModule, BrowserAnimationsModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']
 })

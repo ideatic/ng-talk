@@ -1,5 +1,5 @@
 import {Component, ElementRef, HostListener, Input, OnDestroy, ViewChild} from '@angular/core';
-import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
+import {CdkDragEnd, CdkDragMove, DragDropModule} from '@angular/cdk/drag-drop';
 import {ChatChannel} from '../../models/chat-channel';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {NgTalkSettings} from '../ng-talk-settings';
