@@ -4,7 +4,7 @@ import {CommonModule, DatePipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {InViewportDirective} from './directives/in-viewport.directive';
 import {NgTalkChannelListComponent} from './components/channel-list/ng-talk-channel-list.component';
-import {FormatDatePipe} from './pipes/formatDate.pipe';
+import {RelativeDatePipe} from './pipes/relativeDate.pipe';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {BubbleChannelService} from './service/bubble-channel.service';
 import {NgTalkBubbleChannelComponent} from './components/bubble/ng-talk-bubble-channel.component';
@@ -44,7 +44,7 @@ import {MatMenuModule} from '@angular/material/menu';
     NgTalkSendEmojiComponent,
     NgTalkSendGifComponent,
     InViewportDirective,
-    FormatDatePipe,
+    RelativeDatePipe,
     FnPipe
   ],
   providers: [

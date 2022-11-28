@@ -1,8 +1,8 @@
-import {Component, ElementRef, OnDestroy, Optional, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, OnDestroy, Optional, ViewChild} from '@angular/core';
 import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
 import {Subscription} from 'rxjs';
-import {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-list.component';
+import type {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-list.component';
 import {ChatChannel} from '../../../models/chat-channel';
 import {growAnimation} from './grow-animation';
 import {FormsModule} from "@angular/forms";
@@ -10,6 +10,7 @@ import {NgTalkSendEmojiComponent} from "./emoji/ng-talk-send-emoji.component";
 import {NgTalkSendGifComponent} from "./gif/ng-talk-send-gif.component";
 import {NgTalkChannelMessageRefComponent} from "../message/ref/ng-talk-channel-message-ref.component";
 import {CommonModule} from "@angular/common";
+import {NG_TALK_CHANNEL_LIST_TOKEN} from "../../channel-list/ng-talk-channel-list-token";
 
 
 @Component({
@@ -79,7 +80,7 @@ export class NgTalkSendMessageComponent implements OnDestroy {
   private _channelChangedSubscription: Subscription;
 
   constructor(protected chat: NgTalkChannelComponent,
-              @Optional() channelList: NgTalkChannelListComponent) {
+              @Optional() @Inject(NG_TALK_CHANNEL_LIST_TOKEN) channelList: NgTalkChannelListComponent) {
     if (channelList) { // Detectar cambio de canal si estamos en un listado
       this._channelChangedSubscription = channelList.channelChanged.subscribe((c) => this._onChannelChanged(c));
     }

@@ -31,5 +31,12 @@
     "@angular/compiler-cli": "^14.2.0",
     "@angular/language-service": "^14.2.0",
     "typescript": "^4.8.2"
+  },
+  "madge": {
+    "detectiveOptions": {
+      "ts": {
+        "skipTypeImports": true
+      }
+    }
   }
 }

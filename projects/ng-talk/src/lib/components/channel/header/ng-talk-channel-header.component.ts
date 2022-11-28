@@ -19,8 +19,8 @@ import {NgClass, NgIf} from "@angular/common";
   styleUrls: ['ng-talk-channel-header.component.less']
 })
 export class NgTalkChannelHeaderComponent {
-  constructor(public chat: NgTalkChannelComponent,
-              public bubbleChannelSvc: BubbleChannelService,
+  constructor(protected chat: NgTalkChannelComponent,
+              protected bubbleChannelSvc: BubbleChannelService,
               @Optional() public channelList: NgTalkChannelListComponent) {
 
   }

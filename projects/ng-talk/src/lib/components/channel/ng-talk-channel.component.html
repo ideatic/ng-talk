@@ -23,7 +23,7 @@
     <ng-container *ngFor="let message of messages; trackBy: trackMessage; index as index">
       <!-- Date separator -->
       <div *ngIf="message | fn:isSeparatorVisible:this:messages[index - 1]" class="day-separator">
-        <span>{{ message.date | formatDate : settings }}</span>
+        <span>{{ message.date | relativeDate : settings }}</span>
       </div>
 
       <ng-talk-channel-message [message]="message" [prevMessage]="messages[index - 1]"

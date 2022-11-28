@@ -4,13 +4,12 @@ import {ChatUser, ChatUserStatus} from '../../projects/ng-talk/src/lib/models/ch
 import {NgTalkSettings} from '../../projects/ng-talk/src/lib/components/ng-talk-settings';
 import {ChatAdapter} from '../../projects/ng-talk/src/lib/models/chat-adapter';
 import {FormsModule} from "@angular/forms";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgTalkChannelListComponent} from "../../projects/ng-talk/src/public_api";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FormsModule, NgTalkChannelListComponent, BrowserAnimationsModule],
+  imports: [FormsModule, NgTalkChannelListComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']
 })

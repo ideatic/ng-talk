@@ -8,14 +8,15 @@ import {BubbleChannelRef} from "./bubble-channel-ref";
 import {NgTalkSettings} from "../components/ng-talk-settings";
 import {NgTalkBubbleChannelComponent} from "../components/bubble/ng-talk-bubble-channel.component";
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class BubbleChannelService {
   private static _activeInstances = new Map<string, BubbleChannelRef>();
 
   constructor(private _appRef: ApplicationRef,
               private _injector: EnvironmentInjector,
               private _overlaySvc: Overlay) {
-    debugger;
   }
 
   public get activeChannelIDs(): string[] {

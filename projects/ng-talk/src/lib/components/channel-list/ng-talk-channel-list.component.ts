@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, ElementRef, EventEmitter, forwardRef, HostBinding, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatUser} from '../../models/chat-user';
 import {MessageLoadingMethod, NgTalkSettings} from '../ng-talk-settings';
@@ -12,13 +12,17 @@ import {NgTalkChannelComponent} from "../channel/ng-talk-channel.component";
 import {NgTalkChannelPreviewComponent} from "../channel/preview/ng-talk-channel-preview.component";
 import {FnPipe} from "../../pipes/fn.pipe";
 import {InViewportDirective} from "../../directives/in-viewport.directive";
+import {NG_TALK_CHANNEL_LIST_TOKEN} from "./ng-talk-channel-list-token";
 
 @Component({
   selector: 'ng-talk-channel-list',
   standalone: true,
   imports: [CommonModule, FormsModule, NgTalkChannelComponent, NgTalkChannelPreviewComponent, FnPipe, InViewportDirective],
   templateUrl: './ng-talk-channel-list.component.html',
-  styleUrls: ['./ng-talk-channel-list.component.less']
+  styleUrls: ['./ng-talk-channel-list.component.less'],
+  providers: [
+    {provide: NG_TALK_CHANNEL_LIST_TOKEN, useExisting: forwardRef(() => NgTalkChannelListComponent)},
+  ]
 })
 export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy {
 
