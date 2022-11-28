@@ -4,7 +4,7 @@ import {ChatChannel} from '../../models/chat-channel';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {NgTalkSettings} from '../ng-talk-settings';
 import {ChatUser} from '../../models/chat-user';
-import {NgTalkChannelComponent} from '../ng-talk-channel/ng-talk-channel.component';
+import {NgTalkChannelComponent} from '../channel/ng-talk-channel.component';
 import {fromEvent, Subscription} from 'rxjs';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {DecimalPipe, NgClass, NgIf, NgStyle} from "@angular/common";

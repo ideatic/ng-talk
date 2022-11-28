@@ -8,8 +8,8 @@ import {nameof} from '../../utils/utils';
 import {ChatMessage} from '../../models/chat-message';
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
-import {NgTalkChannelComponent} from "../ng-talk-channel/ng-talk-channel.component";
-import {NgTalkChannelPreviewComponent} from "./preview/ng-talk-channel-preview.component";
+import {NgTalkChannelComponent} from "../channel/ng-talk-channel.component";
+import {NgTalkChannelPreviewComponent} from "../channel/preview/ng-talk-channel-preview.component";
 import {FnPipe} from "../../pipes/fn.pipe";
 import {InViewportDirective} from "../../directives/in-viewport.directive";
 

@@ -1,5 +1,5 @@
 import {Type} from '@angular/core';
-import {NgTalkChannelHeaderComponent} from './ng-talk-channel/header/ng-talk-channel-header.component';
+import {NgTalkChannelHeaderComponent} from './channel/header/ng-talk-channel-header.component';
 import Autolinker from 'autolinker';
 
 export enum MessageLoadingMethod {

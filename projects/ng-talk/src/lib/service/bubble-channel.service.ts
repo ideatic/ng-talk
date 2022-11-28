@@ -6,7 +6,7 @@ import {first} from 'rxjs/operators';
 import {Overlay, OverlayConfig} from '@angular/cdk/overlay';
 import {BubbleChannelRef} from "./bubble-channel-ref";
 import {NgTalkSettings} from "../components/ng-talk-settings";
-import {NgTalkBubbleChannelComponent} from "../components/ng-talk-bubble-channel/ng-talk-bubble-channel.component";
+import {NgTalkBubbleChannelComponent} from "../components/bubble/ng-talk-bubble-channel.component";
 
 @Injectable()
 export class BubbleChannelService {

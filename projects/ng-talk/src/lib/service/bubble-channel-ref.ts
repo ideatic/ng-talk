@@ -1,5 +1,5 @@
 import {ApplicationRef, ComponentRef, EventEmitter} from "@angular/core";
-import {NgTalkBubbleChannelComponent} from "../components/ng-talk-bubble-channel/ng-talk-bubble-channel.component";
+import {NgTalkBubbleChannelComponent} from "../components/bubble/ng-talk-bubble-channel.component";
 import {OverlayRef} from "@angular/cdk/overlay";
 
 export class BubbleChannelRef {

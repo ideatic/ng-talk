@@ -2,7 +2,7 @@ import {Component, Optional} from '@angular/core';
 import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {ChatChannel} from '../../../models/chat-channel';
 import {BubbleChannelService} from '../../../service/bubble-channel.service';
-import {NgTalkChannelListComponent} from '../../ng-talk-channel-list/ng-talk-channel-list.component';
+import {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-list.component';
 import {BubbleChannelRef} from "../../../service/bubble-channel-ref";
 import {NgClass, NgIf} from "@angular/common";
 

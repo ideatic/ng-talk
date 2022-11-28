@@ -2,7 +2,7 @@ import {Component, ElementRef, OnDestroy, Optional, ViewChild} from '@angular/co
 import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
 import {Subscription} from 'rxjs';
-import {NgTalkChannelListComponent} from '../../ng-talk-channel-list/ng-talk-channel-list.component';
+import {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-list.component';
 import {ChatChannel} from '../../../models/chat-channel';
 import {growAnimation} from './grow-animation';
 import {FormsModule} from "@angular/forms";
