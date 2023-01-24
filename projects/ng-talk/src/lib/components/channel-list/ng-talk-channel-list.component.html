@@ -14,11 +14,11 @@
       <!-- Wait 500ms to enable viewport observer while the component render -->
       <a *ngIf="settings.channelMessagesLoading == MessagesLoading.lazy; else renderActiveChannel"
          (click)="selectChannel(channel)" inViewport [inViewportOptions]="{delay: 500}" (inViewportChange)="inViewportChangedChannel(channel, $event)">
-        <ng-talk-channel-preview [channel]="channel"></ng-talk-channel-preview>
+        <ng-talk-channel-preview [channel]="channel"/>
       </a>
       <ng-template #renderActiveChannel>
         <a (click)="selectChannel(channel)">
-          <ng-talk-channel-preview [channel]="channel"></ng-talk-channel-preview>
+          <ng-talk-channel-preview [channel]="channel"/>
         </a>
       </ng-template>
     </li>
@@ -34,5 +34,5 @@
                    [settings]="settings"
                    (userClicked)="userClicked.emit($event)"
                    (messageSent)="messageSent.emit($event)"
-                   (deleted)="activeChannel = null"></ng-talk-channel>
+                   (deleted)="activeChannel = null"/>
 </div>

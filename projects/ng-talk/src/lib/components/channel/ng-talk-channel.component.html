@@ -28,10 +28,10 @@
 
       <ng-talk-channel-message [message]="message" [prevMessage]="messages[index - 1]"
                                cdkDrag cdkDragLockAxis="x" [cdkDragDisabled]="message.type == MessageType.Writing"
-                             (cdkDragMoved)="onDrag($event)"  (cdkDragEnded)="onDragEnded($event, message)"></ng-talk-channel-message>
+                             (cdkDragMoved)="onDrag($event)"  (cdkDragEnded)="onDragEnded($event, message)"/>
     </ng-container>
   </div>
 
   <!-- Send message form -->
-  <ng-talk-send-message></ng-talk-send-message>
+  <ng-talk-send-message/>
 </ng-container>

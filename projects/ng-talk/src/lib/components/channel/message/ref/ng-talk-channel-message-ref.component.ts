@@ -8,7 +8,7 @@ import {NgTalkChannelMessageBodyComponent} from "../body/ng-talk-channel-message
   imports: [NgTalkChannelMessageBodyComponent],
   template: `
     <strong>{{ message.from.name }}</strong>
-    <ng-talk-channel-message-body [message]="message"></ng-talk-channel-message-body>
+    <ng-talk-channel-message-body [message]="message"/>
   `,
   styles: [`
       :host {

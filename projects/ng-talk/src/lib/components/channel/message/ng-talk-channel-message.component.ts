@@ -30,13 +30,13 @@ import {NgTalkChannelMessageBodyComponent} from "./body/ng-talk-channel-message-
       </mat-menu>
 
       <!-- Replied message -->
-      <ng-talk-channel-message-ref *ngIf="message.replyTo" [message]="message.replyTo" role="button" (click)="chat.goToMessage(message.replyTo)"></ng-talk-channel-message-ref>
+      <ng-talk-channel-message-ref *ngIf="message.replyTo" [message]="message.replyTo" role="button" (click)="chat.goToMessage(message.replyTo)"/>
 
       <!-- Author, body and date -->
       <div *ngIf="chat.settings.showNames && showAuthor" class="author" [ngStyle]="{color: message.from.color }"
            (click)="chat.userClicked.emit(message.from)">{{ message.from.name }}</div>
 
-      <ng-talk-channel-message-body [message]="message"></ng-talk-channel-message-body>
+      <ng-talk-channel-message-body [message]="message"/>
 
       <div *ngIf="message.type != MessageType.Writing" class="date">{{ message.date | date:chat.settings.datePipe }}</div>
 

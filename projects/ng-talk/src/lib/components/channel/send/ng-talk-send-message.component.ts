@@ -27,7 +27,7 @@ import {NG_TALK_CHANNEL_LIST_TOKEN} from "../../channel-list/ng-talk-channel-lis
 
       <!-- Reply to message -->
       <div *ngIf="chat.replyingTo" style="display: flex; align-items: center" [@grow]>
-        <ng-talk-channel-message-ref [message]="chat.replyingTo"></ng-talk-channel-message-ref>
+        <ng-talk-channel-message-ref [message]="chat.replyingTo"/>
         <span style="cursor: pointer; padding: 0 15px" role="button" (click)="chat.replyingTo = null">
           <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24">
             <path d="m19.1 17.2-5.3-5.3 5.3-5.3-1.8-1.8-5.3 5.4-5.3-5.3-1.8 1.7 5.3 5.3-5.3 5.3L6.7 19l5.3-5.3 5.3 5.3 1.8-1.8z"></path>

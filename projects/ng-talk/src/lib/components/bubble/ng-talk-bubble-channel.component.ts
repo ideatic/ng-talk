@@ -36,7 +36,7 @@ import {BubbleChannelRef} from "../../service/bubble-channel-ref";
                      [adapter]="adapter"
                      [settings]="channelSettings"
                      [disableRendering]="!channelVisible"
-                     (deleted)="onChatDeleted()"></ng-talk-channel>
+                     (deleted)="onChatDeleted()"/>
 
     <div *ngIf="isDragging" #closeButton class="close-bubble" [ngClass]="closeButtonClass">&times;</div>
   `,

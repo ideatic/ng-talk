@@ -20,7 +20,7 @@ import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-wr
       <img *ngSwitchCase="MessageType.Gif" [src]="message.content" loading="lazy" style="margin-bottom: 8px"/>
 
       <!-- Writing animation -->
-      <ng-talk-channel-message-writing *ngSwitchCase="MessageType.Writing"></ng-talk-channel-message-writing>
+      <ng-talk-channel-message-writing *ngSwitchCase="MessageType.Writing"/>
     </ng-container>
   `,
   styleUrls: ['ng-talk-channel-message-body.component.less']
