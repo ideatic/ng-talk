@@ -41,11 +41,11 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
 
   public activeChannel: ChatChannel;
   private _channelsSubscription: Subscription;
-  public channels: ChatChannel[];
+  protected channels: ChatChannel[];
 
   private _channelMessagesSubscriptions = new Map<string, Subscription>();
 
-  public filterQuery: string;
+  protected filterQuery: string;
 
   // Import types
   protected readonly MessagesLoading = MessageLoadingMethod;
@@ -95,7 +95,7 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
     }
   }
 
-  public trackChannel(i: number, channel: ChatChannel) {
+  protected trackChannel(i: number, channel: ChatChannel) {
     return channel.id;
   }
 
@@ -119,8 +119,8 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
     }
   }
 
-  public filterChannels(channels: ChatChannel[], query: string): ChatChannel[] {
-    if (!query) {
+  protected filterChannels(channels: ChatChannel[], query: string): ChatChannel[] {
+    if (!query || !channels) {
       return channels;
     }
     return channels.filter(c => c.name.toLocaleLowerCase().indexOf(query) >= 0);
