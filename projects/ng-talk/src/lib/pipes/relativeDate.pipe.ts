@@ -10,10 +10,6 @@ import {DatePipe} from '@angular/common';
 export class RelativeDatePipe implements PipeTransform {
   private _datePipe = new DatePipe(inject(LOCALE_ID));
 
-  constructor() {
-
-  }
-
   public transform(date: Date, settings: NgTalkSettings): string {
     const now = new Date();
     const days = daysDiff(date, now);

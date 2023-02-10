@@ -25,7 +25,7 @@ export const archiveChats = functions
         const maxMessageCount = 250;
         const maxContentSize = 100 * 1024; // 100 kB
 
-        let messageCount = channel.messages.length;
+        const messageCount = channel.messages.length;
         const originalCount = messageCount;
         let contentSize = JSON.stringify(channel.messages).length;
 
