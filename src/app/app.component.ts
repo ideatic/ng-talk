@@ -38,5 +38,6 @@ export class AppComponent implements OnInit {
   }
 
   public adapterChanged() {
+    // Not used
   }
 }

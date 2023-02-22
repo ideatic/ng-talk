@@ -37,8 +37,7 @@ export class InViewportDirective implements OnDestroy, OnInit {
   public ngOnInit() {
     if (InViewportDirective.intersectionObserverFeatureDetection()) {
       const activateObserver = () => {
-        const IntersectionObserver = this._window['IntersectionObserver'];
-        this.observer = new IntersectionObserver(
+        this.observer = new this._window['IntersectionObserver'](
           this.intersectionObserverCallback.bind(this),
           this.inViewportOptions
         );
