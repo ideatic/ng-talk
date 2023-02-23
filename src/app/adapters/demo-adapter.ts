@@ -75,6 +75,7 @@ export class DemoAdapter extends ChatAdapter {
 
   private _channels$: BehaviorSubject<ChatChannel[]>;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public getChannels(user: ChatUser): Observable<ChatChannel[]> {
     return (this._channels$ ??= new BehaviorSubject<ChatChannel[]>(DemoAdapter.mockedUsers.map(user => {
       return {
@@ -95,6 +96,7 @@ export class DemoAdapter extends ChatAdapter {
 
   private _channelMessages: { [key: string]: BehaviorSubject<ChatMessage[]> } = {};
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public getMessages(room: ChatChannel, count: number): BehaviorSubject<ChatMessage[]> {
     if (!this._channelMessages[room.id]) {
       this._channelMessages[room.id] = new BehaviorSubject<ChatMessage[]>([]);
@@ -152,7 +154,7 @@ export class DemoAdapter extends ChatAdapter {
     this._channelMessages[room.id].next(roomMessages);
   }
 
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public markAsRead(channel: ChatChannel): Promise<any> {
     return Promise.resolve();
   }

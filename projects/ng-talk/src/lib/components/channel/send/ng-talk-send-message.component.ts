@@ -125,6 +125,7 @@ export class NgTalkSendMessageComponent implements OnDestroy {
     }
   }
 
+  // eslint-disable-next-line
   private _onChannelChanged(c: ChatChannel) {
     this.focus();
   }
