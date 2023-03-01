@@ -55,15 +55,15 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
   @ViewChild('ngTalkChannel', {static: true}) private _ngTalkChannel: NgTalkChannelComponent;
   @ViewChild('closeButton') private _closeButton: ElementRef<HTMLElement>;
 
-  public bubbleClass = '';
+  protected bubbleClass = '';
 
-  public channelVisible = false;
-  public channelClass = 'bounceIn';
-  public channelStyle: { [key: string]: string | number } = {display: 'none'};
+  protected channelVisible = false;
+  protected channelClass = 'bounceIn';
+  protected channelStyle: { [key: string]: string | number } = {display: 'none'};
 
-  public closeButtonClass = '';
+  protected closeButtonClass = '';
 
-  public isDragging = false;
+  protected isDragging = false;
   private _lastPosition: { x: number; y: number; };
 
   private _documentClickSubscription: Subscription;
@@ -140,7 +140,7 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
 
   /* Visibility */
 
-  public toggleChannel() {
+  protected toggleChannel() {
     if (this.isDragging) {
       return;
     }
