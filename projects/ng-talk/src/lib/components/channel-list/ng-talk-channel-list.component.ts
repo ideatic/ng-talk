@@ -30,7 +30,7 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
   @Input() public adapter: ChatAdapter;
   @Input() public settings = new NgTalkSettings();
   @Output() public search = new EventEmitter<string>();
-  @Output() public channelChanged = new EventEmitter<ChatChannel>();
+  @Output() public channelChanged = new EventEmitter<ChatChannel|null>();
 
   // Forwarded events from single channel
   @Output() public messageSent = new EventEmitter<ChatMessage>();
@@ -99,7 +99,7 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
     return channel.id;
   }
 
-  public selectChannel(channel: ChatChannel) {
+  public selectChannel(channel: ChatChannel|null) {
     this.activeChannel = channel;
     this.filterQuery = '';
 
