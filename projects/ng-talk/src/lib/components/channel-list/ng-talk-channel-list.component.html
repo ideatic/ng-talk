@@ -1,38 +1,49 @@
-<div *ngIf="!activeChannel || displayMode == 'desktop'" class="channel-list">
-  <!-- Filter -->
-  <div *ngIf="settings.showFilter" class="filter">
-    <label>
-      <i *ngIf="settings.searchIconClass" [ngClass]="settings.searchIconClass"></i>
-      <input type="text" [placeholder]="settings.filterPlaceholder" [(ngModel)]="filterQuery" (ngModelChange)="search.emit($event)"/>
-    </label>
-  </div>
+@if (!activeChannel || displayMode == 'desktop') {
+  <div class="channel-list">
+    <!-- Filter -->
+    @if (settings.showFilter) {
+      <div class="filter">
+        <label>
+          @if (settings.searchIconClass) {
+            <i [class]="settings.searchIconClass"></i>
+          }
+          <input type="text" [placeholder]="settings.filterPlaceholder" [(ngModel)]="filterQuery" (ngModelChange)="search.emit($event)"/>
+        </label>
+      </div>
+    }
 
-  <!-- Channel list -->
-  <ul>
-    <li *ngFor="let channel of channels | fn:filterChannels:this:filterQuery ; trackBy: trackChannel"
-        [class.active]="activeChannel && channel.id == activeChannel.id">
-      <!-- Wait 500ms to enable viewport observer while the component render -->
-      <a *ngIf="settings.channelMessagesLoading == MessagesLoading.lazy; else renderActiveChannel"
-         (click)="selectChannel(channel)" inViewport [inViewportOptions]="{delay: 500}" (inViewportChange)="inViewportChangedChannel(channel, $event)">
-        <ng-talk-channel-preview [channel]="channel"/>
-      </a>
-      <ng-template #renderActiveChannel>
-        <a (click)="selectChannel(channel)">
-          <ng-talk-channel-preview [channel]="channel"/>
-        </a>
-      </ng-template>
-    </li>
-  </ul>
-</div>
+    <!-- Channel list -->
+    <ul>
+      @for (channel of channels | fn:filterChannels:this:filterQuery;track channel.id) {
+        <li [class.active]="activeChannel && channel.id == activeChannel.id">
+          <!-- Wait 500ms to enable viewport observer while the component render -->
+          @if (settings.channelMessagesLoading == MessagesLoading.lazy) {
+            <a (click)="selectChannel(channel)" inViewport [inViewportOptions]="{delay: 500}" (inViewportChange)="inViewportChangedChannel(channel, $event)">
+              <ng-talk-channel-preview [channel]="channel"/>
+            </a>
+          } @else {
+            <a (click)="selectChannel(channel)">
+              <ng-talk-channel-preview [channel]="channel"/>
+            </a>
+          }
+        </li>
+      }
+    </ul>
+  </div>
+}
 
 <!-- Single channel -->
-<div *ngIf="displayMode == 'desktop' || activeChannel" class="active-channel">
-  <ng-talk-channel *ngIf="activeChannel"
-                   [adapter]="adapter"
-                   [channel]="activeChannel"
-                   [user]="user"
-                   [settings]="settings"
-                   (userClicked)="userClicked.emit($event)"
-                   (messageSent)="messageSent.emit($event)"
-                   (deleted)="activeChannel = null"/>
-</div>
+@if (displayMode == 'desktop' || activeChannel) {
+  <div class="active-channel">
+    @if (activeChannel) {
+      <ng-talk-channel
+        [adapter]="adapter"
+        [channel]="activeChannel"
+        [user]="user"
+        [settings]="settings"
+        (userClicked)="userClicked.emit($event)"
+        (messageSent)="messageSent.emit($event)"
+        (deleted)="activeChannel = null"/>
+    }
+  </div>
+}

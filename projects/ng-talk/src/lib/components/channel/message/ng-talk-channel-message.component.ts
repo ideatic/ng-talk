@@ -5,45 +5,58 @@ import {isSameDay} from '../../../utils/utils';
 import {fromEvent} from 'rxjs';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {MatMenuModule, MatMenuTrigger} from "@angular/material/menu";
-import {DatePipe, NgIf, NgStyle} from "@angular/common";
+import {DatePipe, NgStyle} from "@angular/common";
 import {NgTalkChannelMessageRefComponent} from "./ref/ng-talk-channel-message-ref.component";
 import {NgTalkChannelMessageBodyComponent} from "./body/ng-talk-channel-message-body.component";
 
 @Component({
   selector: 'ng-talk-channel-message',
   standalone: true,
-  imports: [NgIf, MatMenuModule, NgStyle, DatePipe, NgTalkChannelMessageRefComponent, NgTalkChannelMessageBodyComponent],
+  imports: [MatMenuModule, NgStyle, DatePipe, NgTalkChannelMessageRefComponent, NgTalkChannelMessageBodyComponent],
   template: `
-    <div *ngIf="chat.settings.showAvatars && showAuthor" class="avatar">
-      <img [src]="message.from.avatar || chat.settings.defaultAvatar" (click)="chat.userClicked.emit(message.from)"/>
-    </div>
-    <div class="speech-balloon">
-      <!-- Actions menu -->
-      <span *ngIf="message.type != MessageType.Writing && chat.settings.allowReplies" class="action-menu" role="button"
-            #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="toolsMenu" [class.opened]="menuTrigger.menuOpen">
+      @if (chat.settings.showAvatars && showAuthor) {
+          <div class="avatar">
+              <img [src]="message.from.avatar || chat.settings.defaultAvatar" (click)="chat.userClicked.emit(message.from)"/>
+          </div>
+      }
+      <div class="speech-balloon">
+          <!-- Actions menu -->
+          @if (message.type != MessageType.Writing && chat.settings.allowReplies) {
+              <span class="action-menu" role="button"
+                    #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="toolsMenu" [class.opened]="menuTrigger.menuOpen">
             <svg viewBox="0 0 18 18" width="18" height="18" class=""><path fill="currentColor" d="M3.3 4.6 9 10.3l5.7-5.7 1.6 1.6L9 13.4 1.7 6.2l1.6-1.6z"></path></svg>
           </span>
-      <mat-menu #toolsMenu>
-        <ng-template matMenuContent>
-          <button mat-menu-item (click)="chat.replyTo(message)">{{ chat.settings.replyBtn }}</button>
-        </ng-template>
-      </mat-menu>
+              <mat-menu #toolsMenu>
+                  <ng-template matMenuContent>
+                      <button mat-menu-item (click)="chat.replyTo(message)">{{ chat.settings.replyBtn }}</button>
+                  </ng-template>
+              </mat-menu>
+          }
 
-      <!-- Replied message -->
-      <ng-talk-channel-message-ref *ngIf="message.replyTo" [message]="message.replyTo" role="button" (click)="chat.goToMessage(message.replyTo)"/>
+          <!-- Replied message -->
+          @if (message.replyTo) {
+              <ng-talk-channel-message-ref [message]="message.replyTo" role="button" (click)="chat.goToMessage(message.replyTo)"/>
+          }
 
-      <!-- Author, body and date -->
-      <div *ngIf="chat.settings.showNames && showAuthor" class="author" [ngStyle]="{color: message.from.color }"
-           (click)="chat.userClicked.emit(message.from)">{{ message.from.name }}</div>
+          <!-- Author, body and date -->
+          @if (chat.settings.showNames && showAuthor) {
+              <div class="author" [ngStyle]="{color: message.from.color }"
+                   (click)="chat.userClicked.emit(message.from)">{{ message.from.name }}
+              </div>
+          }
 
-      <ng-talk-channel-message-body [message]="message"/>
+          <ng-talk-channel-message-body [message]="message"/>
 
-      <div *ngIf="message.type != MessageType.Writing" class="date">{{ message.date | date:chat.settings.datePipe }}</div>
+          @if (message.type != MessageType.Writing) {
+              <div class="date">{{ message.date | date:chat.settings.datePipe }}</div>
+          }
 
-      <div *ngIf="highlighted" class="overlay"></div>
-    </div>
+          @if (highlighted) {
+              <div class="overlay"></div>
+          }
+      </div>
   `,
-  styleUrls: ['ng-talk-channel-message.component.less']
+  styleUrl: 'ng-talk-channel-message.component.less'
 })
 export class NgTalkChannelMessageComponent implements OnChanges, OnDestroy {
   @Input() public message: ChatMessage;

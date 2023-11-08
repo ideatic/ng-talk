@@ -1,19 +1,21 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import emoji from './emoji.json';
 import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
-import {CommonModule, KeyValue} from '@angular/common';
+import {KeyValue, KeyValuePipe} from '@angular/common';
 import {FormsModule} from "@angular/forms";
 import {FnPipe} from "../../../../pipes/fn.pipe";
 
 @Component({
   selector: 'ng-talk-send-emoji',
   standalone: true,
-  imports: [CommonModule, FormsModule, FnPipe],
+  imports: [FormsModule, KeyValuePipe, FnPipe],
   template: `
-    <input type="search" [(ngModel)]="searchQuery" [placeholder]="chat.settings.search"/>
-    <div>
-      <span *ngFor="let pair of emoji | keyvalue | fn:filter:this:searchQuery" (click)="emojiSelected.emit(pair.value)">{{ pair.value }}</span>
-    </div>
+      <input type="search" [(ngModel)]="searchQuery" [placeholder]="chat.settings.search"/>
+      <div>
+          @for (pair of emoji | keyvalue | fn:filter:this:searchQuery;track pair) {
+              <span (click)="emojiSelected.emit(pair.value)">{{ pair.value }}</span>
+          }
+      </div>
   `,
   styles: [`
     :host {

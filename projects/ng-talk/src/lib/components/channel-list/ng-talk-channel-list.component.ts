@@ -6,7 +6,6 @@ import {ChatChannel} from '../../models/chat-channel';
 import {Subscription} from 'rxjs';
 import {nameof} from '../../utils/utils';
 import {ChatMessage} from '../../models/chat-message';
-import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {NgTalkChannelComponent} from "../channel/ng-talk-channel.component";
 import {NgTalkChannelPreviewComponent} from "../channel/preview/ng-talk-channel-preview.component";
@@ -17,9 +16,9 @@ import {NG_TALK_CHANNEL_LIST_TOKEN} from "./ng-talk-channel-list-token";
 @Component({
   selector: 'ng-talk-channel-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgTalkChannelComponent, NgTalkChannelPreviewComponent, FnPipe, InViewportDirective],
+  imports: [FormsModule, NgTalkChannelComponent, NgTalkChannelPreviewComponent, FnPipe, InViewportDirective],
   templateUrl: './ng-talk-channel-list.component.html',
-  styleUrls: ['./ng-talk-channel-list.component.less'],
+  styleUrl: './ng-talk-channel-list.component.less',
   providers: [
     {provide: NG_TALK_CHANNEL_LIST_TOKEN, useExisting: forwardRef(() => NgTalkChannelListComponent)},
   ]
@@ -93,10 +92,6 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
           }
         });
     }
-  }
-
-  protected trackChannel(i: number, channel: ChatChannel) {
-    return channel.id;
   }
 
   public selectChannel(channel: ChatChannel|null) {

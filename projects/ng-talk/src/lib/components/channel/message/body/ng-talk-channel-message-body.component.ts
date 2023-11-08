@@ -12,18 +12,27 @@ import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-wr
   standalone: true,
   imports: [NgSwitch, NgSwitchCase, FnPipe, NgTalkChannelMessageWritingComponent],
   template: `
-    <ng-container [ngSwitch]="message.type">
-      <!-- Text message -->
-      <div class="text-message" *ngSwitchCase="MessageType.Text" [innerHTML]="message | fn:transformContent:this"></div>
 
-      <img *ngSwitchCase="MessageType.Image" [src]="message.content" loading="lazy" style="margin-bottom: 8px"/>
-      <img *ngSwitchCase="MessageType.Gif" [src]="message.content" loading="lazy" style="margin-bottom: 8px"/>
+      @switch (message.type) {
+      <!-- Text message -->
+          @case (MessageType.Text) {
+              <div class="text-message" [innerHTML]="message | fn:transformContent:this"></div>
+          }
+          @case (MessageType.Image) {
+              <img [src]="message.content" loading="lazy" style="margin-bottom: 8px"/>
+          }
+          @case (MessageType.Gif) {
+              <img [src]="message.content" loading="lazy" style="margin-bottom: 8px"/>
+          }
 
       <!-- Writing animation -->
-      <ng-talk-channel-message-writing *ngSwitchCase="MessageType.Writing"/>
-    </ng-container>
+          @case (MessageType.Writing) {
+              <ng-talk-channel-message-writing/>
+          }
+      }
+
   `,
-  styleUrls: ['ng-talk-channel-message-body.component.less']
+  styleUrl: 'ng-talk-channel-message-body.component.less'
 })
 export class NgTalkChannelMessageBodyComponent {
   @Input() public message: ChatMessage;

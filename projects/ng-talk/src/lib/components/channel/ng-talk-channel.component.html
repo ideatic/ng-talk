@@ -1,37 +1,45 @@
-<ng-container *ngIf="!disableRendering">
+@if (!disableRendering) {
   <!-- Header -->
   <ng-container *ngComponentOutlet="settings.headerComponent"/>
 
   <!-- Chat list -->
   <div class="chat" #chatBox>
     <!-- Loader -->
-    <div *ngIf="loading" style="height: 20px">
+  @if (loading) {
+    <div style="height: 20px">
       <div class="chat-loader"></div>
     </div>
+  }
 
     <!-- Load more -->
-    <ng-container *ngIf="scrollWatcherEnabled && settings.allowLoadOldMessages">
-      <div *ngIf="viewportDetectionAvailable; else noViewportDetectionAvailable" inViewport (inViewportChange)="watcherInViewportChanged($event)"></div>
-      <ng-template #noViewportDetectionAvailable>
-        <div class="load-more">
-          <button (click)="loadOldMessages()">{{ settings.loadMoreText}}</button>
+  @if (scrollWatcherEnabled && settings.allowLoadOldMessages) {
+    @if (viewportDetectionAvailable) {
+      <div inViewport (inViewportChange)="watcherInViewportChanged($event)"></div>
+    } @else {
+      <div class="load-more">
+        <button (click)="loadOldMessages()">{{ settings.loadMoreText }}</button>
         </div>
-      </ng-template>
-    </ng-container>
+    }
+  }
 
     <!-- Messages -->
-    <ng-container *ngFor="let message of messages; trackBy: trackMessage; index as index">
-      <!-- Date separator -->
-      <div *ngIf="message | fn:isSeparatorVisible:this:messages[index - 1]" class="day-separator">
+  @for (message of messages;track trackMessage(index, message);let index = $index) {
+
+    <!-- Date separator -->
+    @if (message | fn:isSeparatorVisible:this:messages[index - 1]) {
+      <div class="day-separator">
         <span>{{ message.date | relativeDate : settings }}</span>
       </div>
+    }
 
       <ng-talk-channel-message [message]="message" [prevMessage]="messages[index - 1]"
                                cdkDrag cdkDragLockAxis="x" [cdkDragDisabled]="message.type == MessageType.Writing"
-                             (cdkDragMoved)="onDrag($event)"  (cdkDragEnded)="onDragEnded($event, message)"/>
-    </ng-container>
+                               (cdkDragMoved)="onDrag($event)" (cdkDragEnded)="onDragEnded($event, message)"/>
+
+  }
   </div>
 
   <!-- Send message form -->
   <ng-talk-send-message/>
-</ng-container>
+
+}

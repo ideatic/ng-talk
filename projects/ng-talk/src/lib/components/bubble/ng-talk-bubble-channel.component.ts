@@ -25,7 +25,9 @@ import {BubbleChannelRef} from "../../service/bubble-channel-ref";
          (cdkDragStarted)="onDragStart()"
          (cdkDragMoved)="onDragMoved($event)"
          (cdkDragEnded)="onDragEnded($event)">
-      <div *ngIf="!channelVisible && channel.unread > 0" class="unread-badge">{{ channel.unread | number }}</div>
+        @if (!channelVisible && channel.unread > 0) {
+            <div class="unread-badge">{{ channel.unread | number }}</div>
+        }
     </div>
 
     <ng-talk-channel #ngTalkChannel
@@ -38,9 +40,11 @@ import {BubbleChannelRef} from "../../service/bubble-channel-ref";
                      [disableRendering]="!channelVisible"
                      (deleted)="onChatDeleted()"/>
 
-    <div *ngIf="isDragging" #closeButton class="close-bubble" [ngClass]="closeButtonClass">&times;</div>
+    @if (isDragging) {
+        <div #closeButton class="close-bubble" [ngClass]="closeButtonClass">&times;</div>
+    }
   `,
-  styleUrls: [`ng-talk-bubble-channel.component.less`]
+  styleUrl: `ng-talk-bubble-channel.component.less`
 })
 export class NgTalkBubbleChannelComponent implements OnDestroy {
 
