@@ -4,11 +4,9 @@ import {ChatChannel} from '../../../models/chat-channel';
 import {BubbleChannelService} from '../../../service/bubble-channel.service';
 import {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-list.component';
 import {BubbleChannelRef} from "../../../service/bubble-channel-ref";
-import {NgClass} from "@angular/common";
 
 @Component({
   standalone: true,
-  imports: [NgClass],
   template: `
       @if (channelList) {
           <a class="go-back" (click)="channelList.selectChannel(null)"><i class="fas fa-arrow-left"></i></a>
@@ -20,7 +18,7 @@ import {NgClass} from "@angular/common";
       @if (!bubbleChannelSvc.hasInstance(chat.channel)) {
           <a class="tool" (click)="openBubbleChat(chat.channel)"><i class="fas fa-external-link-square-alt"></i></a>
       }
-      <a class="tool" (click)="toggleBlock()"><i class="fas" [ngClass]="chat.channel.blocked ? 'fa-unlock' : 'fa-ban'"></i></a>
+      <a class="tool" (click)="toggleBlock()"><i class="fas" [class]="chat.channel.blocked ? 'fa-unlock' : 'fa-ban'"></i></a>
       <a class="tool" (click)="deleteChannel()"><i class="fas fa-trash"></i></a>`,
   styleUrl: 'ng-talk-channel-header.component.less'
 })

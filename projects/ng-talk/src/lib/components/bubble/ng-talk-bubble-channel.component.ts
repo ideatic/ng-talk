@@ -7,19 +7,19 @@ import {ChatUser} from '../../models/chat-user';
 import {NgTalkChannelComponent} from '../channel/ng-talk-channel.component';
 import {fromEvent, Subscription} from 'rxjs';
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {DecimalPipe, NgClass, NgIf, NgStyle} from "@angular/common";
+import {DecimalPipe, NgStyle} from "@angular/common";
 import {BubbleChannelRef} from "../../service/bubble-channel-ref";
 
 
 @Component({
   selector: 'channel-bubble',
   standalone: true,
-  imports: [NgStyle, NgClass, NgIf, DragDropModule, NgTalkChannelComponent, DecimalPipe],
+  imports: [NgStyle, DragDropModule, NgTalkChannelComponent, DecimalPipe],
   template: `
     <div #bubble class="bubble"
          [title]="channel.name"
          [ngStyle]="{backgroundImage: 'url( ' + (channel.icon || channelSettings.defaultChannelIcon) + ')'}"
-         [ngClass]="bubbleClass"
+         [class]="bubbleClass"
          (click)="toggleChannel()"
          cdkDrag [cdkDragBoundary]="dragBoundarySelector"
          (cdkDragStarted)="onDragStart()"
@@ -31,7 +31,7 @@ import {BubbleChannelRef} from "../../service/bubble-channel-ref";
     </div>
 
     <ng-talk-channel #ngTalkChannel
-                     [ngClass]="channelClass"
+                     [class]="channelClass"
                      [ngStyle]="channelStyle"
                      [channel]="channel"
                      [user]="user"
@@ -41,7 +41,7 @@ import {BubbleChannelRef} from "../../service/bubble-channel-ref";
                      (deleted)="onChatDeleted()"/>
 
     @if (isDragging) {
-        <div #closeButton class="close-bubble" [ngClass]="closeButtonClass">&times;</div>
+        <div #closeButton class="close-bubble" [class]="closeButtonClass">&times;</div>
     }
   `,
   styleUrl: `ng-talk-bubble-channel.component.less`
