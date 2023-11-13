@@ -9,7 +9,7 @@ import {Component} from '@angular/core';
     <span></span>
   `,
   // https://codepen.io/jordanlove/pen/NjOvLv
-  styles: [`
+  styles: `
     :host {
       display: block;
       text-align: center;
@@ -48,7 +48,7 @@ import {Component} from '@angular/core';
         background-color: #B6B5BA;
       }
     }
-  `]
+  `
 })
 export class NgTalkChannelMessageWritingComponent {
 

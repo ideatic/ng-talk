@@ -17,7 +17,7 @@ import {FnPipe} from "../../../../pipes/fn.pipe";
           }
       </div>
   `,
-  styles: [`
+  styles: `
     :host {
       display: block;
       max-width: 100%;
@@ -49,7 +49,7 @@ import {FnPipe} from "../../../../pipes/fn.pipe";
       font-size: 20px;
       cursor: pointer;
     }
-  `]
+  `
 })
 export class NgTalkSendEmojiComponent {
   @Output() public emojiSelected = new EventEmitter<string>();

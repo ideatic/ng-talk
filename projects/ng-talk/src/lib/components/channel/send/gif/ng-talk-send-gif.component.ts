@@ -28,7 +28,7 @@ import {AsyncPipe} from "@angular/common";
           }
       </div>
   `,
-  styles: [`
+  styles: `
     :host {
       display: block;
       max-width: 100%;
@@ -54,7 +54,7 @@ import {AsyncPipe} from "@angular/common";
       width: 100%;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     }
-  `]
+  `
 })
 export class NgTalkSendGifComponent implements OnInit {
   @Output() public gifSelected = new EventEmitter<string>();

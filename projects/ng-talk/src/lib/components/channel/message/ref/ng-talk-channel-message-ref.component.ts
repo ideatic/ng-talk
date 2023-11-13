@@ -10,7 +10,7 @@ import {NgTalkChannelMessageBodyComponent} from "../body/ng-talk-channel-message
     <strong>{{ message.from.name }}</strong>
     <ng-talk-channel-message-body [message]="message"/>
   `,
-  styles: [`
+  styles: `
       :host {
           display: block;
           text-align: start;
@@ -31,7 +31,7 @@ import {NgTalkChannelMessageBodyComponent} from "../body/ng-talk-channel-message
           max-height: 3em;
           object-fit: contain;
       }
-  `]
+  `
 })
 export class NgTalkChannelMessageRefComponent {
   @Input() public message: ChatMessage;
