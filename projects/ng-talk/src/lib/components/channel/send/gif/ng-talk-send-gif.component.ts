@@ -12,7 +12,7 @@ import {AsyncPipe} from "@angular/common";
   imports: [FormsModule, AsyncPipe, FnPipe],
   template: `
       <div style="display: flex; align-items: center; margin-bottom: 10px">
-          <input type="search" [(ngModel)]="searchQuery" [placeholder]="chat.settings.search" (ngModelChange)="searchGIFs($event)" style="flex-grow: 1"/>
+          <input type="search" style="flex-grow: 1" [placeholder]="chat.settings.search" [(ngModel)]="searchQuery" (ngModelChange)="searchGIFs($event)"/>
 
           <!-- Giphy attribution -->
           <a href="https://giphy.com/" target="_blank" style="display: flex;align-items: center">
@@ -24,7 +24,7 @@ import {AsyncPipe} from "@angular/common";
       </div>
       <div class="gif-list">
           @for (gif of gifs$ | async;track gif) {
-              <span (click)="onGifSelected(gif)" style="text-align: center"><img [src]="gif | fn:getGifURL:this:false" loading="lazy"/></span>
+              <span style="text-align: center" (click)="onGifSelected(gif)"><img loading="lazy" [src]="gif | fn:getGifURL:this:false"/></span>
           }
       </div>
   `,

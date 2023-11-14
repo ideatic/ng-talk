@@ -3,7 +3,7 @@
   <ng-container *ngComponentOutlet="settings.headerComponent"/>
 
   <!-- Chat list -->
-  <div class="chat" #chatBox>
+  <div #chatBox class="chat">
     <!-- Loader -->
   @if (loading) {
     <div style="height: 20px">
@@ -32,8 +32,8 @@
       </div>
     }
 
-      <ng-talk-channel-message [message]="message" [prevMessage]="messages[index - 1]"
-                               cdkDrag cdkDragLockAxis="x" [cdkDragDisabled]="message.type == MessageType.Writing"
+      <ng-talk-channel-message cdkDrag cdkDragLockAxis="x"
+                               [message]="message" [prevMessage]="messages[index - 1]" [cdkDragDisabled]="message.type == MessageType.Writing"
                                (cdkDragMoved)="onDrag($event)" (cdkDragEnded)="onDragEnded($event, message)"/>
 
   }

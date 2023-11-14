@@ -17,11 +17,11 @@ import {BubbleChannelRef} from "../../service/bubble-channel-ref";
   imports: [NgStyle, DragDropModule, NgTalkChannelComponent, DecimalPipe],
   template: `
     <div #bubble class="bubble"
+         cdkDrag
          [title]="channel.name"
          [ngStyle]="{backgroundImage: 'url( ' + (channel.icon || channelSettings.defaultChannelIcon) + ')'}"
          [class]="bubbleClass"
-         (click)="toggleChannel()"
-         cdkDrag [cdkDragBoundary]="dragBoundarySelector"
+         [cdkDragBoundary]="dragBoundarySelector" (click)="toggleChannel()"
          (cdkDragStarted)="onDragStart()"
          (cdkDragMoved)="onDragMoved($event)"
          (cdkDragEnded)="onDragEnded($event)">

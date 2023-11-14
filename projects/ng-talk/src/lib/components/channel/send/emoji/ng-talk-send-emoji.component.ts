@@ -10,7 +10,7 @@ import {FnPipe} from "../../../../pipes/fn.pipe";
   standalone: true,
   imports: [FormsModule, KeyValuePipe, FnPipe],
   template: `
-      <input type="search" [(ngModel)]="searchQuery" [placeholder]="chat.settings.search"/>
+      <input type="search" [placeholder]="chat.settings.search" [(ngModel)]="searchQuery"/>
       <div>
           @for (pair of emoji | keyvalue | fn:filter:this:searchQuery;track pair) {
               <span (click)="emojiSelected.emit(pair.value)">{{ pair.value }}</span>

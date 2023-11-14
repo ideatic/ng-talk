@@ -18,7 +18,7 @@
         <li [class.active]="activeChannel && channel.id == activeChannel.id">
           <!-- Wait 500ms to enable viewport observer while the component render -->
           @if (settings.channelMessagesLoading == MessagesLoading.lazy) {
-            <a (click)="selectChannel(channel)" inViewport [inViewportOptions]="{delay: 500}" (inViewportChange)="inViewportChangedChannel(channel, $event)">
+            <a inViewport [inViewportOptions]="{delay: 500}" (click)="selectChannel(channel)" (inViewportChange)="inViewportChangedChannel(channel, $event)">
               <ng-talk-channel-preview [channel]="channel"/>
             </a>
           } @else {

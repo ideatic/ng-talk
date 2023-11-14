@@ -22,8 +22,8 @@ import {NgTalkChannelMessageBodyComponent} from "./body/ng-talk-channel-message-
       <div class="speech-balloon">
           <!-- Actions menu -->
           @if (message.type != MessageType.Writing && chat.settings.allowReplies) {
-              <span class="action-menu" role="button"
-                    #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="toolsMenu" [class.opened]="menuTrigger.menuOpen">
+              <span #menuTrigger="matMenuTrigger" class="action-menu"
+                    role="button" [matMenuTriggerFor]="toolsMenu" [class.opened]="menuTrigger.menuOpen">
             <svg viewBox="0 0 18 18" width="18" height="18" class=""><path fill="currentColor" d="M3.3 4.6 9 10.3l5.7-5.7 1.6 1.6L9 13.4 1.7 6.2l1.6-1.6z" /></svg>
           </span>
               <mat-menu #toolsMenu>
@@ -35,7 +35,7 @@ import {NgTalkChannelMessageBodyComponent} from "./body/ng-talk-channel-message-
 
           <!-- Replied message -->
           @if (message.replyTo) {
-              <ng-talk-channel-message-ref [message]="message.replyTo" role="button" (click)="chat.goToMessage(message.replyTo)"/>
+              <ng-talk-channel-message-ref role="button" [message]="message.replyTo" (click)="chat.goToMessage(message.replyTo)"/>
           }
 
           <!-- Author, body and date -->

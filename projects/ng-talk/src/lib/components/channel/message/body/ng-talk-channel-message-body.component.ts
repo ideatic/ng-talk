@@ -19,10 +19,10 @@ import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-wr
               <div class="text-message" [innerHTML]="message | fn:transformContent:this"></div>
           }
           @case (MessageType.Image) {
-              <img [src]="message.content" loading="lazy" style="margin-bottom: 8px"/>
+              <img loading="lazy" style="margin-bottom: 8px" [src]="message.content"/>
           }
           @case (MessageType.Gif) {
-              <img [src]="message.content" loading="lazy" style="margin-bottom: 8px"/>
+              <img loading="lazy" style="margin-bottom: 8px" [src]="message.content"/>
           }
 
       <!-- Writing animation -->
