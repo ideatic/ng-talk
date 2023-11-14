@@ -24,7 +24,7 @@ import {NgTalkChannelMessageBodyComponent} from "./body/ng-talk-channel-message-
           @if (message.type != MessageType.Writing && chat.settings.allowReplies) {
               <span class="action-menu" role="button"
                     #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="toolsMenu" [class.opened]="menuTrigger.menuOpen">
-            <svg viewBox="0 0 18 18" width="18" height="18" class=""><path fill="currentColor" d="M3.3 4.6 9 10.3l5.7-5.7 1.6 1.6L9 13.4 1.7 6.2l1.6-1.6z"></path></svg>
+            <svg viewBox="0 0 18 18" width="18" height="18" class=""><path fill="currentColor" d="M3.3 4.6 9 10.3l5.7-5.7 1.6 1.6L9 13.4 1.7 6.2l1.6-1.6z" /></svg>
           </span>
               <mat-menu #toolsMenu>
                   <ng-template matMenuContent>
