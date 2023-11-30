@@ -5,38 +5,38 @@
   <!-- Chat list -->
   <div #chatBox class="chat">
     <!-- Loader -->
-  @if (loading) {
-    <div style="height: 20px">
-      <div class="chat-loader"></div>
-    </div>
-  }
-
-    <!-- Load more -->
-  @if (scrollWatcherEnabled && settings.allowLoadOldMessages) {
-    @if (viewportDetectionAvailable) {
-      <div inViewport (inViewportChange)="watcherInViewportChanged($event)"></div>
-    } @else {
-      <div class="load-more">
-        <button (click)="loadOldMessages()">{{ settings.loadMoreText }}</button>
-        </div>
-    }
-  }
-
-    <!-- Messages -->
-  @for (message of messages;track trackMessage(index, message);let index = $index) {
-
-    <!-- Date separator -->
-    @if (message | fn:isSeparatorVisible:this:messages[index - 1]) {
-      <div class="day-separator">
-        <span>{{ message.date | relativeDate : settings }}</span>
+    @if (loading) {
+      <div style="height: 20px">
+        <div class="chat-loader"></div>
       </div>
     }
+
+    <!-- Load more -->
+    @if (scrollWatcherEnabled && settings.allowLoadOldMessages) {
+      @if (viewportDetectionAvailable) {
+        <div inViewport (inViewportChange)="watcherInViewportChanged($event)"></div>
+      } @else {
+        <div class="load-more">
+          <button (click)="loadOldMessages()">{{ settings.loadMoreText }}</button>
+        </div>
+      }
+    }
+
+    <!-- Messages -->
+    @for (message of messages;track trackMessage(index, message);let index = $index) {
+
+      <!-- Date separator -->
+      @if (message | fn:isSeparatorVisible:this:messages[index - 1]) {
+        <div class="day-separator">
+          <span>{{ message.date | relativeDate : settings }}</span>
+        </div>
+      }
 
       <ng-talk-channel-message cdkDrag cdkDragLockAxis="x"
                                [message]="message" [prevMessage]="messages[index - 1]" [cdkDragDisabled]="message.type == MessageType.Writing"
                                (cdkDragMoved)="onDrag($event)" (cdkDragEnded)="onDragEnded($event, message)"/>
 
-  }
+    }
   </div>
 
   <!-- Send message form -->
