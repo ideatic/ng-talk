@@ -5,14 +5,14 @@ import {isSameDay} from '../../../utils/utils';
 import {fromEvent} from 'rxjs';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {MatMenuModule, MatMenuTrigger} from "@angular/material/menu";
-import {DatePipe, NgStyle} from "@angular/common";
+import {DatePipe} from "@angular/common";
 import {NgTalkChannelMessageRefComponent} from "./ref/ng-talk-channel-message-ref.component";
 import {NgTalkChannelMessageBodyComponent} from "./body/ng-talk-channel-message-body.component";
 
 @Component({
   selector: 'ng-talk-channel-message',
   standalone: true,
-  imports: [MatMenuModule, NgStyle, DatePipe, NgTalkChannelMessageRefComponent, NgTalkChannelMessageBodyComponent],
+  imports: [MatMenuModule, DatePipe, NgTalkChannelMessageRefComponent, NgTalkChannelMessageBodyComponent],
   template: `
       @if (chat.settings.showAvatars && showAuthor) {
           <div class="avatar">
@@ -40,7 +40,7 @@ import {NgTalkChannelMessageBodyComponent} from "./body/ng-talk-channel-message-
 
           <!-- Author, body and date -->
           @if (chat.settings.showNames && showAuthor) {
-              <div class="author" [ngStyle]="{color: message.from.color }"
+              <div class="author" [style.color]="message.from.color"
                    (click)="chat.userClicked.emit(message.from)">{{ message.from.name }}
               </div>
           }

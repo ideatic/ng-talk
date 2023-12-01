@@ -7,42 +7,35 @@ import {ChatUser} from '../../models/chat-user';
 import {NgTalkChannelComponent} from '../channel/ng-talk-channel.component';
 import {fromEvent, Subscription} from 'rxjs';
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {DecimalPipe, NgStyle} from "@angular/common";
+import {DecimalPipe} from "@angular/common";
 import {BubbleChannelRef} from "../../service/bubble-channel-ref";
 
 
 @Component({
   selector: 'channel-bubble',
   standalone: true,
-  imports: [NgStyle, DragDropModule, NgTalkChannelComponent, DecimalPipe],
+  imports: [DragDropModule, NgTalkChannelComponent, DecimalPipe],
   template: `
-    <div #bubble class="bubble"
-         cdkDrag
-         [title]="channel.name"
-         [ngStyle]="{backgroundImage: 'url( ' + (channel.icon || channelSettings.defaultChannelIcon) + ')'}"
-         [class]="bubbleClass"
-         [cdkDragBoundary]="dragBoundarySelector" (click)="toggleChannel()"
-         (cdkDragStarted)="onDragStart()"
-         (cdkDragMoved)="onDragMoved($event)"
-         (cdkDragEnded)="onDragEnded($event)">
-        @if (!channelVisible && channel.unread > 0) {
-            <div class="unread-badge">{{ channel.unread | number }}</div>
-        }
-    </div>
+      <div #bubble class="bubble"
+           cdkDrag
+           [title]="channel.name"
+           [style.background-image]="'url( ' + (channel.icon || channelSettings.defaultChannelIcon) + ')'"
+           [class]="bubbleClass"
+           [cdkDragBoundary]="dragBoundarySelector" (click)="toggleChannel()"
+           (cdkDragStarted)="onDragStart()"
+           (cdkDragMoved)="onDragMoved($event)"
+           (cdkDragEnded)="onDragEnded($event)">
+          @if (!channelVisible && channel.unread > 0) {
+              <div class="unread-badge">{{ channel.unread | number }}</div>
+          }
+      </div>
 
-    <ng-talk-channel #ngTalkChannel
-                     [class]="channelClass"
-                     [ngStyle]="channelStyle"
-                     [channel]="channel"
-                     [user]="user"
-                     [adapter]="adapter"
-                     [settings]="channelSettings"
-                     [disableRendering]="!channelVisible"
-                     (deleted)="onChatDeleted()"/>
+      <ng-talk-channel #ngTalkChannel [class]="channelClass" [style]="channelStyle" [channel]="channel" [user]="user" [adapter]="adapter" [settings]="channelSettings"
+                       [disableRendering]="!channelVisible" (deleted)="onChatDeleted()"/>
 
-    @if (isDragging) {
-        <div #closeButton class="close-bubble" [class]="closeButtonClass">&times;</div>
-    }
+      @if (isDragging) {
+          <div #closeButton class="close-bubble" [class]="closeButtonClass">&times;</div>
+      }
   `,
   styleUrl: `ng-talk-bubble-channel.component.less`
 })
