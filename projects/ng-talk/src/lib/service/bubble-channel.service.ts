@@ -27,6 +27,10 @@ export class BubbleChannelService {
     return BubbleChannelService._activeInstances.has(channel.id);
   }
 
+  public getInstance(channel: ChatChannel) {
+    return BubbleChannelService._activeInstances.get(channel.id);
+  }
+
   public show(channel: ChatChannel, adapter: ChatAdapter, user: ChatUser, settings?: NgTalkSettings, initComponent?: (c: NgTalkBubbleChannelComponent) => void): BubbleChannelRef {
     if (BubbleChannelService._activeInstances.has(channel.id)) {
       BubbleChannelService._activeInstances.get(channel.id).componentRef.instance.open();
@@ -62,7 +66,6 @@ export class BubbleChannelService {
       .rootNodes[0] as HTMLElement;
 
     // Append DOM element to the body
-    // document.body.appendChild(domElem);
     const overlayConfig: OverlayConfig = {
       hasBackdrop: false,
       disposeOnNavigation: false,
