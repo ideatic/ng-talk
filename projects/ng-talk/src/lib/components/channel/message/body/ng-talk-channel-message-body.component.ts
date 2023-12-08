@@ -3,18 +3,16 @@ import {ChatMessage, ChatMessageType} from '../../../../models/chat-message';
 import type Autolinker from 'autolinker';
 import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
 import {AutoLinkerService} from '../../../../service/autolinker.service';
-import {NgSwitch, NgSwitchCase} from "@angular/common";
 import {FnPipe} from "../../../../pipes/fn.pipe";
 import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-writing.component";
 
 @Component({
   selector: 'ng-talk-channel-message-body',
   standalone: true,
-  imports: [NgSwitch, NgSwitchCase, FnPipe, NgTalkChannelMessageWritingComponent],
+  imports: [FnPipe, NgTalkChannelMessageWritingComponent],
   template: `
-
       @switch (message.type) {
-      <!-- Text message -->
+          <!-- Text message -->
           @case (MessageType.Text) {
               <div class="text-message" [innerHTML]="message | fn:transformContent:this"></div>
           }
@@ -25,12 +23,11 @@ import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-wr
               <img loading="lazy" style="margin-bottom: 8px" [src]="message.content"/>
           }
 
-      <!-- Writing animation -->
+          <!-- Writing animation -->
           @case (MessageType.Writing) {
               <ng-talk-channel-message-writing/>
           }
       }
-
   `,
   styleUrl: 'ng-talk-channel-message-body.component.less'
 })
