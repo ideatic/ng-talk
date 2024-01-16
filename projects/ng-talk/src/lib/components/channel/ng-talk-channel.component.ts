@@ -1,11 +1,11 @@
 import {
   AfterViewInit,
   Component,
+  DestroyRef,
   ElementRef,
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output,
   QueryList,
@@ -27,6 +27,7 @@ import {NgComponentOutlet} from "@angular/common";
 import {FnPipe} from "../../pipes/fn.pipe";
 import {NgTalkChannelMessageComponent} from './message/ng-talk-channel-message.component';
 import {NgTalkSendMessageComponent} from './send/ng-talk-send-message.component';
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 declare const ngDevMode: boolean;
 
@@ -40,7 +41,7 @@ declare const ngDevMode: boolean;
     './styles/loading-spinner.less'
   ]
 })
-export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
+export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Input() public user: ChatUser;
   @Input() public adapter: ChatAdapter;
@@ -71,6 +72,9 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
   // Import types and enums
   protected readonly MessageType = ChatMessageType;
 
+  constructor(private _destroyRef: DestroyRef) {
+  }
+
   public ngOnInit() {
     if (!this.user) {
       throw new Error('Chat current user must be defined');
@@ -99,16 +103,13 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit,
     this.scrollToBottom();
   }
 
-  public ngOnDestroy() {
-    this._messagesSubscription?.unsubscribe();
-  }
-
   public reloadMessages(scrollToBottom = true) {
     this._messagesSubscription?.unsubscribe();
 
     this.loading = true;
 
     this._messagesSubscription = this.adapter.getMessages(this.channel, 0, this._visibleMessages)
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((messages: ChatMessage[]) => {
         this.messages = messages;
         this.loading = false;

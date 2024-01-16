@@ -1,4 +1,18 @@
-import {Component, ElementRef, EventEmitter, forwardRef, HostBinding, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  HostBinding,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatUser} from '../../models/chat-user';
 import {MessageLoadingMethod, NgTalkSettings} from '../ng-talk-settings';
@@ -12,6 +26,7 @@ import {NgTalkChannelPreviewComponent} from "../channel/preview/ng-talk-channel-
 import {FnPipe} from "../../pipes/fn.pipe";
 import {InViewportDirective} from "../../directives/in-viewport.directive";
 import {NG_TALK_CHANNEL_LIST_TOKEN} from "./ng-talk-channel-list-token";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'ng-talk-channel-list',
@@ -49,7 +64,8 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
   // Import types
   protected readonly MessagesLoading = MessageLoadingMethod;
 
-  constructor(private _host: ElementRef<HTMLElement>) {
+  constructor(private _host: ElementRef<HTMLElement>,
+              private _destroyRef: DestroyRef) {
   }
 
   public ngOnInit() {
@@ -67,6 +83,7 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
       this._channelsSubscription?.unsubscribe();
 
       this._channelsSubscription = this.adapter.getChannels(this.user)
+        .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe(channels => {
           this.channels = channels;
 
@@ -122,8 +139,6 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   public ngOnDestroy() {
-    this._channelsSubscription?.unsubscribe();
-
     this._channelMessagesSubscriptions.forEach(s => s.unsubscribe());
     this._channelMessagesSubscriptions.clear();
   }

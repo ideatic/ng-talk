@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, Input, OnDestroy, ViewChild} from '@angular/core';
+import {Component, DestroyRef, ElementRef, HostListener, Input, ViewChild} from '@angular/core';
 import {CdkDragEnd, CdkDragMove, DragDropModule} from '@angular/cdk/drag-drop';
 import {ChatChannel} from '../../models/chat-channel';
 import {ChatAdapter} from '../../models/chat-adapter';
@@ -9,6 +9,7 @@ import {fromEvent, Subscription} from 'rxjs';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {DecimalPipe} from "@angular/common";
 import {BubbleChannelRef} from "../../service/bubble-channel-ref";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 
 @Component({
@@ -39,7 +40,7 @@ import {BubbleChannelRef} from "../../service/bubble-channel-ref";
   `,
   styleUrl: `ng-talk-bubble-channel.component.less`
 })
-export class NgTalkBubbleChannelComponent implements OnDestroy {
+export class NgTalkBubbleChannelComponent {
 
   @Input() public dragBoundarySelector = 'body';
   @Input() public channel: ChatChannel;
@@ -66,6 +67,7 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
   private _documentClickSubscription: Subscription;
 
   constructor(private _host: ElementRef<HTMLElement>,
+              private _destroyRef: DestroyRef,
               private _overlayContainer: OverlayContainer) {
   }
 
@@ -194,7 +196,9 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
 
     setTimeout(() => {
       this._ngTalkChannel.scrollToBottom();
-      this._documentClickSubscription = fromEvent(document, 'click').subscribe(event => this.onDocumentClick(event));
+      this._documentClickSubscription = fromEvent(document, 'click')
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe(event => this.onDocumentClick(event));
     }, 10);
   }
 
@@ -247,9 +251,5 @@ export class NgTalkBubbleChannelComponent implements OnDestroy {
       // Restore bubble position
       this._restoreBubblePosition();
     }
-  }
-
-  public ngOnDestroy() {
-    this._documentClickSubscription?.unsubscribe();
   }
 }
