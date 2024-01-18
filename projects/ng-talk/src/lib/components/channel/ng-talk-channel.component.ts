@@ -21,7 +21,7 @@ import {Subscription} from 'rxjs';
 import {NgTalkSettings} from '../ng-talk-settings';
 import {isSameDay, nameof} from '../../utils/utils';
 import {InViewportDirective} from '../../directives/in-viewport.directive';
-import {CdkDragEnd, CdkDragMove, DragDropModule} from '@angular/cdk/drag-drop';
+import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {RelativeDatePipe} from "../../pipes/relativeDate.pipe";
 import {NgComponentOutlet} from "@angular/common";
 import {FnPipe} from "../../pipes/fn.pipe";
@@ -34,7 +34,7 @@ declare const ngDevMode: boolean;
 @Component({
   selector: 'ng-talk-channel',
   standalone: true,
-  imports: [NgComponentOutlet, FnPipe, DragDropModule, NgTalkSendMessageComponent, RelativeDatePipe, InViewportDirective, NgTalkChannelMessageComponent],
+  imports: [NgComponentOutlet, FnPipe, NgTalkSendMessageComponent, RelativeDatePipe, InViewportDirective, NgTalkChannelMessageComponent, CdkDrag],
   templateUrl: './ng-talk-channel.component.html',
   styleUrls: [
     './ng-talk-channel.component.less',

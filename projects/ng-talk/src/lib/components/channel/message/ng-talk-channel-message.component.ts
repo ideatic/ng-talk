@@ -4,7 +4,7 @@ import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {isSameDay} from '../../../utils/utils';
 import {fromEvent} from 'rxjs';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {MatMenuModule, MatMenuTrigger} from "@angular/material/menu";
+import {MatMenu, MatMenuContent, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {DatePipe} from "@angular/common";
 import {NgTalkChannelMessageRefComponent} from "./ref/ng-talk-channel-message-ref.component";
 import {NgTalkChannelMessageBodyComponent} from "./body/ng-talk-channel-message-body.component";
@@ -12,49 +12,49 @@ import {NgTalkChannelMessageBodyComponent} from "./body/ng-talk-channel-message-
 @Component({
   selector: 'ng-talk-channel-message',
   standalone: true,
-  imports: [MatMenuModule, DatePipe, NgTalkChannelMessageRefComponent, NgTalkChannelMessageBodyComponent],
+  imports: [DatePipe, NgTalkChannelMessageRefComponent, NgTalkChannelMessageBodyComponent, MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem],
   template: `
-      @if (chat.settings.showAvatars && showAuthor) {
-          <div class="avatar">
-              <img [src]="message.from.avatar || chat.settings.defaultAvatar" (click)="chat.userClicked.emit(message.from)"/>
-          </div>
-      }
-      <div class="speech-balloon">
-          <!-- Actions menu -->
-          @if (message.type != MessageType.Writing && chat.settings.allowReplies) {
-              <span #menuTrigger="matMenuTrigger" class="action-menu"
-                    role="button" [matMenuTriggerFor]="toolsMenu" [class.opened]="menuTrigger.menuOpen">
-            <svg viewBox="0 0 18 18" width="18" height="18" class=""><path fill="currentColor" d="M3.3 4.6 9 10.3l5.7-5.7 1.6 1.6L9 13.4 1.7 6.2l1.6-1.6z" /></svg>
-          </span>
-              <mat-menu #toolsMenu>
-                  <ng-template matMenuContent>
-                      <button mat-menu-item (click)="chat.replyTo(message)">{{ chat.settings.replyBtn }}</button>
-                  </ng-template>
-              </mat-menu>
-          }
-
-          <!-- Replied message -->
-          @if (message.replyTo) {
-              <ng-talk-channel-message-ref role="button" [message]="message.replyTo" (click)="chat.goToMessage(message.replyTo)"/>
-          }
-
-          <!-- Author, body and date -->
-          @if (chat.settings.showNames && showAuthor) {
-              <div class="author" [style.color]="message.from.color"
-                   (click)="chat.userClicked.emit(message.from)">{{ message.from.name }}
-              </div>
-          }
-
-          <ng-talk-channel-message-body [message]="message"/>
-
-          @if (message.type != MessageType.Writing) {
-              <div class="date">{{ message.date | date:chat.settings.datePipe }}</div>
-          }
-
-          @if (highlighted) {
-              <div class="overlay"></div>
-          }
+    @if (chat.settings.showAvatars && showAuthor) {
+      <div class="avatar">
+        <img [src]="message.from.avatar || chat.settings.defaultAvatar" (click)="chat.userClicked.emit(message.from)"/>
       </div>
+    }
+    <div class="speech-balloon">
+      <!-- Actions menu -->
+      @if (message.type != MessageType.Writing && chat.settings.allowReplies) {
+        <span #menuTrigger="matMenuTrigger" class="action-menu"
+              role="button" [matMenuTriggerFor]="toolsMenu" [class.opened]="menuTrigger.menuOpen">
+            <svg viewBox="0 0 18 18" width="18" height="18" class=""><path fill="currentColor" d="M3.3 4.6 9 10.3l5.7-5.7 1.6 1.6L9 13.4 1.7 6.2l1.6-1.6z"/></svg>
+          </span>
+        <mat-menu #toolsMenu>
+          <ng-template matMenuContent>
+            <button mat-menu-item (click)="chat.replyTo(message)">{{ chat.settings.replyBtn }}</button>
+          </ng-template>
+        </mat-menu>
+      }
+
+      <!-- Replied message -->
+      @if (message.replyTo) {
+        <ng-talk-channel-message-ref role="button" [message]="message.replyTo" (click)="chat.goToMessage(message.replyTo)"/>
+      }
+
+      <!-- Author, body and date -->
+      @if (chat.settings.showNames && showAuthor) {
+        <div class="author" [style.color]="message.from.color"
+             (click)="chat.userClicked.emit(message.from)">{{ message.from.name }}
+        </div>
+      }
+
+      <ng-talk-channel-message-body [message]="message"/>
+
+      @if (message.type != MessageType.Writing) {
+        <div class="date">{{ message.date | date:chat.settings.datePipe }}</div>
+      }
+
+      @if (highlighted) {
+        <div class="overlay"></div>
+      }
+    </div>
   `,
   styleUrl: 'ng-talk-channel-message.component.less'
 })

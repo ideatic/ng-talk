@@ -1,5 +1,5 @@
 import {Component, DestroyRef, ElementRef, HostListener, Input, ViewChild} from '@angular/core';
-import {CdkDragEnd, CdkDragMove, DragDropModule} from '@angular/cdk/drag-drop';
+import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {ChatChannel} from '../../models/chat-channel';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {NgTalkSettings} from '../ng-talk-settings';
@@ -15,7 +15,7 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 @Component({
   selector: 'channel-bubble',
   standalone: true,
-  imports: [DragDropModule, NgTalkChannelComponent, DecimalPipe],
+  imports: [NgTalkChannelComponent, DecimalPipe, CdkDrag],
   template: `
       <div #bubble class="bubble"
            cdkDrag
