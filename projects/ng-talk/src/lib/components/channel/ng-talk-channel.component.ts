@@ -9,6 +9,7 @@ import {
   OnInit,
   Output,
   QueryList,
+  signal,
   SimpleChanges,
   ViewChild,
   ViewChildren
@@ -58,15 +59,15 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   @ViewChildren(NgTalkChannelMessageComponent) private _messageComponents: QueryList<NgTalkChannelMessageComponent>;
 
   private _visibleMessages = 20;
-  public messages: ChatMessage[] = [];
+  public messages = signal<ChatMessage[]>([]);
 
   private _messagesSubscription: Subscription;
 
   public replyingTo: ChatMessage;
 
   // UI
-  public loading = false;
-  public scrollWatcherEnabled = false;
+  public loading = signal(false);
+  public scrollWatcherEnabled = signal(false);
   protected readonly viewportDetectionAvailable = InViewportDirective.intersectionObserverFeatureDetection();
 
   // Import types and enums
@@ -82,12 +83,10 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (!this.settings) {
-      this.settings = new NgTalkSettings();
-    }
+    this.settings ??= new NgTalkSettings();
 
     if (changes[nameof<NgTalkChannelComponent>('adapter')] || changes[nameof<NgTalkChannelComponent>('channel')]) {
-      this.messages = [];
+      this.messages.set([]);
 
       this._messagesSubscription?.unsubscribe();
 
@@ -106,13 +105,13 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   public reloadMessages(scrollToBottom = true) {
     this._messagesSubscription?.unsubscribe();
 
-    this.loading = true;
+    this.loading.set(true);
 
     this._messagesSubscription = this.adapter.getMessages(this.channel, 0, this._visibleMessages)
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((messages: ChatMessage[]) => {
-        this.messages = messages;
-        this.loading = false;
+        this.messages.set(messages);
+        this.loading.set(false);
 
         if (scrollToBottom && !this.disableRendering) {
           this.scrollToBottom();
@@ -138,8 +137,8 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
       if (this._chatBox) {
         this._chatBox.nativeElement.scrollTop = this._chatBox.nativeElement.scrollHeight;
 
-        if (this.messages.length >= this._visibleMessages) { // Enable scroll watcher if there is more messages pending
-          this.scrollWatcherEnabled = true;
+        if (this.messages().length >= this._visibleMessages) { // Enable scroll watcher if there is more messages pending
+          this.scrollWatcherEnabled.set(true);
         }
       }
     }, 10);
@@ -152,7 +151,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   // Pagination & History
 
   public loadOldMessages() {
-    this.scrollWatcherEnabled = false;
+    this.scrollWatcherEnabled.set(false);
     this._visibleMessages += this.settings.pageSize;
 
     this.reloadMessages(false);

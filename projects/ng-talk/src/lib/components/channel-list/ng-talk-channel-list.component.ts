@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
@@ -11,6 +12,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  signal,
   SimpleChanges
 } from '@angular/core';
 import {ChatAdapter} from '../../models/chat-adapter';
@@ -36,7 +38,8 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
   styleUrl: './ng-talk-channel-list.component.less',
   providers: [
     {provide: NG_TALK_CHANNEL_LIST_TOKEN, useExisting: forwardRef(() => NgTalkChannelListComponent)},
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy {
 
@@ -55,7 +58,7 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
 
   public activeChannel: ChatChannel;
   private _channelsSubscription: Subscription;
-  protected channels: ChatChannel[];
+  protected channels = signal<ChatChannel[]>(null);
 
   private _channelMessagesSubscriptions = new Map<string, Subscription>();
 
@@ -85,7 +88,7 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
       this._channelsSubscription = this.adapter.getChannels(this.user)
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe(channels => {
-          this.channels = channels;
+          this.channels.set(channels);
 
           // Subscribe to new received channels
           if (this.settings.channelMessagesLoading == MessageLoadingMethod.allChannels) {
@@ -96,7 +99,7 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
 
           // Select current channel (when a message to a new channel is sent, the new channel is selected automatically)
           if (this.activeChannel) {
-            const activeChannel = this.channels.find(c => c.id == this.activeChannel.id);
+            const activeChannel = channels.find(c => c.id == this.activeChannel.id);
             if (activeChannel) {
               if (activeChannel != this.activeChannel) {
                 this.selectChannel(activeChannel);
@@ -104,8 +107,8 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
             } else {
               this.activeChannel = null;
             }
-          } else if (this.settings.selectFirstChannelOnInit && this.channels.length > 0) {
-            this.selectChannel(this.channels[0]);
+          } else if (this.settings.selectFirstChannelOnInit && channels.length > 0) {
+            this.selectChannel(channels[0]);
           }
         });
     }

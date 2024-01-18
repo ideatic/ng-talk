@@ -14,7 +14,7 @@
 
     <!-- Channel list -->
     <ul>
-      @for (channel of channels | fn:filterChannels:this:filterQuery;track channel.id) {
+      @for (channel of channels() | fn:filterChannels:this:filterQuery; track channel.id) {
         <li [class.active]="activeChannel && channel.id == activeChannel.id">
           <!-- Wait 500ms to enable viewport observer while the component render -->
           @if (settings.channelMessagesLoading == MessagesLoading.lazy) {
