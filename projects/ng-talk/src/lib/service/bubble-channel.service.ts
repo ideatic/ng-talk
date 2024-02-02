@@ -1,12 +1,12 @@
-import {Overlay, OverlayConfig} from '@angular/cdk/overlay';
 import {ApplicationRef, createComponent, EmbeddedViewRef, EnvironmentInjector, Injectable} from '@angular/core';
-import {first} from 'rxjs/operators';
-import {NgTalkBubbleChannelComponent} from "../components/bubble/ng-talk-bubble-channel.component";
-import {NgTalkSettings} from "../components/ng-talk-settings";
-import {ChatAdapter} from '../models/chat-adapter';
 import {ChatChannel} from '../models/chat-channel';
+import {ChatAdapter} from '../models/chat-adapter';
 import {ChatUser} from '../models/chat-user';
+import {first} from 'rxjs/operators';
+import {Overlay, OverlayConfig} from '@angular/cdk/overlay';
 import {BubbleChannelRef} from "./bubble-channel-ref";
+import {NgTalkSettings} from "../components/ng-talk-settings";
+import {NgTalkBubbleChannelComponent} from "../components/bubble/ng-talk-bubble-channel.component";
 
 @Injectable({
   providedIn: 'root'

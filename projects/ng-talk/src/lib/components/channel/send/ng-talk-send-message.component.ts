@@ -1,15 +1,15 @@
 import {Component, ElementRef, Inject, Optional, ViewChild} from '@angular/core';
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {FormsModule} from "@angular/forms";
-import {ChatChannel} from '../../../models/chat-channel';
-import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
-import {NG_TALK_CHANNEL_LIST_TOKEN} from "../../channel-list/ng-talk-channel-list-token";
-import type {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-list.component';
-import {NgTalkChannelMessageRefComponent} from "../message/ref/ng-talk-channel-message-ref.component";
 import {NgTalkChannelComponent} from '../ng-talk-channel.component';
+import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
+import type {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-list.component';
+import {ChatChannel} from '../../../models/chat-channel';
+import {growAnimation} from './grow-animation';
+import {FormsModule} from "@angular/forms";
 import {NgTalkSendEmojiComponent} from "./emoji/ng-talk-send-emoji.component";
 import {NgTalkSendGifComponent} from "./gif/ng-talk-send-gif.component";
-import {growAnimation} from './grow-animation';
+import {NgTalkChannelMessageRefComponent} from "../message/ref/ng-talk-channel-message-ref.component";
+import {NG_TALK_CHANNEL_LIST_TOKEN} from "../../channel-list/ng-talk-channel-list-token";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 
 @Component({

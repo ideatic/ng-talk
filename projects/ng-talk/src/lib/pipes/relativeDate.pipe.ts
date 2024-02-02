@@ -1,7 +1,7 @@
-import {DatePipe} from '@angular/common';
 import {inject, LOCALE_ID, Pipe, PipeTransform} from '@angular/core';
-import {NgTalkSettings} from '../components/ng-talk-settings';
 import {daysDiff} from '../utils/utils';
+import {NgTalkSettings} from '../components/ng-talk-settings';
+import {DatePipe} from '@angular/common';
 
 @Pipe({
   name: 'relativeDate',

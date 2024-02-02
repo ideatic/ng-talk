@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {ChatChannel, ChatChannelType} from '../../../models/chat-channel';
-import {ChatMessageType} from '../../../models/chat-message';
 import {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-list.component';
+import {ChatMessageType} from '../../../models/chat-message';
 
 @Component({
   selector: 'ng-talk-channel-preview',

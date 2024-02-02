@@ -1,13 +1,13 @@
-import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {DatePipe} from "@angular/common";
 import {Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, ViewChild} from '@angular/core';
-import {MatMenu, MatMenuContent, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
-import {fromEvent} from 'rxjs';
 import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
-import {isSameDay} from '../../../utils/utils';
 import {NgTalkChannelComponent} from '../ng-talk-channel.component';
-import {NgTalkChannelMessageBodyComponent} from "./body/ng-talk-channel-message-body.component";
+import {isSameDay} from '../../../utils/utils';
+import {fromEvent} from 'rxjs';
+import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {MatMenu, MatMenuContent, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {DatePipe} from "@angular/common";
 import {NgTalkChannelMessageRefComponent} from "./ref/ng-talk-channel-message-ref.component";
+import {NgTalkChannelMessageBodyComponent} from "./body/ng-talk-channel-message-body.component";
 
 @Component({
   selector: 'ng-talk-channel-message',
