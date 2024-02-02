@@ -1,9 +1,9 @@
-import {Component, EventEmitter, Output} from '@angular/core';
-import emoji from './emoji.json';
-import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
 import {KeyValue, KeyValuePipe} from '@angular/common';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {FnPipe} from "../../../../pipes/fn.pipe";
+import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
+import emoji from './emoji.json';
 
 @Component({
   selector: 'ng-talk-send-emoji',

@@ -1,10 +1,10 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
-import {HttpClient} from '@angular/common/http';
-import {debounceTime, map, Observable, Subject} from 'rxjs';
-import {FormsModule} from "@angular/forms";
-import {FnPipe} from "../../../../pipes/fn.pipe";
 import {AsyncPipe} from "@angular/common";
+import {HttpClient} from '@angular/common/http';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {FormsModule} from "@angular/forms";
+import {debounceTime, map, Observable, Subject} from 'rxjs';
+import {FnPipe} from "../../../../pipes/fn.pipe";
+import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
 
 @Component({
   selector: 'ng-talk-send-gif',
