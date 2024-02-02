@@ -1,9 +1,9 @@
 import {Component, Input} from '@angular/core';
-import {ChatMessage, ChatMessageType} from '../../../../models/chat-message';
 import type Autolinker from 'autolinker';
-import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
-import {AutoLinkerService} from '../../../../service/autolinker.service';
+import {ChatMessage, ChatMessageType} from '../../../../models/chat-message';
 import {FnPipe} from "../../../../pipes/fn.pipe";
+import {AutoLinkerService} from '../../../../service/autolinker.service';
+import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
 import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-writing.component";
 
 @Component({
