@@ -1,5 +1,4 @@
-import {Component, ElementRef, Inject, Optional, ViewChild} from '@angular/core';
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {Component, DestroyRef, ElementRef, Inject, Optional, ViewChild} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {ChatChannel} from '../../../models/chat-channel';
 import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
@@ -144,9 +143,11 @@ export class NgTalkSendMessageComponent {
   protected showGifSelector = false;
 
   constructor(protected chat: NgTalkChannelComponent,
+              destroyRef: DestroyRef,
               @Optional() @Inject(NG_TALK_CHANNEL_LIST_TOKEN) channelList: NgTalkChannelListComponent) {
     if (channelList) { // Detectar cambio de canal si estamos en un listado
-      channelList.channelChanged.pipe(takeUntilDestroyed()).subscribe((c) => this._onChannelChanged(c));
+      const subscription = channelList.channelChanged.subscribe((c) => this._onChannelChanged(c));
+      destroyRef.onDestroy(() => subscription.unsubscribe());
     }
 
     chat.focus = () => this.focus();

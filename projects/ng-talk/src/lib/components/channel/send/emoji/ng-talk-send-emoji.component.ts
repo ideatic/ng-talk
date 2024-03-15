@@ -1,5 +1,5 @@
 import {KeyValue, KeyValuePipe} from '@angular/common';
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {FnPipe} from "../../../../pipes/fn.pipe";
 import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
@@ -52,7 +52,7 @@ import emoji from './emoji.json';
   `
 })
 export class NgTalkSendEmojiComponent {
-  @Output() public emojiSelected = new EventEmitter<string>();
+  public emojiSelected = output<string>();
 
   protected readonly emoji = emoji;
   protected searchQuery: string;

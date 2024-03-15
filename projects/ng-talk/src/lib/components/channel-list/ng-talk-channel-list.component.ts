@@ -3,7 +3,6 @@ import {
   Component,
   DestroyRef,
   ElementRef,
-  EventEmitter,
   forwardRef,
   HostBinding,
   HostListener,
@@ -11,7 +10,7 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
+  output,
   signal,
   SimpleChanges
 } from '@angular/core';
@@ -25,10 +24,10 @@ import {ChatMessage} from '../../models/chat-message';
 import {ChatUser} from '../../models/chat-user';
 import {FnPipe} from "../../pipes/fn.pipe";
 import {nameof} from '../../utils/utils';
+import {NgTalkChannelComponent} from "../channel/ng-talk-channel.component";
+import {NgTalkChannelPreviewComponent} from "../channel/preview/ng-talk-channel-preview.component";
 import {MessageLoadingMethod, NgTalkSettings} from '../ng-talk-settings';
 import {NG_TALK_CHANNEL_LIST_TOKEN} from "./ng-talk-channel-list-token";
-import {NgTalkChannelPreviewComponent} from "../channel/preview/ng-talk-channel-preview.component";
-import {NgTalkChannelComponent} from "../channel/ng-talk-channel.component";
 
 @Component({
   selector: 'ng-talk-channel-list',
@@ -46,12 +45,12 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
   @Input() public user: ChatUser;
   @Input() public adapter: ChatAdapter;
   @Input() public settings = new NgTalkSettings();
-  @Output() public search = new EventEmitter<string>();
-  @Output() public channelChanged = new EventEmitter<ChatChannel | null>();
+  public search = output<string>();
+  public channelChanged = output<ChatChannel | null>();
 
   // Forwarded events from single channel
-  @Output() public messageSent = new EventEmitter<ChatMessage>();
-  @Output() public userClicked = new EventEmitter<ChatUser>();
+  public messageSent = output<ChatMessage>();
+  public userClicked = output<ChatUser>();
 
   @HostBinding('class')
   public displayMode: 'desktop' | 'mobile';

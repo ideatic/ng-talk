@@ -1,6 +1,6 @@
 import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {NgComponentOutlet} from "@angular/common";
-import {AfterViewInit, Component, DestroyRef, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, signal, SimpleChanges, ViewChild, viewChildren} from '@angular/core';
+import {AfterViewInit, Component, DestroyRef, ElementRef, Input, OnChanges, OnInit, output, signal, SimpleChanges, ViewChild, viewChildren} from '@angular/core';
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {Subscription} from 'rxjs';
 import {InViewportDirective} from '../../directives/in-viewport.directive';
@@ -35,9 +35,9 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   @Input() public settings: NgTalkSettings;
   @Input() public disableRendering = false;
 
-  @Output() public messageSent = new EventEmitter<ChatMessage>();
-  @Output() public userClicked = new EventEmitter<ChatUser>();
-  @Output() public deleted = new EventEmitter<void>();
+  public messageSent = output<ChatMessage>();
+  public userClicked = output<ChatUser>();
+  public deleted = output<void>();
 
   @ViewChild('chatBox') private _chatBox: ElementRef<HTMLElement>;
   @ViewChild(NgTalkSendMessageComponent) private _sendMessageComponent: NgTalkSendMessageComponent;

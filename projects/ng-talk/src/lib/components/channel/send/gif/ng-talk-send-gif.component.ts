@@ -1,6 +1,6 @@
 import {AsyncPipe} from "@angular/common";
 import {HttpClient} from '@angular/common/http';
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit, output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {debounceTime, map, Observable, Subject} from 'rxjs';
 import {FnPipe} from "../../../../pipes/fn.pipe";
@@ -57,7 +57,7 @@ import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
   `
 })
 export class NgTalkSendGifComponent implements OnInit {
-  @Output() public gifSelected = new EventEmitter<string>();
+  public gifSelected = output<string>();
 
   protected searchQuery: string;
   protected gifs$: Observable<any>;
