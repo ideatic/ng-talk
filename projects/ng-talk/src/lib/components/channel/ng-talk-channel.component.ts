@@ -1,21 +1,6 @@
 import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {NgComponentOutlet} from "@angular/common";
-import {
-  AfterViewInit,
-  Component,
-  DestroyRef,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  QueryList,
-  signal,
-  SimpleChanges,
-  ViewChild, viewChildren,
-  ViewChildren
-} from '@angular/core';
+import {AfterViewInit, Component, DestroyRef, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, signal, SimpleChanges, ViewChild, viewChildren} from '@angular/core';
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {Subscription} from 'rxjs';
 import {InViewportDirective} from '../../directives/in-viewport.directive';
