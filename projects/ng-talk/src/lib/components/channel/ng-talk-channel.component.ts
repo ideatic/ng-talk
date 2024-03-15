@@ -13,7 +13,7 @@ import {
   QueryList,
   signal,
   SimpleChanges,
-  ViewChild,
+  ViewChild, viewChildren,
   ViewChildren
 } from '@angular/core';
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
@@ -56,7 +56,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
 
   @ViewChild('chatBox') private _chatBox: ElementRef<HTMLElement>;
   @ViewChild(NgTalkSendMessageComponent) private _sendMessageComponent: NgTalkSendMessageComponent;
-  @ViewChildren(NgTalkChannelMessageComponent) private _messageComponents: QueryList<NgTalkChannelMessageComponent>;
+  private _messageComponents = viewChildren(NgTalkChannelMessageComponent);
 
   private _visibleMessages = 20;
   public messages = signal<ChatMessage[]>([]);
@@ -169,7 +169,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   public goToMessage(message: ChatMessage) {
-    const wrapper = this._messageComponents?.find(m => m.message === message || (m.message.id && message.id && m.message.id === message.id));
+    const wrapper = this._messageComponents()?.find(m => m.message === message || (m.message.id && message.id && m.message.id === message.id));
     wrapper?.highlight();
   }
 
