@@ -11,23 +11,23 @@ import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-wr
   standalone: true,
   imports: [FnPipe, NgTalkChannelMessageWritingComponent],
   template: `
-      @switch (message.type) {
-          <!-- Text message -->
-          @case (MessageType.Text) {
-              <div class="text-message" [innerHTML]="message | fn:transformContent:this"></div>
-          }
-          @case (MessageType.Image) {
-              <img loading="lazy" style="margin-bottom: 8px" [src]="message.content"/>
-          }
-          @case (MessageType.Gif) {
-              <img loading="lazy" style="margin-bottom: 8px" [src]="message.content"/>
-          }
-
-          <!-- Writing animation -->
-          @case (MessageType.Writing) {
-              <ng-talk-channel-message-writing/>
-          }
+    @switch (message.type) {
+      <!-- Text message -->
+      @case (MessageType.Text) {
+        <div class="text-message" [innerHTML]="message | fn:transformContent:this"></div>
       }
+      @case (MessageType.Image) {
+        <img loading="lazy" style="margin-bottom: 8px" [src]="message.content"/>
+      }
+      @case (MessageType.Gif) {
+        <img loading="lazy" style="margin-bottom: 8px" [src]="message.content"/>
+      }
+
+      <!-- Writing animation -->
+      @case (MessageType.Writing) {
+        <ng-talk-channel-message-writing/>
+      }
+    }
   `,
   styleUrl: 'ng-talk-channel-message-body.component.less'
 })

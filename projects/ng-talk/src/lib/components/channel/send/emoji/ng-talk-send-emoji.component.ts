@@ -1,5 +1,5 @@
 import {KeyValue, KeyValuePipe} from '@angular/common';
-import {Component, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {FnPipe} from "../../../../pipes/fn.pipe";
 import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
@@ -8,14 +8,15 @@ import emoji from './emoji.json';
 @Component({
   selector: 'ng-talk-send-emoji',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, KeyValuePipe, FnPipe],
   template: `
-      <input type="search" [placeholder]="chat.settings.search" [(ngModel)]="searchQuery"/>
-      <div>
-          @for (pair of emoji | keyvalue | fn:filter:this:searchQuery;track pair) {
-              <span (click)="emojiSelected.emit(pair.value)">{{ pair.value }}</span>
-          }
-      </div>
+    <input type="search" [placeholder]="chat.settings.search" [(ngModel)]="searchQuery"/>
+    <div>
+      @for (pair of emoji | keyvalue | fn:filter:this:searchQuery; track pair) {
+        <span (click)="emojiSelected.emit(pair.value)">{{ pair.value }}</span>
+      }
+    </div>
   `,
   styles: `
     :host {
