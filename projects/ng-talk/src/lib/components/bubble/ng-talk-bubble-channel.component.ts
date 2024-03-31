@@ -1,41 +1,41 @@
+import {Component, DestroyRef, ElementRef, HostListener, Input, signal, ViewChild} from '@angular/core';
 import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
+import {ChatChannel} from '../../models/chat-channel';
+import {ChatAdapter} from '../../models/chat-adapter';
+import {NgTalkSettings} from '../ng-talk-settings';
+import {ChatUser} from '../../models/chat-user';
+import {NgTalkChannelComponent} from '../channel/ng-talk-channel.component';
+import {fromEvent, Subscription} from 'rxjs';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {DecimalPipe} from "@angular/common";
-import {Component, DestroyRef, ElementRef, HostListener, Input, ViewChild} from '@angular/core';
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {fromEvent, Subscription} from 'rxjs';
-import {ChatAdapter} from '../../models/chat-adapter';
-import {ChatChannel} from '../../models/chat-channel';
-import {ChatUser} from '../../models/chat-user';
 import {BubbleChannelRef} from "../../service/bubble-channel-ref";
-import {NgTalkChannelComponent} from '../channel/ng-talk-channel.component';
-import {NgTalkSettings} from '../ng-talk-settings';
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'channel-bubble',
   standalone: true,
   imports: [NgTalkChannelComponent, DecimalPipe, CdkDrag],
   template: `
-      <div #bubble class="bubble"
-           cdkDrag
-           [title]="channel.name"
-           [style.background-image]="'url( ' + (channel.icon || channelSettings.defaultChannelIcon) + ')'"
-           [class]="bubbleClass"
-           [cdkDragBoundary]="dragBoundarySelector" (click)="toggleChannel()"
-           (cdkDragStarted)="onDragStart()"
-           (cdkDragMoved)="onDragMoved($event)"
-           (cdkDragEnded)="onDragEnded($event)">
-          @if (!channelVisible && channel.unread > 0) {
-              <div class="unread-badge">{{ channel.unread | number }}</div>
-          }
-      </div>
-
-      <ng-talk-channel #ngTalkChannel [class]="channelClass" [style]="channelStyle" [channel]="channel" [user]="user" [adapter]="adapter" [settings]="channelSettings"
-                       [disableRendering]="!channelVisible" (deleted)="onChatDeleted()"/>
-
-      @if (isDragging) {
-          <div #closeButton class="close-bubble" [class]="closeButtonClass">&times;</div>
+    <div #bubble class="bubble"
+         cdkDrag
+         [title]="channel.name"
+         [style.background-image]="'url( ' + (channel.icon || channelSettings.defaultChannelIcon) + ')'"
+         [class]="bubbleClass"
+         [cdkDragBoundary]="dragBoundarySelector" (click)="toggleChannel()"
+         (cdkDragStarted)="onDragStart()"
+         (cdkDragMoved)="onDragMoved($event)"
+         (cdkDragEnded)="onDragEnded($event)">
+      @if (!channelVisible() && channel.unread > 0) {
+        <div class="unread-badge">{{ channel.unread | number }}</div>
       }
+    </div>
+
+    <ng-talk-channel #ngTalkChannel [class]="channelClass" [style]="channelStyle" [channel]="channel" [user]="user" [adapter]="adapter" [settings]="channelSettings"
+                     [disableRendering]="!channelVisible()" (deleted)="onChatDeleted()"/>
+
+    @if (isDragging) {
+      <div #closeButton class="close-bubble" [class]="closeButtonClass()">&times;</div>
+    }
   `,
   styleUrl: `ng-talk-bubble-channel.component.less`
 })
@@ -54,11 +54,11 @@ export class NgTalkBubbleChannelComponent {
 
   protected bubbleClass = '';
 
-  protected channelVisible = false;
+  protected channelVisible = signal(false);
   protected channelClass = 'bounceIn';
   protected channelStyle: { [key: string]: string | number } = {display: 'none'};
 
-  protected closeButtonClass = '';
+  protected closeButtonClass = signal('');
 
   protected isDragging = false;
   private _lastPosition: { x: number; y: number; };
@@ -73,7 +73,7 @@ export class NgTalkBubbleChannelComponent {
   /* Dragging */
 
   protected onDragStart() {
-    if (this.channelVisible) {
+    if (this.channelVisible()) {
       this.close();
     }
   }
@@ -83,8 +83,7 @@ export class NgTalkBubbleChannelComponent {
     this._lastPosition = event.pointerPosition;
 
     if (this._closeButton) {
-      this.closeButtonClass = this._isOver(event.pointerPosition.x, event.pointerPosition.y, this._closeButton.nativeElement, 20)
-        ? 'active' : '';
+      this.closeButtonClass.set(this._isOver(event.pointerPosition.x, event.pointerPosition.y, this._closeButton.nativeElement, 20) ? 'active' : '');
     }
   }
 
@@ -98,8 +97,8 @@ export class NgTalkBubbleChannelComponent {
   }
 
   protected onDragEnded(event: CdkDragEnd) {
-    if (this.closeButtonClass == 'active') { // Close chat
-      this.closeButtonClass = 'bounceOut';
+    if (this.closeButtonClass() == 'active') { // Close chat
+      this.closeButtonClass.set('bounceOut');
       this.bubbleClass = 'fadeOut';
 
       setTimeout(() => this.selfRef.destroy(), 250);
@@ -107,12 +106,12 @@ export class NgTalkBubbleChannelComponent {
       return;
     }
 
-    this.closeButtonClass = 'bounceOut';
+    this.closeButtonClass.set('bounceOut');
 
     setTimeout(() => {
       this.isDragging = false;
       event.source.reset();
-      this.closeButtonClass = '';
+      this.closeButtonClass.set('');
     }, 250);
 
     this.close();
@@ -143,7 +142,7 @@ export class NgTalkBubbleChannelComponent {
       return;
     }
 
-    if (this.channelVisible) {
+    if (this.channelVisible()) {
       this.close();
 
       // Restore bubble position
@@ -158,7 +157,7 @@ export class NgTalkBubbleChannelComponent {
   }
 
   public open() {
-    if (this.channelVisible) {
+    if (this.channelVisible()) {
       return;
     }
 
@@ -191,7 +190,7 @@ export class NgTalkBubbleChannelComponent {
     // Fix height
     this._onResized();
 
-    this.channelVisible = true;
+    this.channelVisible.set(true);
 
     setTimeout(() => {
       this._ngTalkChannel.scrollToBottom();
@@ -222,11 +221,11 @@ export class NgTalkBubbleChannelComponent {
   }
 
   public close() {
-    if (this.channelVisible) {
+    if (this.channelVisible()) {
       this.channelClass = 'bounceOut';
 
       setTimeout(() => {
-        this.channelVisible = false;
+        this.channelVisible.set(false);
         this.channelStyle = {display: 'none'};
       }, 300);
     }
@@ -236,7 +235,7 @@ export class NgTalkBubbleChannelComponent {
   }
 
   public onDocumentClick($event) {
-    if (!this.channelVisible) {
+    if (!this.channelVisible()) {
       return;
     }
 

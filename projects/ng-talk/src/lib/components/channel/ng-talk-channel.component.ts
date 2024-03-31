@@ -1,19 +1,34 @@
-import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
-import {NgComponentOutlet} from "@angular/common";
-import {AfterViewInit, Component, DestroyRef, ElementRef, Input, OnChanges, OnInit, output, signal, SimpleChanges, ViewChild, viewChildren} from '@angular/core';
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {Subscription} from 'rxjs';
-import {InViewportDirective} from '../../directives/in-viewport.directive';
+import {
+  AfterViewInit,
+  Component,
+  DestroyRef,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit, output,
+  Output,
+  QueryList,
+  signal,
+  SimpleChanges,
+  ViewChild, viewChildren,
+  ViewChildren
+} from '@angular/core';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatChannel} from '../../models/chat-channel';
 import {ChatMessage, ChatMessageType} from '../../models/chat-message';
 import {ChatUser} from '../../models/chat-user';
-import {FnPipe} from "../../pipes/fn.pipe";
-import {RelativeDatePipe} from "../../pipes/relativeDate.pipe";
-import {isSameDay, nameof} from '../../utils/utils';
+import {Subscription} from 'rxjs';
 import {NgTalkSettings} from '../ng-talk-settings';
+import {isSameDay, nameof} from '../../utils/utils';
+import {InViewportDirective} from '../../directives/in-viewport.directive';
+import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
+import {RelativeDatePipe} from "../../pipes/relativeDate.pipe";
+import {NgComponentOutlet} from "@angular/common";
+import {FnPipe} from "../../pipes/fn.pipe";
 import {NgTalkChannelMessageComponent} from './message/ng-talk-channel-message.component';
 import {NgTalkSendMessageComponent} from './send/ng-talk-send-message.component';
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 declare const ngDevMode: boolean;
 
