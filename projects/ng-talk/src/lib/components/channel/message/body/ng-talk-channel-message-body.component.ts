@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import type Autolinker from 'autolinker';
 import {ChatMessage, ChatMessageType} from '../../../../models/chat-message';
 import {FnPipe} from "../../../../pipes/fn.pipe";
@@ -9,10 +9,10 @@ import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-wr
 @Component({
   selector: 'ng-talk-channel-message-body',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FnPipe, NgTalkChannelMessageWritingComponent],
   template: `
     @switch (message.type) {
-      <!-- Text message -->
       @case (MessageType.Text) {
         <div class="text-message" [innerHTML]="message | fn:transformContent:this"></div>
       }
@@ -22,8 +22,6 @@ import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-wr
       @case (MessageType.Gif) {
         <img loading="lazy" style="margin-bottom: 8px" [src]="message.content"/>
       }
-
-      <!-- Writing animation -->
       @case (MessageType.Writing) {
         <ng-talk-channel-message-writing/>
       }

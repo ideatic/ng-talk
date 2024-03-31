@@ -2,10 +2,10 @@
   <!-- Header -->
   <ng-container *ngComponentOutlet="settings.headerComponent"/>
 
-  <!-- Chat list -->
+  <!-- Message list -->
   <div #chatBox class="chat">
     <!-- Loader -->
-    @if (loading) {
+    @if (loading()) {
       <div style="height: 20px">
         <div class="chat-loader"></div>
       </div>
@@ -24,7 +24,6 @@
 
     <!-- Messages -->
     @for (message of messages(); track trackMessage(index, message); let index = $index) {
-
       <!-- Date separator -->
       @if (message | fn:isSeparatorVisible:this:messages()[index - 1]) {
         <div class="day-separator">
@@ -32,14 +31,11 @@
         </div>
       }
 
-      <ng-talk-channel-message cdkDrag cdkDragLockAxis="x"
-                               [message]="message" [prevMessage]="messages[index - 1]" [cdkDragDisabled]="message.type == MessageType.Writing"
+      <ng-talk-channel-message cdkDrag cdkDragLockAxis="x" [message]="message" [prevMessage]="messages[index - 1]" [cdkDragDisabled]="message.type == MessageType.Writing"
                                (cdkDragMoved)="onDrag($event)" (cdkDragEnded)="onDragEnded($event, message)"/>
-
     }
   </div>
 
   <!-- Send message form -->
   <ng-talk-send-message/>
-
 }

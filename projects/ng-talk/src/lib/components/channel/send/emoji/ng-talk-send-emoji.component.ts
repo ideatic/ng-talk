@@ -3,7 +3,7 @@ import {ChangeDetectionStrategy, Component, output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {FnPipe} from "../../../../pipes/fn.pipe";
 import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
-import emoji from './emoji.json';
+import emojis from './emoji.json';
 
 @Component({
   selector: 'ng-talk-send-emoji',
@@ -13,7 +13,7 @@ import emoji from './emoji.json';
   template: `
     <input type="search" [placeholder]="chat.settings.search" [(ngModel)]="searchQuery"/>
     <div>
-      @for (pair of emoji | keyvalue | fn:filter:this:searchQuery; track pair) {
+      @for (pair of emojis | keyvalue | fn:filter:this:searchQuery; track pair) {
         <span (click)="emojiSelected.emit(pair.value)">{{ pair.value }}</span>
       }
     </div>
@@ -55,11 +55,10 @@ import emoji from './emoji.json';
 export class NgTalkSendEmojiComponent {
   public emojiSelected = output<string>();
 
-  protected readonly emoji = emoji;
+  protected readonly emojis = emojis;
   protected searchQuery: string;
 
   constructor(protected chat: NgTalkChannelComponent) {
-
   }
 
   protected filter(entries: KeyValue<string, string>[], searchQuery: string): KeyValue<string, string>[] {

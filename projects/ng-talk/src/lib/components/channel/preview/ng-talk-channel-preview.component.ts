@@ -1,11 +1,14 @@
-import {Component, Input} from '@angular/core';
+import {Component, Inject, Input} from '@angular/core';
 import {ChatChannel, ChatChannelType} from '../../../models/chat-channel';
 import {ChatMessageType} from '../../../models/chat-message';
-import {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-list.component';
+import type {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-list.component';
+import {NG_TALK_CHANNEL_LIST_TOKEN} from "../../../tokens";
+import {DecimalPipe} from "@angular/common";
 
 @Component({
   selector: 'ng-talk-channel-preview',
   standalone: true,
+  imports: [DecimalPipe],
   template: `
     @if (channels.settings.showChannelsIcons) {
       <img [src]="channel.icon || channels.settings.defaultChannelIcon" [attr.aria-label]="channel.name">
@@ -14,11 +17,11 @@ import {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-lis
       <div class="channel-name">{{ channel.name }}</div>
       <div class="channel-status">
         <div class="last-message">
-          @if (channel.lastMessage?.from && channel.type == ChannelType.Group) {
-            {{ channel.lastMessage.from.name }}:&ngsp;
+          @if (channel.lastMessage()?.from && channel.type == ChannelType.Group) {
+            {{ channel.lastMessage().from.name }}:&ngsp;
           }
 
-          @switch (channel.lastMessage?.type) {
+          @switch (channel.lastMessage()?.type) {
             @case (MessageType.Gif) {
               <svg viewBox="0 0 20 20" width="20" height="20">
                 <path fill="currentColor"
@@ -32,26 +35,25 @@ import {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-lis
               </svg>
             }
             @default {
-              {{ channel.lastMessage?.content }}
+              {{ channel.lastMessage()?.content }}
             }
           }
         </div>
 
-        @if (channel.unread > 0 && !(channels.activeChannel && channel.id == channels.activeChannel.id)) {
-          <div class="unread-badge">{{ channel.unread }}</div>
+        @if (channel.unread() > 0 && !(channels.activeChannel && channel.id == channels.activeChannel.id)) {
+          <div class="unread-badge">{{ channel.unread() | number }}</div>
         }
       </div>
     </div>`,
   styleUrl: './ng-talk-channel-preview.component.less'
 })
 export class NgTalkChannelPreviewComponent {
-
   @Input() public channel: ChatChannel;
 
   // Import types
   protected readonly ChannelType = ChatChannelType;
   protected readonly MessageType = ChatMessageType;
 
-  constructor(protected channels: NgTalkChannelListComponent) {
+  constructor(@Inject(NG_TALK_CHANNEL_LIST_TOKEN) protected channels: NgTalkChannelListComponent) {
   }
 }

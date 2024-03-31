@@ -1,6 +1,6 @@
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {DatePipe} from "@angular/common";
-import {Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, viewChild} from '@angular/core';
 import {MatMenu, MatMenuContent, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {fromEvent} from 'rxjs';
 import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
@@ -12,6 +12,7 @@ import {NgTalkChannelMessageRefComponent} from "./ref/ng-talk-channel-message-re
 @Component({
   selector: 'ng-talk-channel-message',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DatePipe, NgTalkChannelMessageRefComponent, NgTalkChannelMessageBodyComponent, MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem],
   template: `
     @if (chat.settings.showAvatars && showAuthor) {
@@ -62,7 +63,7 @@ export class NgTalkChannelMessageComponent implements OnChanges, OnDestroy {
   @Input() public message: ChatMessage;
   @Input() public prevMessage: ChatMessage;
 
-  @ViewChild(MatMenuTrigger, {static: false}) private _toolsMenu: MatMenuTrigger;
+  private _toolsMenu = viewChild(MatMenuTrigger);
 
   @HostBinding('class') private _className: string;
   protected showAuthor = true;
@@ -103,7 +104,7 @@ export class NgTalkChannelMessageComponent implements OnChanges, OnDestroy {
       fromEvent(this._host.nativeElement, 'touchmove').subscribe(() => clearTimeout(this._showTimeout))
     );
 
-    this._showTimeout = setTimeout(() => this._toolsMenu?.openMenu(), 1000);
+    this._showTimeout = setTimeout(() => this._toolsMenu()?.openMenu(), 1_000);
   }
 
   public ngOnDestroy() {

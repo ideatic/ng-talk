@@ -27,18 +27,18 @@ import {nameof} from '../../utils/utils';
 import {NgTalkChannelComponent} from "../channel/ng-talk-channel.component";
 import {NgTalkChannelPreviewComponent} from "../channel/preview/ng-talk-channel-preview.component";
 import {MessageLoadingMethod, NgTalkSettings} from '../ng-talk-settings';
-import {NG_TALK_CHANNEL_LIST_TOKEN} from "./ng-talk-channel-list-token";
+import {NG_TALK_CHANNEL_LIST_TOKEN} from "../../tokens";
 
 @Component({
   selector: 'ng-talk-channel-list',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, NgTalkChannelComponent, NgTalkChannelPreviewComponent, FnPipe, InViewportDirective],
   templateUrl: './ng-talk-channel-list.component.html',
   styleUrl: './ng-talk-channel-list.component.less',
   providers: [
     {provide: NG_TALK_CHANNEL_LIST_TOKEN, useExisting: forwardRef(() => NgTalkChannelListComponent)},
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  ]
 })
 export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy {
 
@@ -47,7 +47,6 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
   @Input() public settings = new NgTalkSettings();
   public search = output<string>();
   public channelChanged = output<ChatChannel | null>();
-
   // Forwarded events from single channel
   public messageSent = output<ChatMessage>();
   public userClicked = output<ChatUser>();

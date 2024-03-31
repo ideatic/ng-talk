@@ -1,12 +1,12 @@
-import {Overlay, OverlayConfig} from '@angular/cdk/overlay';
 import {ApplicationRef, createComponent, EmbeddedViewRef, EnvironmentInjector, Injectable} from '@angular/core';
-import {first} from 'rxjs/operators';
-import {NgTalkBubbleChannelComponent} from "../components/bubble/ng-talk-bubble-channel.component";
-import {NgTalkSettings} from "../components/ng-talk-settings";
-import {ChatAdapter} from '../models/chat-adapter';
 import {ChatChannel} from '../models/chat-channel';
+import {ChatAdapter} from '../models/chat-adapter';
 import {ChatUser} from '../models/chat-user';
+import {Overlay} from '@angular/cdk/overlay';
 import {BubbleChannelRef} from "./bubble-channel-ref";
+import {NgTalkSettings} from "../components/ng-talk-settings";
+import {NgTalkBubbleChannelComponent} from "../components/bubble/ng-talk-bubble-channel.component";
+
 
 @Injectable({
   providedIn: 'root'
@@ -46,17 +46,19 @@ export class BubbleChannelService {
     if (settings) {
       componentRef.setInput('channelSettings', settings);
     }
-
     if (initComponent) {
       initComponent(componentRef.instance);
     }
 
     // Create a reference
-    const bubbleRef = new BubbleChannelRef(this._appRef, componentRef);
+    const bubbleRef = new BubbleChannelRef(componentRef);
     BubbleChannelService._activeInstances.set(channel.id, bubbleRef);
     componentRef.setInput('selfRef', bubbleRef);
 
-    bubbleRef.onDestroyed.pipe(first()).subscribe(() => BubbleChannelService._activeInstances.delete(channel.id));
+    bubbleRef.destroyed.subscribe(() => {
+      this._appRef.detachView(componentRef.hostView);
+      BubbleChannelService._activeInstances.delete(channel.id);
+    });
 
     // Attach component to the appRef so that it's inside the ng component tree
     this._appRef.attachView(componentRef.hostView);
@@ -66,13 +68,11 @@ export class BubbleChannelService {
       .rootNodes[0] as HTMLElement;
 
     // Append DOM element to the body
-    const overlayConfig: OverlayConfig = {
+    bubbleRef.overlayRef = this._overlaySvc.create({
       hasBackdrop: false,
       disposeOnNavigation: false,
       scrollStrategy: this._overlaySvc.scrollStrategies.noop()
-    };
-
-    bubbleRef.overlayRef = this._overlaySvc.create(overlayConfig);
+    });
     bubbleRef.overlayRef.overlayElement.appendChild(domElem);
 
     return bubbleRef;

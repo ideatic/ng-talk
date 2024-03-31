@@ -1,4 +1,5 @@
 import {ChatMessage} from './chat-message';
+import { WritableSignal} from "@angular/core";
 
 export enum ChatChannelType {
   User,
@@ -14,7 +15,7 @@ export interface ChatChannel<T = any> {
 
   disabled?: boolean;
   blocked?: boolean;
-  unread?: number;
-  lastMessage?: ChatMessage;
+  unread: WritableSignal<number>;
+  lastMessage: WritableSignal<ChatMessage | null>;
   data?: T;
 }

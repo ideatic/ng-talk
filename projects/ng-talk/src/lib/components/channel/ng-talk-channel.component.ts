@@ -1,19 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  DestroyRef,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit, output,
-  Output,
-  QueryList,
-  signal,
-  SimpleChanges,
-  ViewChild, viewChildren,
-  ViewChildren
-} from '@angular/core';
+import {AfterViewInit, Component, DestroyRef, ElementRef, Input, OnChanges, OnInit, output, signal, SimpleChanges, viewChild, viewChildren} from '@angular/core';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatChannel} from '../../models/chat-channel';
 import {ChatMessage, ChatMessageType} from '../../models/chat-message';
@@ -43,7 +28,6 @@ declare const ngDevMode: boolean;
   ]
 })
 export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit {
-
   @Input() public user: ChatUser;
   @Input() public adapter: ChatAdapter;
   @Input() public channel: ChatChannel;
@@ -54,8 +38,8 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   public userClicked = output<ChatUser>();
   public deleted = output<void>();
 
-  @ViewChild('chatBox') private _chatBox: ElementRef<HTMLElement>;
-  @ViewChild(NgTalkSendMessageComponent) private _sendMessageComponent: NgTalkSendMessageComponent;
+  private _chatBox = viewChild('chatBox', {read: ElementRef<HTMLElement>});
+  private _sendMessageComponent = viewChild(NgTalkSendMessageComponent);
   private _messageComponents = viewChildren(NgTalkChannelMessageComponent);
 
   private _visibleMessages = 20;
@@ -66,8 +50,8 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   public replyingTo: ChatMessage;
 
   // UI
-  public loading = signal(false);
-  public scrollWatcherEnabled = signal(false);
+  protected loading = signal(false);
+  protected scrollWatcherEnabled = signal(false);
   protected readonly viewportDetectionAvailable = InViewportDirective.intersectionObserverFeatureDetection();
 
   // Import types and enums
@@ -118,7 +102,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
         }
 
         // Mark as read if component is focused
-        if (this.channel?.unread > 0 && document.hasFocus()) {
+        if (this.channel?.unread() > 0 && document.hasFocus()) {
           this.adapter.markAsRead(this.channel);
         }
       });
@@ -134,8 +118,8 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public scrollToBottom() {
     setTimeout(() => {  // Wait until new messages are drawn
-      if (this._chatBox) {
-        this._chatBox.nativeElement.scrollTop = this._chatBox.nativeElement.scrollHeight;
+      if (this._chatBox()) {
+        this._chatBox().nativeElement.scrollTop = this._chatBox().nativeElement.scrollHeight;
 
         if (this.messages().length >= this._visibleMessages) { // Enable scroll watcher if there is more messages pending
           this.scrollWatcherEnabled.set(true);
@@ -145,7 +129,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   public focus() {
-    this._sendMessageComponent?.focus();
+    this._sendMessageComponent()?.focus();
   }
 
   // Pagination & History
