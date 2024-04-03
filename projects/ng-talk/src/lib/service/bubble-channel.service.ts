@@ -1,4 +1,4 @@
-import {ApplicationRef, createComponent, EmbeddedViewRef, EnvironmentInjector, Injectable} from '@angular/core';
+import {ApplicationRef, createComponent, EmbeddedViewRef, EnvironmentInjector, Injectable, signal} from '@angular/core';
 import {ChatChannel} from '../models/chat-channel';
 import {ChatAdapter} from '../models/chat-adapter';
 import {ChatUser} from '../models/chat-user';
@@ -12,29 +12,30 @@ import {NgTalkBubbleChannelComponent} from "../components/bubble/ng-talk-bubble-
   providedIn: 'root'
 })
 export class BubbleChannelService {
-  private static _activeInstances = new Map<string, BubbleChannelRef>();
+  private static _activeInstances = signal<BubbleChannelRef[]>([]);
 
   constructor(private _appRef: ApplicationRef,
               private _injector: EnvironmentInjector,
               private _overlaySvc: Overlay) {
   }
 
-  public get activeChannelIDs(): string[] {
-    return Array.from(BubbleChannelService._activeInstances.keys());
+  public get activeChannels(): ChatChannel[] {
+    return BubbleChannelService._activeInstances().map(ref => ref.channel);
   }
 
   public hasInstance(channel: ChatChannel) {
-    return BubbleChannelService._activeInstances.has(channel.id);
+    return BubbleChannelService._activeInstances().some(ref => ref.channel.id == channel.id);
   }
 
   public getInstance(channel: ChatChannel) {
-    return BubbleChannelService._activeInstances.get(channel.id);
+    return BubbleChannelService._activeInstances().find(ref => ref.channel.id == channel.id);
   }
 
   public show(channel: ChatChannel, adapter: ChatAdapter, user: ChatUser, settings?: NgTalkSettings, initComponent?: (c: NgTalkBubbleChannelComponent) => void): BubbleChannelRef {
-    if (BubbleChannelService._activeInstances.has(channel.id)) {
-      BubbleChannelService._activeInstances.get(channel.id).componentRef.instance.open();
-      return BubbleChannelService._activeInstances.get(channel.id);
+    const alreadyOpened = this.getInstance(channel);
+    if (alreadyOpened) {
+      alreadyOpened.componentRef.instance.open();
+      return alreadyOpened;
     }
 
     // Create and configure component
@@ -51,13 +52,13 @@ export class BubbleChannelService {
     }
 
     // Create a reference
-    const bubbleRef = new BubbleChannelRef(componentRef);
-    BubbleChannelService._activeInstances.set(channel.id, bubbleRef);
+    const bubbleRef = new BubbleChannelRef(channel, componentRef);
+    BubbleChannelService._activeInstances.update(active => [...active, bubbleRef]);
     componentRef.setInput('selfRef', bubbleRef);
 
     bubbleRef.destroyed.subscribe(() => {
       this._appRef.detachView(componentRef.hostView);
-      BubbleChannelService._activeInstances.delete(channel.id);
+      BubbleChannelService._activeInstances.update(active => active.filter(ref => ref.channel.id != channel.id));
     });
 
     // Attach component to the appRef so that it's inside the ng component tree
@@ -79,7 +80,7 @@ export class BubbleChannelService {
   }
 
   public destroyAll() {
-    BubbleChannelService._activeInstances.forEach(ref => ref.destroy());
+    BubbleChannelService._activeInstances().forEach(ref => ref.destroy());
   }
 }
 

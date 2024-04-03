@@ -1,7 +1,7 @@
 import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {DecimalPipe} from "@angular/common";
-import {Component, DestroyRef, ElementRef, HostListener, Input, signal, viewChild} from '@angular/core';
+import {Component, computed, DestroyRef, ElementRef, forwardRef, HostListener, Input, signal, viewChild} from '@angular/core';
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {fromEvent, Subscription} from 'rxjs';
 import {ChatAdapter} from '../../models/chat-adapter';
@@ -14,14 +14,16 @@ import {NgTalkSettings} from '../ng-talk-settings';
 @Component({
   selector: 'channel-bubble',
   standalone: true,
-  imports: [NgTalkChannelComponent, DecimalPipe, CdkDrag],
+  // https://dev.to/loukaskotas/the-power-of-forwardref-to-fix-circular-dependencies-in-angular-337k
+  imports: [forwardRef(() => NgTalkChannelComponent), DecimalPipe, CdkDrag],
   template: `
     <div #bubble class="bubble"
          cdkDrag
          [title]="channel.name"
          [style.background-image]="'url( ' + (channel.icon || channelSettings.defaultChannelIcon) + ')'"
          [class]="bubbleClass()"
-         [cdkDragBoundary]="dragBoundarySelector" (click)="toggleChannel()"
+         [cdkDragBoundary]="dragBoundarySelector"
+         (click)="toggleChannel()"
          (cdkDragStarted)="onDragStart()"
          (cdkDragMoved)="onDragMoved($event)"
          (cdkDragEnded)="onDragEnded($event)">
@@ -36,8 +38,8 @@ import {NgTalkSettings} from '../ng-talk-settings';
                        [disableRendering]="!channelVisible()" (deleted)="onChatDeleted()"/>
     }
 
-    @if (isDragging()) {
-      <div #closeButton class="close-bubble" [class]="closeButtonClass()">&times;</div>
+    @if (dragPosition()) {
+      <div #closeButton class="close-bubble" [class.active]="isOverCloseBtn()" [class]="closeBtnAnimationClass()">&times;</div>
     }
   `,
   styleUrl: `ng-talk-bubble-channel.component.less`
@@ -61,10 +63,16 @@ export class NgTalkBubbleChannelComponent {
   protected channelClass = signal('bounceIn');
   protected channelStyle: { [key: string]: string | number } = {display: 'none'};
 
-  protected closeButtonClass = signal('');
+  protected dragPosition = signal<{ x: number; y: number; }>(null);
 
-  protected isDragging = signal(false);
-  private _lastPosition: { x: number; y: number; };
+  protected isOverCloseBtn = computed(() => {
+    if (this.dragPosition() && this._closeButton()) {
+      return this._isOver(this.dragPosition().x, this.dragPosition().y, this._closeButton().nativeElement, 20);
+    } else {
+      return false;
+    }
+  });
+  protected closeBtnAnimationClass = signal('');
 
   private _documentClickSubscription: Subscription;
 
@@ -82,12 +90,7 @@ export class NgTalkBubbleChannelComponent {
   }
 
   protected onDragMoved(event: CdkDragMove) {
-    this.isDragging.set(true);
-    this._lastPosition = event.pointerPosition;
-
-    if (this._closeButton()) {
-      this.closeButtonClass.set(this._isOver(event.pointerPosition.x, event.pointerPosition.y, this._closeButton().nativeElement, 20) ? 'active' : '');
-    }
+    this.dragPosition.set(event.pointerPosition);
   }
 
   private _isOver(x: number, y: number, element: HTMLElement, margin = 0) {
@@ -100,8 +103,8 @@ export class NgTalkBubbleChannelComponent {
   }
 
   protected onDragEnded(event: CdkDragEnd) {
-    if (this.closeButtonClass() == 'active') { // Close chat
-      this.closeButtonClass.set('bounceOut');
+    if (this.isOverCloseBtn()) { // Close chat
+      this.closeBtnAnimationClass.set('bounceOut');
       this.bubbleClass.set('fadeOut');
 
       setTimeout(() => this.selfRef.destroy(), 250);
@@ -109,12 +112,12 @@ export class NgTalkBubbleChannelComponent {
       return;
     }
 
-    this.closeButtonClass.set('bounceOut');
+    this.closeBtnAnimationClass.set('bounceOut');
 
     setTimeout(() => {
-      this.isDragging.set(false);
+      this.dragPosition.set(null);
       event.source.reset();
-      this.closeButtonClass.set('');
+      this.closeBtnAnimationClass.set(null);
     }, 250);
 
     this.close();
@@ -127,21 +130,21 @@ export class NgTalkBubbleChannelComponent {
     const bubbleStyles = this._bubbleElement().nativeElement.style;
 
     let x;
-    if (this._lastPosition?.x > containerWidth / 2) { // Move to the right
+    if (this.dragPosition()?.x > containerWidth / 2) { // Move to the right
       x = containerWidth - this._bubbleElement().nativeElement.offsetWidth;
     } else { // Move to the left
       x = 0;
     }
 
     bubbleStyles.transform = '';
-    bubbleStyles.top = (this._lastPosition ? this._lastPosition.y : 35) + 'px';
+    bubbleStyles.top = (this.dragPosition() ? this.dragPosition().y : 35) + 'px';
     bubbleStyles.left = x + 'px';
   }
 
   /* Visibility */
 
   protected toggleChannel() {
-    if (this.isDragging()) {
+    if (this.dragPosition()) {
       return;
     }
 
