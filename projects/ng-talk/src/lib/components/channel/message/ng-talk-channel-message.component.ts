@@ -17,7 +17,7 @@ import {NgTalkChannelMessageRefComponent} from "./ref/ng-talk-channel-message-re
   template: `
     @if (chat.settings.showAvatars && showAuthor) {
       <div class="avatar">
-        <img [src]="message.from.avatar || chat.settings.defaultAvatar" (click)="chat.userClicked.emit(message.from)"/>
+        <img [src]="message.from().avatar ?? chat.settings.defaultAvatar" (click)="chat.userClicked.emit(message.from())"/>
       </div>
     }
     <div class="speech-balloon">
@@ -41,9 +41,7 @@ import {NgTalkChannelMessageRefComponent} from "./ref/ng-talk-channel-message-re
 
       <!-- Author, body and date -->
       @if (chat.settings.showNames && showAuthor) {
-        <div class="author" [style.color]="message.from.color"
-             (click)="chat.userClicked.emit(message.from)">{{ message.from.name }}
-        </div>
+        <div class="author" [style.color]="message.from().color" (click)="chat.userClicked.emit(message.from())">{{ message.from().name }}</div>
       }
 
       <ng-talk-channel-message-body [message]="message"/>
@@ -80,10 +78,10 @@ export class NgTalkChannelMessageComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
-    this.showAuthor = !this.prevMessage || this.prevMessage.from.id != this.message.from.id || !isSameDay(this.prevMessage.date, this.message.date);
+    this.showAuthor = !this.prevMessage || this.prevMessage.from().id != this.message.from().id || !isSameDay(this.prevMessage.date, this.message.date);
 
     this._className = this.chat.settings.messageClass
-      + (this.message.from.id == this.chat.user.id ? ' sent' : 'received')
+      + (this.message.from().id == this.chat.user.id ? ' sent' : 'received')
       + (this.chat.settings.showAvatars ? ' with-avatar' : '')
       + (this.showAuthor && this.prevMessage ? ' wide' : '');
   }

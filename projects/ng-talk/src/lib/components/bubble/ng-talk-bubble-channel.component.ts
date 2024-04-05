@@ -1,7 +1,7 @@
 import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {DecimalPipe} from "@angular/common";
-import {Component, computed, DestroyRef, ElementRef, forwardRef, HostListener, Input, signal, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, forwardRef, HostListener, Input, signal, viewChild} from '@angular/core';
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {fromEvent, Subscription} from 'rxjs';
 import {ChatAdapter} from '../../models/chat-adapter';
@@ -14,6 +14,7 @@ import {NgTalkSettings} from '../ng-talk-settings';
 @Component({
   selector: 'channel-bubble',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   // https://dev.to/loukaskotas/the-power-of-forwardref-to-fix-circular-dependencies-in-angular-337k
   imports: [forwardRef(() => NgTalkChannelComponent), DecimalPipe, CdkDrag],
   template: `

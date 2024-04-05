@@ -1,4 +1,4 @@
-import {Component, DestroyRef, ElementRef, Inject, Optional, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DestroyRef, ElementRef, Inject, Optional, signal, viewChild} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {ChatChannel} from '../../../models/chat-channel';
 import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
@@ -13,6 +13,7 @@ import {growAnimation} from './grow-animation';
 @Component({
   selector: 'ng-talk-send-message',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, NgTalkSendEmojiComponent, NgTalkChannelMessageRefComponent, NgTalkSendGifComponent, NgTalkSendEmojiComponent],
   template: `
     @if (chat.channel?.blocked) {
@@ -99,7 +100,7 @@ export class NgTalkSendMessageComponent {
     if (this.chat.channel && !this.chat.channel.disabled) {
       const fullMessage = {
         replyTo: this.chat.replyingTo,
-        from: this.chat.user,
+        from: signal(this.chat.user),
         ...message
       } as ChatMessage;
 

@@ -1,4 +1,4 @@
-import {Component, Inject, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, Input} from '@angular/core';
 import {ChatChannel, ChatChannelType} from '../../../models/chat-channel';
 import {ChatMessageType} from '../../../models/chat-message';
 import type {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-list.component';
@@ -8,6 +8,7 @@ import {DecimalPipe} from "@angular/common";
 @Component({
   selector: 'ng-talk-channel-preview',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DecimalPipe],
   template: `
     @if (channels.settings.showChannelsIcons) {
@@ -17,8 +18,8 @@ import {DecimalPipe} from "@angular/common";
       <div class="channel-name">{{ channel.name }}</div>
       <div class="channel-status">
         <div class="last-message">
-          @if (channel.lastMessage()?.from && channel.type == ChannelType.Group) {
-            {{ channel.lastMessage().from.name }}:&ngsp;
+          @if (channel.lastMessage()?.from() && channel.type == ChannelType.Group) {
+            {{ channel.lastMessage().from().name }}:&ngsp;
           }
 
           @switch (channel.lastMessage()?.type) {

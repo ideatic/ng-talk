@@ -1,4 +1,5 @@
 import {ChatUser} from './chat-user';
+import {Signal} from "@angular/core";
 
 export enum ChatMessageType {
   Text = 'text',
@@ -10,7 +11,7 @@ export enum ChatMessageType {
 export interface ChatMessage<T = any> {
   id?: number | string;
   type?: ChatMessageType;
-  from: ChatUser;
+  from: Signal<ChatUser>;
   content: string;
   date?: Date;
   replyTo?: ChatMessage;

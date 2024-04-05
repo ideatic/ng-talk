@@ -1,4 +1,18 @@
-import {AfterViewInit, Component, DestroyRef, ElementRef, Input, OnChanges, OnInit, output, signal, SimpleChanges, viewChild, viewChildren} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  output,
+  signal,
+  SimpleChanges,
+  viewChild,
+  viewChildren
+} from '@angular/core';
 import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatChannel} from '../../models/chat-channel';
 import {ChatMessage, ChatMessageType} from '../../models/chat-message';
@@ -20,6 +34,7 @@ declare const ngDevMode: boolean;
 @Component({
   selector: 'ng-talk-channel',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgComponentOutlet, FnPipe, NgTalkSendMessageComponent, RelativeDatePipe, InViewportDirective, NgTalkChannelMessageComponent, CdkDrag],
   templateUrl: './ng-talk-channel.component.html',
   styleUrls: [

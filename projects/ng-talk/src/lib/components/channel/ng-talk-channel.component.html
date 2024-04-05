@@ -26,6 +26,7 @@
     @for (message of messages(); track trackMessage(index, message); let index = $index) {
       <!-- Date separator -->
       @if (message | fn:isSeparatorVisible:this:messages()[index - 1]) {
+        <div style="clear: both"></div>
         <div class="day-separator">
           <span>{{ message.date | relativeDate : settings }}</span>
         </div>
