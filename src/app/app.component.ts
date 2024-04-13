@@ -1,4 +1,4 @@
-  import { inject } from "@angular/core";
+import {ChangeDetectionStrategy, inject} from "@angular/core";
 import {Component, OnInit} from '@angular/core';
 import {DemoAdapter} from './adapters/demo-adapter';
 import {ChatUser, ChatUserStatus} from '../../projects/ng-talk/src/lib/models/chat-user';
@@ -10,12 +10,14 @@ import {NgTalkChannelListComponent} from "../../projects/ng-talk/src/public_api"
 @Component({
   selector: 'app-root',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, NgTalkChannelListComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']
 })
 export class AppComponent implements OnInit {
-      public demoAdapter = inject(DemoAdapter);
+  public demoAdapter = inject(DemoAdapter);
+
   public adapter: ChatAdapter;
   public chatSettings = new NgTalkSettings({
     showAvatars: true,
