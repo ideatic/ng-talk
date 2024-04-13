@@ -1,9 +1,8 @@
-import {ChangeDetectionStrategy, Component, DestroyRef, ElementRef, Inject, Optional, signal, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal, viewChild} from "@angular/core";
 import {FormsModule} from "@angular/forms";
 import {ChatChannel} from '../../../models/chat-channel';
 import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
 import {NG_TALK_CHANNEL_LIST_TOKEN} from "../../../tokens";
-import type {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-list.component';
 import {NgTalkChannelMessageRefComponent} from "../message/ref/ng-talk-channel-message-ref.component";
 import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {NgTalkSendEmojiComponent} from "./emoji/ng-talk-send-emoji.component";
@@ -80,20 +79,22 @@ import {growAnimation} from './grow-animation';
   animations: [growAnimation]
 })
 export class NgTalkSendMessageComponent {
+  protected readonly chat = inject(NgTalkChannelComponent);
+
   private _textInput = viewChild('textInput', {read: ElementRef<HTMLInputElement>});
 
   protected newMessage = '';
   protected mediaSelector: string = null;
 
-  constructor(protected chat: NgTalkChannelComponent,
-              destroyRef: DestroyRef,
-              @Optional() @Inject(NG_TALK_CHANNEL_LIST_TOKEN) channelList: NgTalkChannelListComponent) {
+  constructor() {
+    const channelList = inject(NG_TALK_CHANNEL_LIST_TOKEN, {optional: true});
+
     if (channelList) { // Detectar cambio de canal si estamos en un listado
       const subscription = channelList.channelChanged.subscribe((c) => this._onChannelChanged(c));
-      destroyRef.onDestroy(() => subscription.unsubscribe());
+      inject(DestroyRef).onDestroy(() => subscription.unsubscribe());
     }
 
-    chat.focus = () => this.focus();
+    this.chat.focus = () => this.focus();
   }
 
   private _sendMessage(message: Partial<ChatMessage>) {

@@ -1,5 +1,5 @@
+import {ChangeDetectionStrategy, Component, inject, output} from "@angular/core";
 import {KeyValue, KeyValuePipe} from '@angular/common';
-import {ChangeDetectionStrategy, Component, output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {FnPipe} from "../../../../pipes/fn.pipe";
 import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
@@ -53,13 +53,15 @@ import emojis from './emoji.json';
   `
 })
 export class NgTalkSendEmojiComponent {
+  // Deps
+  protected readonly chat = inject(NgTalkChannelComponent);
+
+  // Bindings
   public emojiSelected = output<string>();
 
+  // State
   protected readonly emojis = emojis;
   protected searchQuery: string;
-
-  constructor(protected chat: NgTalkChannelComponent) {
-  }
 
   protected filter(entries: KeyValue<string, string>[], searchQuery: string): KeyValue<string, string>[] {
     return (searchQuery

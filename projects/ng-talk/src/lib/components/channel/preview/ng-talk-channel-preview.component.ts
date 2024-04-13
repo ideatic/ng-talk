@@ -1,7 +1,6 @@
-import {ChangeDetectionStrategy, Component, Inject, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input} from "@angular/core";
 import {ChatChannel, ChatChannelType} from '../../../models/chat-channel';
 import {ChatMessageType} from '../../../models/chat-message';
-import type {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-list.component';
 import {NG_TALK_CHANNEL_LIST_TOKEN} from "../../../tokens";
 import {DecimalPipe} from "@angular/common";
 
@@ -49,12 +48,13 @@ import {DecimalPipe} from "@angular/common";
   styleUrl: './ng-talk-channel-preview.component.less'
 })
 export class NgTalkChannelPreviewComponent {
+  // Deps
+  protected readonly channels = inject(NG_TALK_CHANNEL_LIST_TOKEN);
+
+  // Bindings
   @Input() public channel: ChatChannel;
 
   // Import types
   protected readonly ChannelType = ChatChannelType;
   protected readonly MessageType = ChatMessageType;
-
-  constructor(@Inject(NG_TALK_CHANNEL_LIST_TOKEN) protected channels: NgTalkChannelListComponent) {
-  }
 }

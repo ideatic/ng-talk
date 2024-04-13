@@ -1,6 +1,6 @@
+import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, inject, Input, OnChanges, OnDestroy, viewChild} from "@angular/core";
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {DatePipe} from "@angular/common";
-import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, viewChild} from '@angular/core';
 import {MatMenu, MatMenuContent, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {fromEvent} from 'rxjs';
 import {ChatMessage, ChatMessageType} from '../../../models/chat-message';
@@ -58,9 +58,15 @@ import {NgTalkChannelMessageRefComponent} from "./ref/ng-talk-channel-message-re
   styleUrl: 'ng-talk-channel-message.component.less'
 })
 export class NgTalkChannelMessageComponent implements OnChanges, OnDestroy {
+  // Deps
+  protected readonly chat = inject(NgTalkChannelComponent);
+  private readonly _host = inject(ElementRef<HTMLElement>);
+
+  // Bindings
   @Input() public message: ChatMessage;
   @Input() public prevMessage: ChatMessage;
 
+  // State
   private _toolsMenu = viewChild(MatMenuTrigger);
 
   @HostBinding('class') private _className: string;
@@ -72,10 +78,6 @@ export class NgTalkChannelMessageComponent implements OnChanges, OnDestroy {
 
   // Import types and enums
   protected readonly MessageType = ChatMessageType;
-
-  constructor(protected chat: NgTalkChannelComponent,
-              private _host: ElementRef<HTMLElement>) {
-  }
 
   public ngOnChanges() {
     this.showAuthor = !this.prevMessage || this.prevMessage.from().id != this.message.from().id || !isSameDay(this.prevMessage.date, this.message.date);

@@ -6,6 +6,7 @@ import {
   forwardRef,
   HostBinding,
   HostListener,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -13,7 +14,7 @@ import {
   output,
   signal,
   SimpleChanges
-} from '@angular/core';
+} from "@angular/core";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {FormsModule} from "@angular/forms";
 import {Subscription} from 'rxjs';
@@ -41,7 +42,11 @@ import {NG_TALK_CHANNEL_LIST_TOKEN} from "../../tokens";
   ]
 })
 export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy {
+  // Deps
+  private _host = inject(ElementRef<HTMLElement>);
+  private _destroyRef = inject(DestroyRef);
 
+  // Bindings
   @Input() public user: ChatUser;
   @Input() public adapter: ChatAdapter;
   @Input() public settings = new NgTalkSettings();
@@ -54,6 +59,7 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
   @HostBinding('class')
   public displayMode: 'desktop' | 'mobile';
 
+  // State
   public activeChannel: ChatChannel;
   private _channelsSubscription: Subscription;
   protected channels = signal<ChatChannel[]>(null);
@@ -64,10 +70,6 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
 
   // Import types
   protected readonly MessagesLoading = MessageLoadingMethod;
-
-  constructor(private _host: ElementRef<HTMLElement>,
-              private _destroyRef: DestroyRef) {
-  }
 
   public ngOnInit() {
     // Choose initial displayMode

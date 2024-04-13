@@ -1,6 +1,6 @@
+import {ChangeDetectionStrategy, Component, inject, OnInit, output} from "@angular/core";
 import {AsyncPipe} from "@angular/common";
 import {HttpClient} from '@angular/common/http';
-import {ChangeDetectionStrategy, Component, OnInit, output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {debounceTime, map, Observable, Subject} from 'rxjs';
 import {FnPipe} from "../../../../pipes/fn.pipe";
@@ -58,16 +58,18 @@ import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
   `
 })
 export class NgTalkSendGifComponent implements OnInit {
+  // Deps
+  protected readonly chat = inject(NgTalkChannelComponent);
+  private readonly _http = inject(HttpClient);
+
+  // Bindings
   public gifSelected = output<string>();
 
+  // State
   protected searchQuery: string;
   protected gifs$: Observable<any>;
 
   private _deBouncer: Subject<string>;
-
-  constructor(protected chat: NgTalkChannelComponent,
-              private _http: HttpClient) {
-  }
 
   public ngOnInit() {
     this._getTrendingGIFs();

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input} from "@angular/core";
 import type Autolinker from 'autolinker';
 import {ChatMessage, ChatMessageType} from '../../../../models/chat-message';
 import {FnPipe} from "../../../../pipes/fn.pipe";
@@ -30,14 +30,15 @@ import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-wr
   styleUrl: 'ng-talk-channel-message-body.component.less'
 })
 export class NgTalkChannelMessageBodyComponent {
+  // Deps
+  private _chat = inject(NgTalkChannelComponent);
+  private _autoLinker = inject(AutoLinkerService);
+
+  // Bindings
   @Input() public message: ChatMessage;
 
   // Import types and enums
   protected readonly MessageType = ChatMessageType;
-
-  constructor(private _chat: NgTalkChannelComponent,
-              private _autoLinker: AutoLinkerService) {
-  }
 
   protected transformContent(message: ChatMessage): string {
     let content = message.content;

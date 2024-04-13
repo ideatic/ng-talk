@@ -1,8 +1,7 @@
-import {ChangeDetectionStrategy, Component, Inject, Optional} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from "@angular/core";
 import {ChatChannel} from '../../../models/chat-channel';
 import type {BubbleChannelRef} from "../../../service/bubble-channel-ref";
 import {BubbleChannelService} from '../../../service/bubble-channel.service';
-import type {NgTalkChannelListComponent} from '../../channel-list/ng-talk-channel-list.component';
 import {NgTalkChannelComponent} from '../ng-talk-channel.component';
 import {NG_TALK_CHANNEL_LIST_TOKEN} from "../../../tokens";
 
@@ -26,11 +25,10 @@ import {NG_TALK_CHANNEL_LIST_TOKEN} from "../../../tokens";
   styleUrl: 'ng-talk-channel-header.component.less'
 })
 export class NgTalkChannelHeaderComponent {
-  constructor(protected chat: NgTalkChannelComponent,
-              protected bubbleChannelSvc: BubbleChannelService,
-              @Optional() @Inject(NG_TALK_CHANNEL_LIST_TOKEN) protected channelList: NgTalkChannelListComponent) {
-
-  }
+  // Deps
+  protected readonly chat = inject(NgTalkChannelComponent);
+  protected readonly bubbleChannelSvc = inject(BubbleChannelService);
+  protected readonly channelList = inject(NG_TALK_CHANNEL_LIST_TOKEN, {optional: true});
 
   protected openBubbleChat(channel: ChatChannel): BubbleChannelRef | void {
     if (channel && !this.bubbleChannelSvc.hasInstance(channel)) {

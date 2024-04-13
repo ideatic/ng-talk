@@ -1,4 +1,4 @@
-import {ApplicationRef, createComponent, EmbeddedViewRef, EnvironmentInjector, Injectable, signal} from '@angular/core';
+import {ApplicationRef, createComponent, EmbeddedViewRef, EnvironmentInjector, inject, Injectable, signal} from "@angular/core";
 import {ChatChannel} from '../models/chat-channel';
 import {ChatAdapter} from '../models/chat-adapter';
 import {ChatUser} from '../models/chat-user';
@@ -14,10 +14,10 @@ import {NgTalkBubbleChannelComponent} from "../components/bubble/ng-talk-bubble-
 export class BubbleChannelService {
   private static _activeInstances = signal<BubbleChannelRef[]>([]);
 
-  constructor(private _appRef: ApplicationRef,
-              private _injector: EnvironmentInjector,
-              private _overlaySvc: Overlay) {
-  }
+  // Deps
+  private _appRef = inject(ApplicationRef);
+  private _injector = inject(EnvironmentInjector);
+  private _overlaySvc = inject(Overlay);
 
   public get activeChannels(): ChatChannel[] {
     return BubbleChannelService._activeInstances().map(ref => ref.channel);

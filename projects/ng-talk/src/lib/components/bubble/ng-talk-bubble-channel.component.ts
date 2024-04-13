@@ -1,7 +1,7 @@
+import {ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, forwardRef, HostListener, inject, Input, signal, viewChild} from "@angular/core";
 import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {DecimalPipe} from "@angular/common";
-import {ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, forwardRef, HostListener, Input, signal, viewChild} from '@angular/core';
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {fromEvent, Subscription} from 'rxjs';
 import {ChatAdapter} from '../../models/chat-adapter';
@@ -46,7 +46,12 @@ import {NgTalkSettings} from '../ng-talk-settings';
   styleUrl: `ng-talk-bubble-channel.component.less`
 })
 export class NgTalkBubbleChannelComponent {
+  // Deps
+  private _host = inject(ElementRef<HTMLElement>);
+  private _destroyRef = inject(DestroyRef);
+  private _overlayContainer = inject(OverlayContainer);
 
+  // State
   @Input() public dragBoundarySelector = 'body';
   @Input() public channel: ChatChannel;
   @Input() public adapter: ChatAdapter;
@@ -76,11 +81,6 @@ export class NgTalkBubbleChannelComponent {
   protected closeBtnAnimationClass = signal('');
 
   private _documentClickSubscription: Subscription;
-
-  constructor(private _host: ElementRef<HTMLElement>,
-              private _destroyRef: DestroyRef,
-              private _overlayContainer: OverlayContainer) {
-  }
 
   /* Dragging */
 

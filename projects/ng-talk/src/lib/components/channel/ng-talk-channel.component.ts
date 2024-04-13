@@ -4,6 +4,7 @@ import {
   Component,
   DestroyRef,
   ElementRef,
+  inject,
   Input,
   OnChanges,
   OnInit,
@@ -12,7 +13,7 @@ import {
   SimpleChanges,
   viewChild,
   viewChildren
-} from '@angular/core';
+} from "@angular/core";
 import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatChannel} from '../../models/chat-channel';
 import {ChatMessage, ChatMessageType} from '../../models/chat-message';
@@ -43,6 +44,10 @@ declare const ngDevMode: boolean;
   ]
 })
 export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit {
+  // Deps
+  private _destroyRef = inject(DestroyRef);
+
+  // Bindings
   @Input() public user: ChatUser;
   @Input() public adapter: ChatAdapter;
   @Input() public channel: ChatChannel;
@@ -53,6 +58,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   public userClicked = output<ChatUser>();
   public deleted = output<void>();
 
+  // State
   private _chatBox = viewChild('chatBox', {read: ElementRef<HTMLElement>});
   private _sendMessageComponent = viewChild(NgTalkSendMessageComponent);
   private _messageComponents = viewChildren(NgTalkChannelMessageComponent);
@@ -71,9 +77,6 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
 
   // Import types and enums
   protected readonly MessageType = ChatMessageType;
-
-  constructor(private _destroyRef: DestroyRef) {
-  }
 
   public ngOnInit() {
     if (!this.user) {

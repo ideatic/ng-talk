@@ -1,4 +1,4 @@
-import {Directive, ElementRef, Input, OnDestroy, OnInit, output} from '@angular/core';
+import {Directive, ElementRef, inject, Input, OnDestroy, OnInit, output} from "@angular/core";
 
 /**
  * From https://github.com/thisissoon/angular-inviewport
@@ -24,15 +24,17 @@ import {Directive, ElementRef, Input, OnDestroy, OnInit, output} from '@angular/
   standalone: true
 })
 export class InViewportDirective implements OnDestroy, OnInit {
+  // Deps
+  private _host = inject(ElementRef);
+  private _window = inject(Window);
+
+  // Bindings
   @Input() public inViewportOptions: IntersectionObserverInit & { delay?: number };
   public inViewportChange = output<boolean>();
 
+  // State
   private _inViewport: boolean;
   protected observer: IntersectionObserver;
-
-  constructor(private _host: ElementRef,
-              private _window: Window) {
-  }
 
   public ngOnInit() {
     if (InViewportDirective.intersectionObserverFeatureDetection()) {
