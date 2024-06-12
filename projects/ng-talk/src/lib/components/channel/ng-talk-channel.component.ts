@@ -64,7 +64,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   private _messageComponents = viewChildren(NgTalkChannelMessageComponent);
 
   private _visibleMessages = 20;
-  public messages = signal<ChatMessage[]>([]);
+  public readonly messages = signal<ChatMessage[]>([]);
 
   private _messagesSubscription: Subscription;
 
