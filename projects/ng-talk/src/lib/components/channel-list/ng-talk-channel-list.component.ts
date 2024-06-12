@@ -50,11 +50,11 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
   @Input() public user: ChatUser;
   @Input() public adapter: ChatAdapter;
   @Input() public settings = new NgTalkSettings();
-  public search = output<string>();
-  public channelChanged = output<ChatChannel | null>();
+  public readonly search = output<string>();
+  public readonly channelChanged = output<ChatChannel | null>();
   // Forwarded events from single channel
-  public messageSent = output<ChatMessage>();
-  public userClicked = output<ChatUser>();
+  public readonly messageSent = output<ChatMessage>();
+  public readonly userClicked = output<ChatUser>();
 
   @HostBinding('class')
   public displayMode: 'desktop' | 'mobile';

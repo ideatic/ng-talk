@@ -30,7 +30,7 @@ export class InViewportDirective implements OnDestroy, OnInit {
 
   // Bindings
   @Input() public inViewportOptions: IntersectionObserverInit & { delay?: number };
-  public inViewportChange = output<boolean>();
+  public readonly inViewportChange = output<boolean>();
 
   // State
   private _inViewport: boolean;

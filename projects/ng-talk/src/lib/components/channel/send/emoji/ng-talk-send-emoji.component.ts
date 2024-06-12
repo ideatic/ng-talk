@@ -57,7 +57,7 @@ export class NgTalkSendEmojiComponent {
   protected readonly chat = inject(NgTalkChannelComponent);
 
   // Bindings
-  public emojiSelected = output<string>();
+  public readonly emojiSelected = output<string>();
 
   // State
   protected readonly emojis = emojis;

@@ -54,9 +54,9 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   @Input() public settings: NgTalkSettings;
   @Input() public disableRendering = false;
 
-  public messageSent = output<ChatMessage>();
-  public userClicked = output<ChatUser>();
-  public deleted = output<void>();
+  public readonly messageSent = output<ChatMessage>();
+  public readonly userClicked = output<ChatUser>();
+  public readonly deleted = output<void>();
 
   // State
   private _chatBox = viewChild('chatBox', {read: ElementRef<HTMLElement>});

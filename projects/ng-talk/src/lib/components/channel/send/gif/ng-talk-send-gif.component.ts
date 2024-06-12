@@ -63,7 +63,7 @@ export class NgTalkSendGifComponent implements OnInit {
   private readonly _http = inject(HttpClient);
 
   // Bindings
-  public gifSelected = output<string>();
+  public readonly gifSelected = output<string>();
 
   // State
   protected searchQuery: string;
