@@ -49,7 +49,7 @@ import {growAnimation} from './grow-animation';
         </span>
 
         <!-- Gif -->
-        @if (chat.settings.giphyApiKey) {
+        @if (chat.settings.giphyApiKey || chat.settings.tenorApiKey) {
           <span role="button" class="emoji-btn" [style.color]="mediaSelector == 'gif' ? '#008069' : null"
                 (click)="mediaSelector = mediaSelector == 'gif' ? null : 'gif'">
           <svg viewBox="0 0 24 24" width="24" height="24">
