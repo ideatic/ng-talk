@@ -7,11 +7,10 @@ import {FnPipe} from "../../../../pipes/fn.pipe";
 import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
 
 @Component({
-  selector: 'ng-talk-send-gif',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, AsyncPipe, FnPipe],
-  template: `
+    selector: 'ng-talk-send-gif',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [FormsModule, AsyncPipe, FnPipe],
+    template: `
     <div style="display: flex; align-items: center; margin-bottom: 10px">
       <input type="search" style="flex-grow: 1" [placeholder]="chat.settings.search" [(ngModel)]="searchQuery" (ngModelChange)="searchGIFs($event)"/>
 
@@ -56,11 +55,11 @@ import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
     </div>
     <div class="gif-list">
       @for (gif of gifs$() | async; track gif) {
-        <span style="text-align: center" (click)="onGifSelected(gif)"><img loading="lazy" [src]="gif | fn:getGifURL:this:false"/></span>
+        <span style="text-align: center" (click)="onGifSelected(gif)"><img loading="lazy" [src]="gif | fn:getGifURL:false"/></span>
       }
     </div>
   `,
-  styles: `
+    styles: `
     :host {
       display: block;
       max-width: 100%;

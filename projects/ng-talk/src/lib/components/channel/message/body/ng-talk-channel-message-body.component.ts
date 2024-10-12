@@ -7,14 +7,13 @@ import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
 import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-writing.component";
 
 @Component({
-  selector: 'ng-talk-channel-message-body',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FnPipe, NgTalkChannelMessageWritingComponent],
-  template: `
+    selector: 'ng-talk-channel-message-body',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [FnPipe, NgTalkChannelMessageWritingComponent],
+    template: `
     @switch (message.type) {
       @case (MessageType.Text) {
-        <div class="text-message" [innerHTML]="message | fn:transformContent:this"></div>
+        <div class="text-message" [innerHTML]="message | fn:transformContent"></div>
       }
       @case (MessageType.Image) {
         <img loading="lazy" style="margin-bottom: 8px" [src]="message.content"/>
@@ -27,7 +26,7 @@ import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-wr
       }
     }
   `,
-  styleUrl: 'ng-talk-channel-message-body.component.less'
+    styleUrl: 'ng-talk-channel-message-body.component.less'
 })
 export class NgTalkChannelMessageBodyComponent {
   // Deps

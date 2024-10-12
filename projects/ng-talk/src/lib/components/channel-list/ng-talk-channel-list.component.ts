@@ -31,15 +31,14 @@ import {MessageLoadingMethod, NgTalkSettings} from '../ng-talk-settings';
 import {NG_TALK_CHANNEL_LIST_TOKEN} from "../../tokens";
 
 @Component({
-  selector: 'ng-talk-channel-list',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, NgTalkChannelComponent, NgTalkChannelPreviewComponent, FnPipe, InViewportDirective],
-  templateUrl: './ng-talk-channel-list.component.html',
-  styleUrl: './ng-talk-channel-list.component.less',
-  providers: [
-    {provide: NG_TALK_CHANNEL_LIST_TOKEN, useExisting: forwardRef(() => NgTalkChannelListComponent)},
-  ]
+    selector: 'ng-talk-channel-list',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [FormsModule, NgTalkChannelComponent, NgTalkChannelPreviewComponent, FnPipe, InViewportDirective],
+    templateUrl: './ng-talk-channel-list.component.html',
+    styleUrl: './ng-talk-channel-list.component.less',
+    providers: [
+        { provide: NG_TALK_CHANNEL_LIST_TOKEN, useExisting: forwardRef(() => NgTalkChannelListComponent) },
+    ]
 })
 export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy {
   // Deps

@@ -5,11 +5,10 @@ import {NG_TALK_CHANNEL_LIST_TOKEN} from "../../../tokens";
 import {DecimalPipe} from "@angular/common";
 
 @Component({
-  selector: 'ng-talk-channel-preview',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DecimalPipe],
-  template: `
+    selector: 'ng-talk-channel-preview',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [DecimalPipe],
+    template: `
     @if (channels.settings.showChannelsIcons) {
       <img [src]="channel.icon || channels.settings.defaultChannelIcon" [attr.aria-label]="channel.name">
     }
@@ -45,7 +44,7 @@ import {DecimalPipe} from "@angular/common";
         }
       </div>
     </div>`,
-  styleUrl: './ng-talk-channel-preview.component.less'
+    styleUrl: './ng-talk-channel-preview.component.less'
 })
 export class NgTalkChannelPreviewComponent {
   // Deps

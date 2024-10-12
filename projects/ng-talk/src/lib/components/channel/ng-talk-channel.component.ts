@@ -33,15 +33,14 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 declare const ngDevMode: boolean;
 
 @Component({
-  selector: 'ng-talk-channel',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgComponentOutlet, FnPipe, NgTalkSendMessageComponent, RelativeDatePipe, InViewportDirective, NgTalkChannelMessageComponent, CdkDrag],
-  templateUrl: './ng-talk-channel.component.html',
-  styleUrls: [
-    './ng-talk-channel.component.less',
-    './styles/loading-spinner.less'
-  ]
+    selector: 'ng-talk-channel',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgComponentOutlet, FnPipe, NgTalkSendMessageComponent, RelativeDatePipe, InViewportDirective, NgTalkChannelMessageComponent, CdkDrag],
+    templateUrl: './ng-talk-channel.component.html',
+    styleUrls: [
+        './ng-talk-channel.component.less',
+        './styles/loading-spinner.less'
+    ]
 })
 export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit {
   // Deps

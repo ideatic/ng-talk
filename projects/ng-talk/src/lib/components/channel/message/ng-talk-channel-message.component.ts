@@ -10,11 +10,10 @@ import {NgTalkChannelMessageBodyComponent} from "./body/ng-talk-channel-message-
 import {NgTalkChannelMessageRefComponent} from "./ref/ng-talk-channel-message-ref.component";
 
 @Component({
-  selector: 'ng-talk-channel-message',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DatePipe, NgTalkChannelMessageRefComponent, NgTalkChannelMessageBodyComponent, MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem],
-  template: `
+    selector: 'ng-talk-channel-message',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [DatePipe, NgTalkChannelMessageRefComponent, NgTalkChannelMessageBodyComponent, MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem],
+    template: `
     @if (chat.settings.showAvatars && showAuthor) {
       <div class="avatar">
         <img [src]="message.from().avatar ?? chat.settings.defaultAvatar" (click)="chat.userClicked.emit(message.from())"/>
@@ -55,7 +54,7 @@ import {NgTalkChannelMessageRefComponent} from "./ref/ng-talk-channel-message-re
       }
     </div>
   `,
-  styleUrl: 'ng-talk-channel-message.component.less'
+    styleUrl: 'ng-talk-channel-message.component.less'
 })
 export class NgTalkChannelMessageComponent implements OnChanges, OnDestroy {
   // Deps

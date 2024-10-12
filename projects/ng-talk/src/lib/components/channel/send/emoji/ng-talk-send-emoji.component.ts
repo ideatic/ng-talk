@@ -6,19 +6,18 @@ import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
 import emojis from './emoji.json';
 
 @Component({
-  selector: 'ng-talk-send-emoji',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, KeyValuePipe, FnPipe],
-  template: `
+    selector: 'ng-talk-send-emoji',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [FormsModule, KeyValuePipe, FnPipe],
+    template: `
     <input type="search" [placeholder]="chat.settings.search" [(ngModel)]="searchQuery"/>
     <div>
-      @for (pair of emojis | keyvalue | fn:filter:this:searchQuery; track pair) {
+      @for (pair of emojis | keyvalue | fn:filter:searchQuery; track pair) {
         <span (click)="emojiSelected.emit(pair.value)">{{ pair.value }}</span>
       }
     </div>
   `,
-  styles: `
+    styles: `
     :host {
       display: block;
       max-width: 100%;

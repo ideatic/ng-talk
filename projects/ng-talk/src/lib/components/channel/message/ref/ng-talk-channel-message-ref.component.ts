@@ -3,15 +3,14 @@ import {ChatMessage} from '../../../../models/chat-message';
 import {NgTalkChannelMessageBodyComponent} from "../body/ng-talk-channel-message-body.component";
 
 @Component({
-  selector: 'ng-talk-channel-message-ref',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgTalkChannelMessageBodyComponent],
-  template: `
+    selector: 'ng-talk-channel-message-ref',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgTalkChannelMessageBodyComponent],
+    template: `
     <strong>{{ message.from().name }}</strong>
     <ng-talk-channel-message-body [message]="message"/>
   `,
-  styles: `
+    styles: `
       :host {
           display: block;
           text-align: start;

@@ -10,11 +10,10 @@ import {NgTalkSendGifComponent} from "./gif/ng-talk-send-gif.component";
 import {growAnimation} from './grow-animation';
 
 @Component({
-  selector: 'ng-talk-send-message',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, NgTalkSendEmojiComponent, NgTalkChannelMessageRefComponent, NgTalkSendGifComponent, NgTalkSendEmojiComponent],
-  template: `
+    selector: 'ng-talk-send-message',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [FormsModule, NgTalkSendEmojiComponent, NgTalkChannelMessageRefComponent, NgTalkSendGifComponent, NgTalkSendEmojiComponent],
+    template: `
     @if (chat.channel?.blocked) {
       <p style="margin: 1em 0; text-align: center">{{ chat.settings.disabledMessage }}</p>
     } @else {
@@ -75,8 +74,8 @@ import {growAnimation} from './grow-animation';
       </form>
     }
   `,
-  styleUrl: 'ng-talk-send-message.component.less',
-  animations: [growAnimation]
+    styleUrl: 'ng-talk-send-message.component.less',
+    animations: [growAnimation]
 })
 export class NgTalkSendMessageComponent {
   protected readonly chat = inject(NgTalkChannelComponent);

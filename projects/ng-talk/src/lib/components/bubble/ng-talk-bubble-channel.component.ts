@@ -12,12 +12,11 @@ import {NgTalkChannelComponent} from '../channel/ng-talk-channel.component';
 import {NgTalkSettings} from '../ng-talk-settings';
 
 @Component({
-  selector: 'channel-bubble',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  // https://dev.to/loukaskotas/the-power-of-forwardref-to-fix-circular-dependencies-in-angular-337k
-  imports: [forwardRef(() => NgTalkChannelComponent), DecimalPipe, CdkDrag],
-  template: `
+    selector: 'channel-bubble',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    // https://dev.to/loukaskotas/the-power-of-forwardref-to-fix-circular-dependencies-in-angular-337k
+    imports: [forwardRef(() => NgTalkChannelComponent), DecimalPipe, CdkDrag],
+    template: `
     <div #bubble class="bubble"
          cdkDrag
          [title]="channel.name"
@@ -43,7 +42,7 @@ import {NgTalkSettings} from '../ng-talk-settings';
       <div #closeButton class="close-bubble" [class.active]="isOverCloseBtn()" [class]="closeBtnAnimationClass()">&times;</div>
     }
   `,
-  styleUrl: `ng-talk-bubble-channel.component.less`
+    styleUrl: `ng-talk-bubble-channel.component.less`
 })
 export class NgTalkBubbleChannelComponent {
   // Deps
