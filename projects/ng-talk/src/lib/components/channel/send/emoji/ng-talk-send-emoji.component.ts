@@ -13,7 +13,7 @@ import emojis from './emoji.json';
   template: `
     <input type="search" [placeholder]="chat.settings.search" [(ngModel)]="searchQuery"/>
     <div>
-      @for (pair of emojis | keyvalue | fn:filter:this:searchQuery; track pair) {
+      @for (pair of emojis | keyvalue | fn:filter:searchQuery; track pair) {
         <span (click)="emojiSelected.emit(pair.value)">{{ pair.value }}</span>
       }
     </div>

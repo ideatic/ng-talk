@@ -14,7 +14,7 @@ import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-wr
   template: `
     @switch (message.type) {
       @case (MessageType.Text) {
-        <div class="text-message" [innerHTML]="message | fn:transformContent:this"></div>
+        <div class="text-message" [innerHTML]="message | fn:transformContent"></div>
       }
       @case (MessageType.Image) {
         <img loading="lazy" style="margin-bottom: 8px" [src]="message.content"/>

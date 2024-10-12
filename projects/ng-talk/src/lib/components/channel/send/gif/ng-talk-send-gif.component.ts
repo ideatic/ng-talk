@@ -56,7 +56,7 @@ import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
     </div>
     <div class="gif-list">
       @for (gif of gifs$() | async; track gif) {
-        <span style="text-align: center" (click)="onGifSelected(gif)"><img loading="lazy" [src]="gif | fn:getGifURL:this:false"/></span>
+        <span style="text-align: center" (click)="onGifSelected(gif)"><img loading="lazy" [src]="gif | fn:getGifURL:false"/></span>
       }
     </div>
   `,
