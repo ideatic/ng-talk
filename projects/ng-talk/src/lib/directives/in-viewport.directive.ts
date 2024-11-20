@@ -20,8 +20,7 @@ import {Directive, ElementRef, inject, Input, OnDestroy, OnInit, output} from "@
 
 @Directive({
   selector: '[inViewport]',
-  exportAs: 'inViewport',
-  standalone: true
+  exportAs: 'inViewport'
 })
 export class InViewportDirective implements OnDestroy, OnInit {
   // Deps

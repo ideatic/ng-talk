@@ -4,8 +4,7 @@ import {NgTalkSettings} from '../components/ng-talk-settings';
 import {daysDiff} from '../utils/utils';
 
 @Pipe({
-  name: 'relativeDate',
-  standalone: true
+  name: 'relativeDate'
 })
 export class RelativeDatePipe implements PipeTransform {
   private _datePipe = new DatePipe(inject(LOCALE_ID));
