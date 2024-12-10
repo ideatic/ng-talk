@@ -61,7 +61,7 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
   // State
   public activeChannel: ChatChannel;
   private _channelsSubscription: Subscription;
-  protected channels = signal<ChatChannel[]>(null);
+  protected readonly channels = signal<ChatChannel[]>(null);
 
   private _channelMessagesSubscriptions = new Map<string, Subscription>();
 

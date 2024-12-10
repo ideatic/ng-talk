@@ -12,7 +12,7 @@ import {NgTalkBubbleChannelComponent} from "../components/bubble/ng-talk-bubble-
   providedIn: 'root'
 })
 export class BubbleChannelService {
-  private static _activeInstances = signal<BubbleChannelRef[]>([]);
+  private static readonly _activeInstances = signal<BubbleChannelRef[]>([]);
 
   // Deps
   private _appRef = inject(ApplicationRef);

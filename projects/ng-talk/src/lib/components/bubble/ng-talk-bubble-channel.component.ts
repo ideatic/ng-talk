@@ -58,26 +58,26 @@ export class NgTalkBubbleChannelComponent {
   @Input() public user: ChatUser;
   @Input() public selfRef: BubbleChannelRef;
 
-  private _bubbleElement = viewChild.required('bubble', {read: ElementRef<HTMLElement>});
-  private _ngTalkChannel = viewChild.required(NgTalkChannelComponent);
-  private _closeButton = viewChild('closeButton', {read: ElementRef<HTMLElement>});
+  private readonly _bubbleElement = viewChild.required('bubble', {read: ElementRef<HTMLElement>});
+  private readonly _ngTalkChannel = viewChild.required(NgTalkChannelComponent);
+  private readonly _closeButton = viewChild('closeButton', {read: ElementRef<HTMLElement>});
 
-  protected bubbleClass = signal('');
+  protected readonly bubbleClass = signal('');
 
-  protected channelVisible = signal(false);
-  protected channelClass = signal('bounceIn');
+  protected readonly channelVisible = signal(false);
+  protected readonly channelClass = signal('bounceIn');
   protected channelStyle: { [key: string]: string | number } = {display: 'none'};
 
-  protected dragPosition = signal<{ x: number; y: number; }>(null);
+  protected readonly dragPosition = signal<{ x: number; y: number; }>(null);
 
-  protected isOverCloseBtn = computed(() => {
+  protected readonly isOverCloseBtn = computed(() => {
     if (this.dragPosition() && this._closeButton()) {
       return this._isOver(this.dragPosition().x, this.dragPosition().y, this._closeButton().nativeElement, 20);
     } else {
       return false;
     }
   });
-  protected closeBtnAnimationClass = signal('');
+  protected readonly closeBtnAnimationClass = signal('');
 
   private _documentClickSubscription: Subscription;
 

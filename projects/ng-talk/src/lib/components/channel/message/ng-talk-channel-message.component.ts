@@ -66,7 +66,7 @@ export class NgTalkChannelMessageComponent implements OnChanges, OnDestroy {
   @Input() public prevMessage: ChatMessage;
 
   // State
-  private _toolsMenu = viewChild(MatMenuTrigger);
+  private readonly _toolsMenu = viewChild(MatMenuTrigger);
 
   @HostBinding('class') private _className: string;
   protected showAuthor = true;

@@ -80,7 +80,7 @@ import {growAnimation} from './grow-animation';
 export class NgTalkSendMessageComponent {
   protected readonly chat = inject(NgTalkChannelComponent);
 
-  private _textInput = viewChild('textInput', {read: ElementRef<HTMLInputElement>});
+  private readonly _textInput = viewChild('textInput', {read: ElementRef<HTMLInputElement>});
 
   protected newMessage = '';
   protected mediaSelector: string = null;

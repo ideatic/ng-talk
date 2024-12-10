@@ -97,7 +97,7 @@ export class NgTalkSendGifComponent implements OnInit {
 
   // State
   protected searchQuery: string;
-  protected gifs$ = signal<Observable<any>>(null);
+  protected readonly gifs$ = signal<Observable<any>>(null);
 
   private _deBouncer: Subject<string>;
 

@@ -58,9 +58,9 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   public readonly deleted = output<void>();
 
   // State
-  private _chatBox = viewChild('chatBox', {read: ElementRef<HTMLElement>});
-  private _sendMessageComponent = viewChild(NgTalkSendMessageComponent);
-  private _messageComponents = viewChildren(NgTalkChannelMessageComponent);
+  private readonly _chatBox = viewChild('chatBox', {read: ElementRef<HTMLElement>});
+  private readonly _sendMessageComponent = viewChild(NgTalkSendMessageComponent);
+  private readonly _messageComponents = viewChildren(NgTalkChannelMessageComponent);
 
   private _visibleMessages = 20;
   public readonly messages = signal<ChatMessage[]>([]);
@@ -70,8 +70,8 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   public replyingTo: ChatMessage;
 
   // UI
-  protected loading = signal(false);
-  protected scrollWatcherEnabled = signal(false);
+  protected readonly loading = signal(false);
+  protected readonly scrollWatcherEnabled = signal(false);
   protected readonly viewportDetectionAvailable = InViewportDirective.intersectionObserverFeatureDetection();
 
   // Import types and enums
