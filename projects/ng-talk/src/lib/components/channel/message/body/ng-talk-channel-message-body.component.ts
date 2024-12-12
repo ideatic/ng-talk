@@ -41,9 +41,9 @@ export class NgTalkChannelMessageBodyComponent {
 
   protected transformContent(message: ChatMessage): string {
     let content = message.content;
-    if (this._chat.settings.autoLinks) {
-      if (typeof this._chat.settings.autoLinks === 'object') {
-        content = (this._chat.settings.autoLinks as Autolinker).link(content);
+    if (this._chat.settings().autoLinks) {
+      if (typeof this._chat.settings().autoLinks === 'object') {
+        content = (this._chat.settings().autoLinks as Autolinker).link(content);
       } else {
         content = this._autoLinker.link(content);
       }

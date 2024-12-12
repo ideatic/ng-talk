@@ -37,9 +37,9 @@
   <div class="active-channel">
     @if (activeChannel) {
       <ng-talk-channel
-        [adapter]="adapter"
+        [adapter]="adapter()"
         [channel]="activeChannel"
-        [user]="user"
+        [user]="user()"
         [settings]="settings"
         (userClicked)="userClicked.emit($event)"
         (messageSent)="messageSent.emit($event)"

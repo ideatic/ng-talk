@@ -13,7 +13,8 @@ import {
   OnInit,
   output,
   signal,
-  SimpleChanges
+  SimpleChanges,
+  input
 } from "@angular/core";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {FormsModule} from "@angular/forms";
@@ -46,8 +47,8 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
   private _destroyRef = inject(DestroyRef);
 
   // Bindings
-  @Input() public user: ChatUser;
-  @Input() public adapter: ChatAdapter;
+  public readonly user = input<ChatUser>(undefined);
+  public readonly adapter = input<ChatAdapter>(undefined);
   @Input() public settings = new NgTalkSettings();
   public readonly search = output<string>();
   public readonly channelChanged = output<ChatChannel | null>();
@@ -84,7 +85,7 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
     if (changes[nameof<NgTalkChannelListComponent>('adapter')] || changes[nameof<NgTalkChannelListComponent>('user')]) {
       this._channelsSubscription?.unsubscribe();
 
-      this._channelsSubscription = this.adapter.getChannels(this.user)
+      this._channelsSubscription = this.adapter().getChannels(this.user())
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe(channels => {
           this.channels.set(channels);
@@ -93,7 +94,7 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
           if (this.settings.channelMessagesLoading == MessageLoadingMethod.allChannels) {
             channels
               .filter(channel => !this._channelMessagesSubscriptions.has(channel.id))
-              .forEach(channel => this._channelMessagesSubscriptions.set(channel.id, this.adapter.getMessages(channel, 0, this.settings.pageSize).subscribe()));
+              .forEach(channel => this._channelMessagesSubscriptions.set(channel.id, this.adapter().getMessages(channel, 0, this.settings.pageSize).subscribe()));
           }
 
           // Select current channel (when a message to a new channel is sent, the new channel is selected automatically)
@@ -129,7 +130,7 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
 
   protected inViewportChangedChannel(channel: ChatChannel, isVisible: boolean) {
     if (isVisible && this.settings.channelMessagesLoading == MessageLoadingMethod.lazy) {
-      this.adapter.getMessages(channel, 0, this.settings.pageSize);
+      this.adapter().getMessages(channel, 0, this.settings.pageSize);
     }
   }
 

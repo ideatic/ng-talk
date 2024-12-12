@@ -10,7 +10,7 @@ import emojis from './emoji.json';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FormsModule, KeyValuePipe, FnPipe],
     template: `
-    <input type="search" [placeholder]="chat.settings.search" [(ngModel)]="searchQuery"/>
+    <input type="search" [placeholder]="chat.settings().search" [(ngModel)]="searchQuery"/>
     <div>
       @for (pair of emojis | keyvalue | fn:filter:searchQuery; track pair) {
         <span (click)="emojiSelected.emit(pair.value)">{{ pair.value }}</span>

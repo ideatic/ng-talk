@@ -5,14 +5,14 @@ import {
   DestroyRef,
   ElementRef,
   inject,
-  Input,
   OnChanges,
   OnInit,
   output,
   signal,
   SimpleChanges,
   viewChild,
-  viewChildren
+  viewChildren,
+  input
 } from "@angular/core";
 import {ChatAdapter} from '../../models/chat-adapter';
 import {ChatChannel} from '../../models/chat-channel';
@@ -33,25 +33,25 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 declare const ngDevMode: boolean;
 
 @Component({
-    selector: 'ng-talk-channel',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgComponentOutlet, FnPipe, NgTalkSendMessageComponent, RelativeDatePipe, InViewportDirective, NgTalkChannelMessageComponent, CdkDrag],
-    templateUrl: './ng-talk-channel.component.html',
-    styleUrls: [
-        './ng-talk-channel.component.less',
-        './styles/loading-spinner.less'
-    ]
+  selector: 'ng-talk-channel',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgComponentOutlet, FnPipe, NgTalkSendMessageComponent, RelativeDatePipe, InViewportDirective, NgTalkChannelMessageComponent, CdkDrag],
+  templateUrl: './ng-talk-channel.component.html',
+  styleUrls: [
+    './ng-talk-channel.component.less',
+    './styles/loading-spinner.less'
+  ]
 })
 export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit {
   // Deps
   private _destroyRef = inject(DestroyRef);
 
   // Bindings
-  @Input() public user: ChatUser;
-  @Input() public adapter: ChatAdapter;
-  @Input() public channel: ChatChannel;
-  @Input() public settings: NgTalkSettings;
-  @Input() public disableRendering = false;
+  public readonly user = input<ChatUser>(undefined);
+  public readonly adapter = input<ChatAdapter>(undefined);
+  public readonly channel = input<ChatChannel>(undefined);
+  public readonly settings = input<NgTalkSettings>(new NgTalkSettings());
+  public readonly disableRendering = input(false);
 
   public readonly messageSent = output<ChatMessage>();
   public readonly userClicked = output<ChatUser>();
@@ -78,22 +78,22 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   protected readonly MessageType = ChatMessageType;
 
   public ngOnInit() {
-    if (!this.user) {
+    if (!this.user()) {
       throw new Error('Chat current user must be defined');
     }
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    this.settings ??= new NgTalkSettings();
+    const settings = this.settings();
 
     if (changes[nameof<NgTalkChannelComponent>('adapter')] || changes[nameof<NgTalkChannelComponent>('channel')]) {
       this.messages.set([]);
 
       this._messagesSubscription?.unsubscribe();
 
-      this._visibleMessages = this.settings.pageSize;
+      this._visibleMessages = settings.pageSize;
 
-      if (this.adapter && this.channel) {
+      if (this.adapter() && this.channel()) {
         this.reloadMessages();
       }
     }
@@ -108,19 +108,20 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
 
     this.loading.set(true);
 
-    this._messagesSubscription = this.adapter.getMessages(this.channel, 0, this._visibleMessages)
+    this._messagesSubscription = this.adapter().getMessages(this.channel(), 0, this._visibleMessages)
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((messages: ChatMessage[]) => {
         this.messages.set(messages);
         this.loading.set(false);
 
-        if (scrollToBottom && !this.disableRendering) {
+        if (scrollToBottom && !this.disableRendering()) {
           this.scrollToBottom();
         }
 
         // Mark as read if component is focused
-        if (this.channel?.unread() > 0 && document.hasFocus()) {
-          this.adapter.markAsRead(this.channel);
+        const channel = this.channel();
+        if (channel?.unread() > 0 && document.hasFocus()) {
+          this.adapter().markAsRead(channel);
         }
       });
   }
@@ -153,7 +154,7 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
 
   public loadOldMessages() {
     this.scrollWatcherEnabled.set(false);
-    this._visibleMessages += this.settings.pageSize;
+    this._visibleMessages += this.settings().pageSize;
 
     this.reloadMessages(false);
   }

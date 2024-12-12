@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, forwardRef, HostListener, inject, Input, signal, viewChild} from "@angular/core";
+import {ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, forwardRef, HostListener, inject, Input, signal, viewChild, input} from "@angular/core";
 import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {DecimalPipe} from "@angular/common";
@@ -33,8 +33,8 @@ import {NgTalkSettings} from '../ng-talk-settings';
     </div>
 
     @defer (on idle) {
-      <ng-talk-channel [class]="channelClass()" [style]="channelStyle" [channel]="channel" [user]="user"
-                       [adapter]="adapter" [settings]="channelSettings"
+      <ng-talk-channel [class]="channelClass()" [style]="channelStyle" [channel]="channel" [user]="user()"
+                       [adapter]="adapter()" [settings]="channelSettings"
                        [disableRendering]="!channelVisible()" (deleted)="onChatDeleted()"/>
     }
 
@@ -53,10 +53,10 @@ export class NgTalkBubbleChannelComponent {
   // State
   @Input() public dragBoundarySelector = 'body';
   @Input() public channel: ChatChannel;
-  @Input() public adapter: ChatAdapter;
+  public readonly adapter = input<ChatAdapter>(undefined);
   @Input() public channelSettings: NgTalkSettings;
-  @Input() public user: ChatUser;
-  @Input() public selfRef: BubbleChannelRef;
+  public readonly user = input<ChatUser>(undefined);
+  public readonly selfRef = input<BubbleChannelRef>(undefined);
 
   private readonly _bubbleElement = viewChild.required('bubble', {read: ElementRef<HTMLElement>});
   private readonly _ngTalkChannel = viewChild.required(NgTalkChannelComponent);
@@ -107,7 +107,7 @@ export class NgTalkBubbleChannelComponent {
       this.closeBtnAnimationClass.set('bounceOut');
       this.bubbleClass.set('fadeOut');
 
-      setTimeout(() => this.selfRef.destroy(), 250);
+      setTimeout(() => this.selfRef().destroy(), 250);
 
       return;
     }
@@ -208,7 +208,7 @@ export class NgTalkBubbleChannelComponent {
 
   public onChatDeleted() {
     this.close();
-    setTimeout(() => this.selfRef.destroy(), 250);
+    setTimeout(() => this.selfRef().destroy(), 250);
   }
 
   @HostListener('window:resize')

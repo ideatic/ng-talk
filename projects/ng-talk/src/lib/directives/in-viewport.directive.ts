@@ -1,4 +1,4 @@
-import {Directive, ElementRef, inject, Input, OnDestroy, OnInit, output} from "@angular/core";
+import {Directive, ElementRef, inject, OnDestroy, OnInit, output, input} from "@angular/core";
 
 /**
  * From https://github.com/thisissoon/angular-inviewport
@@ -28,7 +28,9 @@ export class InViewportDirective implements OnDestroy, OnInit {
   private _window = inject(Window);
 
   // Bindings
-  @Input() public inViewportOptions: IntersectionObserverInit & { delay?: number };
+  public readonly inViewportOptions = input<IntersectionObserverInit & {
+    delay?: number;
+}>(undefined);
   public readonly inViewportChange = output<boolean>();
 
   // State
@@ -40,14 +42,15 @@ export class InViewportDirective implements OnDestroy, OnInit {
       const activateObserver = () => {
         this.observer = new this._window['IntersectionObserver'](
           this.intersectionObserverCallback.bind(this),
-          this.inViewportOptions
+          this.inViewportOptions()
         );
 
         this.observer.observe(this._host.nativeElement);
       };
 
-      if (this.inViewportOptions?.delay) {
-        setTimeout(activateObserver, this.inViewportOptions.delay);
+      const inViewportOptions = this.inViewportOptions();
+      if (inViewportOptions?.delay) {
+        setTimeout(activateObserver, inViewportOptions.delay);
       } else {
         activateObserver();
       }

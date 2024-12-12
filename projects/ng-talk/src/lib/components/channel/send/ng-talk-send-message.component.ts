@@ -10,12 +10,12 @@ import {NgTalkSendGifComponent} from "./gif/ng-talk-send-gif.component";
 import {growAnimation} from './grow-animation';
 
 @Component({
-    selector: 'ng-talk-send-message',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, NgTalkSendEmojiComponent, NgTalkChannelMessageRefComponent, NgTalkSendGifComponent, NgTalkSendEmojiComponent],
-    template: `
-    @if (chat.channel?.blocked) {
-      <p style="margin: 1em 0; text-align: center">{{ chat.settings.disabledMessage }}</p>
+  selector: 'ng-talk-send-message',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [FormsModule, NgTalkSendEmojiComponent, NgTalkChannelMessageRefComponent, NgTalkSendGifComponent, NgTalkSendEmojiComponent],
+  template: `
+    @if (chat.channel()?.blocked) {
+      <p style="margin: 1em 0; text-align: center">{{ chat.settings().disabledMessage }}</p>
     } @else {
       <!-- Selector de emojis -->
       @if (mediaSelector == 'emoji') {
@@ -48,7 +48,7 @@ import {growAnimation} from './grow-animation';
         </span>
 
         <!-- Gif -->
-        @if (chat.settings.giphyApiKey || chat.settings.tenorApiKey) {
+        @if (chat.settings().giphyApiKey || chat.settings().tenorApiKey) {
           <span role="button" class="emoji-btn" [style.color]="mediaSelector == 'gif' ? '#008069' : null"
                 (click)="mediaSelector = mediaSelector == 'gif' ? null : 'gif'">
           <svg viewBox="0 0 24 24" width="24" height="24">
@@ -60,11 +60,11 @@ import {growAnimation} from './grow-animation';
 
         <!-- Text -->
         <input #textInput class="input" name="newMessage" maxlength="1000" autocomplete="off"
-               [placeholder]="chat.settings.writePlaceholder"
-               [disabled]="!chat.channel || chat.channel.disabled" [(ngModel)]="newMessage"
+               [placeholder]="chat.settings().writePlaceholder"
+               [disabled]="!chat.channel() || chat.channel().disabled" [(ngModel)]="newMessage"
                (focus)="onInputFocus()"/>
-        <span role="button" class="send-btn" [class.disabled]="!newMessage || !chat.channel || chat.channel.disabled"
-              [title]="chat.settings.sendBtnTitle"
+        <span role="button" class="send-btn" [class.disabled]="!newMessage || !chat.channel() || chat.channel().disabled"
+              [title]="chat.settings().sendBtnTitle"
               (click)="sendTextMessage()">
           <svg viewBox="0 0 24 24" width="24" height="24">
             <path fill="currentColor"
@@ -74,8 +74,8 @@ import {growAnimation} from './grow-animation';
       </form>
     }
   `,
-    styleUrl: 'ng-talk-send-message.component.less',
-    animations: [growAnimation]
+  styleUrl: 'ng-talk-send-message.component.less',
+  animations: [growAnimation]
 })
 export class NgTalkSendMessageComponent {
   protected readonly chat = inject(NgTalkChannelComponent);
@@ -97,14 +97,14 @@ export class NgTalkSendMessageComponent {
   }
 
   private _sendMessage(message: Partial<ChatMessage>) {
-    if (this.chat.channel && !this.chat.channel.disabled) {
+    if (this.chat.channel() && !this.chat.channel().disabled) {
       const fullMessage = {
         replyTo: this.chat.replyingTo,
-        from: signal(this.chat.user),
+        from: signal(this.chat.user()),
         ...message
       } as ChatMessage;
 
-      this.chat.adapter.sendMessage(this.chat.channel, fullMessage)
+      this.chat.adapter().sendMessage(this.chat.channel(), fullMessage)
         .then(() => this.chat.messageSent.emit(fullMessage));
 
       this.mediaSelector = null;
@@ -128,8 +128,8 @@ export class NgTalkSendMessageComponent {
 
   protected onInputFocus() {
     // Mark as read if component is focused
-    if (this.chat.channel && this.chat.channel.unread() > 0 && document.hasFocus()) {
-      this.chat.adapter.markAsRead(this.chat.channel);
+    if (this.chat.channel && this.chat.channel().unread() > 0 && document.hasFocus()) {
+      this.chat.adapter().markAsRead(this.chat.channel());
     }
   }
 

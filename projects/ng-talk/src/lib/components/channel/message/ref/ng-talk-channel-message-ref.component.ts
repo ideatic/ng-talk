@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {ChatMessage} from '../../../../models/chat-message';
 import {NgTalkChannelMessageBodyComponent} from "../body/ng-talk-channel-message-body.component";
 
@@ -7,8 +7,8 @@ import {NgTalkChannelMessageBodyComponent} from "../body/ng-talk-channel-message
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgTalkChannelMessageBodyComponent],
     template: `
-    <strong>{{ message.from().name }}</strong>
-    <ng-talk-channel-message-body [message]="message"/>
+    <strong>{{ message().from().name }}</strong>
+    <ng-talk-channel-message-body [message]="message()"/>
   `,
     styles: `
       :host {
@@ -34,5 +34,5 @@ import {NgTalkChannelMessageBodyComponent} from "../body/ng-talk-channel-message
   `
 })
 export class NgTalkChannelMessageRefComponent {
-  @Input() public message: ChatMessage;
+  public readonly message = input<ChatMessage>(undefined);
 }
