@@ -50,7 +50,7 @@ export class NgTalkBubbleChannelComponent {
   private _destroyRef = inject(DestroyRef);
   private _overlayContainer = inject(OverlayContainer);
 
-  // State
+  // Bindings
   @Input() public dragBoundarySelector = 'body';
   @Input() public channel: ChatChannel;
   public readonly adapter = input<ChatAdapter>(undefined);
@@ -58,6 +58,7 @@ export class NgTalkBubbleChannelComponent {
   public readonly user = input<ChatUser>(undefined);
   public readonly selfRef = input<BubbleChannelRef>(undefined);
 
+  // State
   private readonly _bubbleElement = viewChild.required('bubble', {read: ElementRef<HTMLElement>});
   private readonly _ngTalkChannel = viewChild.required(NgTalkChannelComponent);
   private readonly _closeButton = viewChild('closeButton', {read: ElementRef<HTMLElement>});
