@@ -8,40 +8,51 @@ import {
   HostListener,
   inject,
   Input,
+  input,
   OnChanges,
   OnDestroy,
   OnInit,
   output,
   signal,
-  SimpleChanges,
-  input
-} from "@angular/core";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {FormsModule} from "@angular/forms";
-import {Subscription} from 'rxjs';
-import {InViewportDirective} from "../../directives/in-viewport.directive";
-import {ChatAdapter} from '../../models/chat-adapter';
-import {ChatChannel} from '../../models/chat-channel';
-import {ChatMessage} from '../../models/chat-message';
-import {ChatUser} from '../../models/chat-user';
-import {FnPipe} from "../../pipes/fn.pipe";
-import {nameof} from '../../utils/utils';
-import {NgTalkChannelComponent} from "../channel/ng-talk-channel.component";
-import {NgTalkChannelPreviewComponent} from "../channel/preview/ng-talk-channel-preview.component";
-import {MessageLoadingMethod, NgTalkSettings} from '../ng-talk-settings';
-import {NG_TALK_CHANNEL_LIST_TOKEN} from "../../tokens";
+  SimpleChanges
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { InViewportDirective } from '../../directives/in-viewport.directive';
+import { ChatAdapter } from '../../models/chat-adapter';
+import { ChatChannel } from '../../models/chat-channel';
+import { ChatMessage } from '../../models/chat-message';
+import { ChatUser } from '../../models/chat-user';
+import { FnPipe } from '../../pipes/fn.pipe';
+import { NG_TALK_CHANNEL_LIST_TOKEN } from '../../tokens';
+import { nameof } from '../../utils/utils';
+import { NgTalkChannelComponent } from '../channel/ng-talk-channel.component';
+import { NgTalkChannelPreviewComponent } from '../channel/preview/ng-talk-channel-preview.component';
+import { MessageLoadingMethod, NgTalkSettings } from '../ng-talk-settings';
 
 @Component({
-    selector: 'ng-talk-channel-list',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, NgTalkChannelComponent, NgTalkChannelPreviewComponent, FnPipe, InViewportDirective],
-    templateUrl: './ng-talk-channel-list.component.html',
-    styleUrl: './ng-talk-channel-list.component.less',
-    providers: [
-        { provide: NG_TALK_CHANNEL_LIST_TOKEN, useExisting: forwardRef(() => NgTalkChannelListComponent) },
-    ]
+  selector: 'ng-talk-channel-list',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    FormsModule,
+    NgTalkChannelComponent,
+    NgTalkChannelPreviewComponent,
+    FnPipe,
+    InViewportDirective
+  ],
+  templateUrl: './ng-talk-channel-list.component.html',
+  styleUrl: './ng-talk-channel-list.component.less',
+  providers: [
+    {
+      provide: NG_TALK_CHANNEL_LIST_TOKEN,
+      useExisting: forwardRef(() => NgTalkChannelListComponent)
+    }
+  ]
 })
-export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy {
+export class NgTalkChannelListComponent
+  implements OnInit, OnChanges, OnDestroy
+{
   // Deps
   private _host = inject(ElementRef<HTMLElement>);
   private _destroyRef = inject(DestroyRef);
@@ -50,7 +61,7 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
   public readonly user = input<ChatUser>(undefined);
   public readonly adapter = input<ChatAdapter>(undefined);
   @Input() public settings = new NgTalkSettings();
-  public readonly search = output<string>();
+  public readonly searched = output<string>();
   public readonly channelChanged = output<ChatChannel | null>();
   // Forwarded events from single channel
   public readonly messageSent = output<ChatMessage>();
@@ -82,24 +93,42 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
       this._channelMessagesSubscriptions.clear();
     }
 
-    if (changes[nameof<NgTalkChannelListComponent>('adapter')] || changes[nameof<NgTalkChannelListComponent>('user')]) {
+    if (
+      changes[nameof<NgTalkChannelListComponent>('adapter')] ||
+      changes[nameof<NgTalkChannelListComponent>('user')]
+    ) {
       this._channelsSubscription?.unsubscribe();
 
-      this._channelsSubscription = this.adapter().getChannels(this.user())
+      this._channelsSubscription = this.adapter()
+        .getChannels(this.user())
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe(channels => {
           this.channels.set(channels);
 
           // Subscribe to new received channels
-          if (this.settings.channelMessagesLoading == MessageLoadingMethod.allChannels) {
+          if (
+            this.settings.channelMessagesLoading ==
+            MessageLoadingMethod.allChannels
+          ) {
             channels
-              .filter(channel => !this._channelMessagesSubscriptions.has(channel.id))
-              .forEach(channel => this._channelMessagesSubscriptions.set(channel.id, this.adapter().getMessages(channel, 0, this.settings.pageSize).subscribe()));
+              .filter(
+                channel => !this._channelMessagesSubscriptions.has(channel.id)
+              )
+              .forEach(channel =>
+                this._channelMessagesSubscriptions.set(
+                  channel.id,
+                  this.adapter()
+                    .getMessages(channel, 0, this.settings.pageSize)
+                    .subscribe()
+                )
+              );
           }
 
           // Select current channel (when a message to a new channel is sent, the new channel is selected automatically)
           if (this.activeChannel) {
-            const activeChannel = channels.find(c => c.id == this.activeChannel.id);
+            const activeChannel = channels.find(
+              c => c.id == this.activeChannel.id
+            );
             if (activeChannel) {
               if (activeChannel != this.activeChannel) {
                 this.selectChannel(activeChannel);
@@ -107,7 +136,10 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
             } else {
               this.activeChannel = null;
             }
-          } else if (this.settings.selectFirstChannelOnInit && channels.length > 0) {
+          } else if (
+            this.settings.selectFirstChannelOnInit &&
+            channels.length > 0
+          ) {
             this.selectChannel(channels[0]);
           }
         });
@@ -125,16 +157,25 @@ export class NgTalkChannelListComponent implements OnInit, OnChanges, OnDestroy 
   @HostListener('window:deviceorientation')
   @HostListener('window:scroll')
   private _onResized() {
-    this.displayMode = this._host.nativeElement.clientWidth < this.settings.mobileBreakpoint ? 'mobile' : 'desktop';
+    this.displayMode =
+      this._host.nativeElement.clientWidth < this.settings.mobileBreakpoint
+        ? 'mobile'
+        : 'desktop';
   }
 
   protected inViewportChangedChannel(channel: ChatChannel, isVisible: boolean) {
-    if (isVisible && this.settings.channelMessagesLoading == MessageLoadingMethod.lazy) {
+    if (
+      isVisible &&
+      this.settings.channelMessagesLoading == MessageLoadingMethod.lazy
+    ) {
       this.adapter().getMessages(channel, 0, this.settings.pageSize);
     }
   }
 
-  protected filterChannels(channels: ChatChannel[], query: string): ChatChannel[] {
+  protected filterChannels(
+    channels: ChatChannel[],
+    query: string
+  ): ChatChannel[] {
     if (!query || !channels) {
       return channels;
     }

@@ -7,7 +7,7 @@
           @if (settings.searchIconClass) {
             <i [class]="settings.searchIconClass"></i>
           }
-          <input type="text" [placeholder]="settings.filterPlaceholder" [(ngModel)]="filterQuery" (ngModelChange)="search.emit($event)"/>
+          <input type="text" [placeholder]="settings.filterPlaceholder" [(ngModel)]="filterQuery" (ngModelChange)="searched.emit($event)"/>
         </label>
       </div>
     }
