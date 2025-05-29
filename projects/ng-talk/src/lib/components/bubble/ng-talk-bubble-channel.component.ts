@@ -1,48 +1,80 @@
-import {ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, forwardRef, HostListener, inject, Input, signal, viewChild, input} from "@angular/core";
-import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {DecimalPipe} from "@angular/common";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {fromEvent, Subscription} from 'rxjs';
-import {ChatAdapter} from '../../models/chat-adapter';
-import {ChatChannel} from '../../models/chat-channel';
-import {ChatUser} from '../../models/chat-user';
-import {BubbleChannelRef} from "../../service/bubble-channel-ref";
-import {NgTalkChannelComponent} from '../channel/ng-talk-channel.component';
-import {NgTalkSettings} from '../ng-talk-settings';
+import { CdkDrag, CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { DecimalPipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  ElementRef,
+  forwardRef,
+  HostListener,
+  inject,
+  Input,
+  input,
+  signal,
+  viewChild
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { fromEvent, Subscription } from 'rxjs';
+import { ChatAdapter } from '../../models/chat-adapter';
+import { ChatChannel } from '../../models/chat-channel';
+import { ChatUser } from '../../models/chat-user';
+import { BubbleChannelRef } from '../../service/bubble-channel-ref';
+import { NgTalkChannelComponent } from '../channel/ng-talk-channel.component';
+import { NgTalkSettings } from '../ng-talk-settings';
 
 @Component({
-    selector: 'channel-bubble',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    // https://dev.to/loukaskotas/the-power-of-forwardref-to-fix-circular-dependencies-in-angular-337k
-    imports: [forwardRef(() => NgTalkChannelComponent), DecimalPipe, CdkDrag],
-    template: `
-    <div #bubble class="bubble"
-         cdkDrag
-         [title]="channel.name"
-         [style.background-image]="'url( ' + (channel.icon || channelSettings.defaultChannelIcon) + ')'"
-         [class]="bubbleClass()"
-         [cdkDragBoundary]="dragBoundarySelector"
-         (click)="toggleChannel()"
-         (cdkDragStarted)="onDragStart()"
-         (cdkDragMoved)="onDragMoved($event)"
-         (cdkDragEnded)="onDragEnded($event)">
+  selector: 'channel-bubble',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  // https://dev.to/loukaskotas/the-power-of-forwardref-to-fix-circular-dependencies-in-angular-337k
+  imports: [forwardRef(() => NgTalkChannelComponent), DecimalPipe, CdkDrag],
+  template: `
+    <div
+      #bubble
+      class="bubble"
+      cdkDrag
+      [title]="channel.name"
+      [style.background-image]="
+        'url( ' + (channel.icon || channelSettings.defaultChannelIcon) + ')'
+      "
+      [class]="bubbleClass()"
+      [cdkDragBoundary]="dragBoundarySelector"
+      (click)="toggleChannel()"
+      (cdkDragStarted)="onDragStart()"
+      (cdkDragMoved)="onDragMoved($event)"
+      (cdkDragEnded)="onDragEnded($event)"
+    >
       @if (!channelVisible() && channel.unread() > 0) {
         <div class="unread-badge">{{ channel.unread() | number }}</div>
       }
     </div>
 
     @defer (on idle) {
-      <ng-talk-channel [class]="channelClass()" [style]="channelStyle" [channel]="channel" [user]="user()"
-                       [adapter]="adapter()" [settings]="channelSettings"
-                       [disableRendering]="!channelVisible()" (deleted)="onChatDeleted()"/>
+      <ng-talk-channel
+        [class]="channelClass()"
+        [style]="channelStyle"
+        [channel]="channel"
+        [user]="user()"
+        [adapter]="adapter()"
+        [settings]="channelSettings"
+        [disableRendering]="!channelVisible()"
+        (deleted)="onChatDeleted()"
+      />
     }
 
     @if (dragPosition()) {
-      <div #closeButton class="close-bubble" [class.active]="isOverCloseBtn()" [class]="closeBtnAnimationClass()">&times;</div>
+      <div
+        #closeButton
+        class="close-bubble"
+        [class.active]="isOverCloseBtn()"
+        [class]="closeBtnAnimationClass()"
+      >
+        &times;
+      </div>
     }
   `,
-    styleUrl: `ng-talk-bubble-channel.component.less`
+  styleUrl: `ng-talk-bubble-channel.component.less`
 })
 export class NgTalkBubbleChannelComponent {
   // Deps
@@ -53,27 +85,38 @@ export class NgTalkBubbleChannelComponent {
   // Bindings
   @Input() public dragBoundarySelector = 'body';
   @Input() public channel: ChatChannel;
-  public readonly adapter = input<ChatAdapter>(undefined);
+  public readonly adapter = input<ChatAdapter>();
   @Input() public channelSettings: NgTalkSettings;
-  public readonly user = input<ChatUser>(undefined);
-  public readonly selfRef = input<BubbleChannelRef>(undefined);
+  public readonly user = input<ChatUser>();
+  public readonly selfRef = input<BubbleChannelRef>();
 
   // State
-  private readonly _bubbleElement = viewChild.required('bubble', {read: ElementRef<HTMLElement>});
+  private readonly _bubbleElement = viewChild.required('bubble', {
+    read: ElementRef<HTMLElement>
+  });
   private readonly _ngTalkChannel = viewChild.required(NgTalkChannelComponent);
-  private readonly _closeButton = viewChild('closeButton', {read: ElementRef<HTMLElement>});
+  private readonly _closeButton = viewChild('closeButton', {
+    read: ElementRef<HTMLElement>
+  });
 
   protected readonly bubbleClass = signal('');
 
   protected readonly channelVisible = signal(false);
   protected readonly channelClass = signal('bounceIn');
-  protected channelStyle: { [key: string]: string | number } = {display: 'none'};
+  protected channelStyle: { [key: string]: string | number } = {
+    display: 'none'
+  };
 
-  protected readonly dragPosition = signal<{ x: number; y: number; }>(null);
+  protected readonly dragPosition = signal<{ x: number; y: number }>(null);
 
   protected readonly isOverCloseBtn = computed(() => {
     if (this.dragPosition() && this._closeButton()) {
-      return this._isOver(this.dragPosition().x, this.dragPosition().y, this._closeButton().nativeElement, 20);
+      return this._isOver(
+        this.dragPosition().x,
+        this.dragPosition().y,
+        this._closeButton().nativeElement,
+        20
+      );
     } else {
       return false;
     }
@@ -95,8 +138,14 @@ export class NgTalkBubbleChannelComponent {
   }
 
   private _isOver(x: number, y: number, element: HTMLElement, margin = 0) {
-    if (x > element.offsetLeft - margin && x < element.offsetLeft + element.offsetWidth + margin) {
-      if (y > element.offsetTop - margin && y < element.offsetTop + element.offsetHeight + margin) {
+    if (
+      x > element.offsetLeft - margin &&
+      x < element.offsetLeft + element.offsetWidth + margin
+    ) {
+      if (
+        y > element.offsetTop - margin &&
+        y < element.offsetTop + element.offsetHeight + margin
+      ) {
         return true;
       }
     }
@@ -104,7 +153,8 @@ export class NgTalkBubbleChannelComponent {
   }
 
   protected onDragEnded(event: CdkDragEnd) {
-    if (this.isOverCloseBtn()) { // Close chat
+    if (this.isOverCloseBtn()) {
+      // Close chat
       this.closeBtnAnimationClass.set('bounceOut');
       this.bubbleClass.set('fadeOut');
 
@@ -131,14 +181,17 @@ export class NgTalkBubbleChannelComponent {
     const bubbleStyles = this._bubbleElement().nativeElement.style;
 
     let x;
-    if (this.dragPosition()?.x > containerWidth / 2) { // Move to the right
+    if (this.dragPosition()?.x > containerWidth / 2) {
+      // Move to the right
       x = containerWidth - this._bubbleElement().nativeElement.offsetWidth;
-    } else { // Move to the left
+    } else {
+      // Move to the left
       x = 0;
     }
 
     bubbleStyles.transform = '';
-    bubbleStyles.top = (this.dragPosition() ? this.dragPosition().y : 35) + 'px';
+    bubbleStyles.top =
+      (this.dragPosition() ? this.dragPosition().y : 35) + 'px';
     bubbleStyles.left = x + 'px';
   }
 
@@ -160,7 +213,10 @@ export class NgTalkBubbleChannelComponent {
   }
 
   private get _container(): HTMLElement {
-    return document.querySelector(this.dragBoundarySelector) || document.documentElement;
+    return (
+      document.querySelector(this.dragBoundarySelector) ||
+      document.documentElement
+    );
   }
 
   public open() {
@@ -187,7 +243,7 @@ export class NgTalkBubbleChannelComponent {
 
     if (containerWidth < 400 + 25 + bubbleSize) {
       bubbleStyles.top = '0px'; // Math.max(150 - bubbleWidth - 10, 0) + 'px';
-      this.channelStyle.top = (bubbleSize + 10) + 'px';
+      this.channelStyle.top = bubbleSize + 10 + 'px';
     } else {
       this.channelStyle.top = '150px';
       bubbleStyles.top = '150px';
@@ -195,7 +251,7 @@ export class NgTalkBubbleChannelComponent {
     }
 
     // Fix height
-    this._onResized();
+    this.onResized();
 
     this.channelVisible.set(true);
 
@@ -215,13 +271,14 @@ export class NgTalkBubbleChannelComponent {
   @HostListener('window:resize')
   @HostListener('window:deviceorientation')
   @HostListener('window:scroll')
-  private _onResized() {
+  protected onResized() {
     const containerHeight = this._container.clientHeight;
     const bubbleSize = this._bubbleElement().nativeElement.offsetWidth;
 
     // Fix channel height
     if (containerHeight < 600) {
-      this.channelStyle.height = Math.min(Math.max(200, containerHeight - bubbleSize - 10), 400) + 'px';
+      this.channelStyle.height =
+        Math.min(Math.max(200, containerHeight - bubbleSize - 10), 400) + 'px';
     } else {
       this.channelStyle.height = undefined;
     }
@@ -233,7 +290,7 @@ export class NgTalkBubbleChannelComponent {
 
       setTimeout(() => {
         this.channelVisible.set(false);
-        this.channelStyle = {display: 'none'};
+        this.channelStyle = { display: 'none' };
       }, 300);
     }
 
@@ -246,9 +303,10 @@ export class NgTalkBubbleChannelComponent {
       return;
     }
 
-    const insideClick = $event && (this._host?.nativeElement.contains($event.target))
+    const insideClick =
+      ($event && this._host?.nativeElement.contains($event.target)) ||
       // Click en un menú
-      || this._overlayContainer.getContainerElement()?.contains($event.target);
+      this._overlayContainer.getContainerElement()?.contains($event.target);
 
     if (!insideClick) {
       this.close();

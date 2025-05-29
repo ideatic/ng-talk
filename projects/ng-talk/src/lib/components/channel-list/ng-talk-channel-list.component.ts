@@ -58,8 +58,8 @@ export class NgTalkChannelListComponent
   private _destroyRef = inject(DestroyRef);
 
   // Bindings
-  public readonly user = input<ChatUser>(undefined);
-  public readonly adapter = input<ChatAdapter>(undefined);
+  public readonly user = input<ChatUser>();
+  public readonly adapter = input<ChatAdapter>();
   @Input() public settings = new NgTalkSettings();
   public readonly searched = output<string>();
   public readonly channelChanged = output<ChatChannel | null>();
@@ -84,7 +84,7 @@ export class NgTalkChannelListComponent
 
   public ngOnInit() {
     // Choose initial displayMode
-    this._onResized();
+    this.onResized();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -156,7 +156,7 @@ export class NgTalkChannelListComponent
   @HostListener('window:resize')
   @HostListener('window:deviceorientation')
   @HostListener('window:scroll')
-  private _onResized() {
+  protected onResized() {
     this.displayMode =
       this._host.nativeElement.clientWidth < this.settings.mobileBreakpoint
         ? 'mobile'

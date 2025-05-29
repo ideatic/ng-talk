@@ -1,3 +1,5 @@
+import { CdkDrag, CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
+import { NgComponentOutlet } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -5,51 +7,59 @@ import {
   DestroyRef,
   ElementRef,
   inject,
+  input,
   OnChanges,
   OnInit,
   output,
   signal,
   SimpleChanges,
   viewChild,
-  viewChildren,
-  input
-} from "@angular/core";
-import {ChatAdapter} from '../../models/chat-adapter';
-import {ChatChannel} from '../../models/chat-channel';
-import {ChatMessage, ChatMessageType} from '../../models/chat-message';
-import {ChatUser} from '../../models/chat-user';
-import {Subscription} from 'rxjs';
-import {NgTalkSettings} from '../ng-talk-settings';
-import {isSameDay, nameof} from '../../utils/utils';
-import {InViewportDirective} from '../../directives/in-viewport.directive';
-import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
-import {RelativeDatePipe} from "../../pipes/relativeDate.pipe";
-import {NgComponentOutlet} from "@angular/common";
-import {FnPipe} from "../../pipes/fn.pipe";
-import {NgTalkChannelMessageComponent} from './message/ng-talk-channel-message.component';
-import {NgTalkSendMessageComponent} from './send/ng-talk-send-message.component';
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+  viewChildren
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subscription } from 'rxjs';
+import { InViewportDirective } from '../../directives/in-viewport.directive';
+import { ChatAdapter } from '../../models/chat-adapter';
+import { ChatChannel } from '../../models/chat-channel';
+import { ChatMessage, ChatMessageType } from '../../models/chat-message';
+import { ChatUser } from '../../models/chat-user';
+import { FnPipe } from '../../pipes/fn.pipe';
+import { RelativeDatePipe } from '../../pipes/relativeDate.pipe';
+import { isSameDay, nameof } from '../../utils/utils';
+import { NgTalkSettings } from '../ng-talk-settings';
+import { NgTalkChannelMessageComponent } from './message/ng-talk-channel-message.component';
+import { NgTalkSendMessageComponent } from './send/ng-talk-send-message.component';
 
 declare const ngDevMode: boolean;
 
 @Component({
   selector: 'ng-talk-channel',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgComponentOutlet, FnPipe, NgTalkSendMessageComponent, RelativeDatePipe, InViewportDirective, NgTalkChannelMessageComponent, CdkDrag],
+  imports: [
+    NgComponentOutlet,
+    FnPipe,
+    NgTalkSendMessageComponent,
+    RelativeDatePipe,
+    InViewportDirective,
+    NgTalkChannelMessageComponent,
+    CdkDrag
+  ],
   templateUrl: './ng-talk-channel.component.html',
   styleUrls: [
     './ng-talk-channel.component.less',
     './styles/loading-spinner.less'
   ]
 })
-export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit {
+export class NgTalkChannelComponent
+  implements OnInit, OnChanges, AfterViewInit
+{
   // Deps
   private _destroyRef = inject(DestroyRef);
 
   // Bindings
-  public readonly user = input<ChatUser>(undefined);
-  public readonly adapter = input<ChatAdapter>(undefined);
-  public readonly channel = input<ChatChannel>(undefined);
+  public readonly user = input<ChatUser>();
+  public readonly adapter = input<ChatAdapter>();
+  public readonly channel = input<ChatChannel>();
   public readonly settings = input<NgTalkSettings>(new NgTalkSettings());
   public readonly disableRendering = input(false);
 
@@ -58,9 +68,15 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   public readonly deleted = output<void>();
 
   // State
-  private readonly _chatBox = viewChild('chatBox', {read: ElementRef<HTMLElement>});
-  private readonly _sendMessageComponent = viewChild(NgTalkSendMessageComponent);
-  private readonly _messageComponents = viewChildren(NgTalkChannelMessageComponent);
+  private readonly _chatBox = viewChild('chatBox', {
+    read: ElementRef<HTMLElement>
+  });
+  private readonly _sendMessageComponent = viewChild(
+    NgTalkSendMessageComponent
+  );
+  private readonly _messageComponents = viewChildren(
+    NgTalkChannelMessageComponent
+  );
 
   private _visibleMessages = 20;
   public readonly messages = signal<ChatMessage[]>([]);
@@ -72,7 +88,8 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   // UI
   protected readonly loading = signal(false);
   protected readonly scrollWatcherEnabled = signal(false);
-  protected readonly viewportDetectionAvailable = InViewportDirective.intersectionObserverFeatureDetection();
+  protected readonly viewportDetectionAvailable =
+    InViewportDirective.intersectionObserverFeatureDetection();
 
   // Import types and enums
   protected readonly MessageType = ChatMessageType;
@@ -86,7 +103,10 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   public ngOnChanges(changes: SimpleChanges) {
     const settings = this.settings();
 
-    if (changes[nameof<NgTalkChannelComponent>('adapter')] || changes[nameof<NgTalkChannelComponent>('channel')]) {
+    if (
+      changes[nameof<NgTalkChannelComponent>('adapter')] ||
+      changes[nameof<NgTalkChannelComponent>('channel')]
+    ) {
       this.messages.set([]);
 
       this._messagesSubscription?.unsubscribe();
@@ -108,7 +128,8 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
 
     this.loading.set(true);
 
-    this._messagesSubscription = this.adapter().getMessages(this.channel(), 0, this._visibleMessages)
+    this._messagesSubscription = this.adapter()
+      .getMessages(this.channel(), 0, this._visibleMessages)
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((messages: ChatMessage[]) => {
         this.messages.set(messages);
@@ -126,7 +147,10 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
       });
   }
 
-  protected isSeparatorVisible(message: ChatMessage, prevMessage: ChatMessage | null): boolean {
+  protected isSeparatorVisible(
+    message: ChatMessage,
+    prevMessage: ChatMessage | null
+  ): boolean {
     return !prevMessage || !isSameDay(prevMessage.date, message.date);
   }
 
@@ -135,11 +159,14 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   public scrollToBottom() {
-    setTimeout(() => {  // Wait until new messages are drawn
+    setTimeout(() => {
+      // Wait until new messages are drawn
       if (this._chatBox()) {
-        this._chatBox().nativeElement.scrollTop = this._chatBox().nativeElement.scrollHeight;
+        this._chatBox().nativeElement.scrollTop =
+          this._chatBox().nativeElement.scrollHeight;
 
-        if (this.messages().length >= this._visibleMessages) { // Enable scroll watcher if there is more messages pending
+        if (this.messages().length >= this._visibleMessages) {
+          // Enable scroll watcher if there is more messages pending
           this.scrollWatcherEnabled.set(true);
         }
       }
@@ -171,12 +198,17 @@ export class NgTalkChannelComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   public goToMessage(message: ChatMessage) {
-    const wrapper = this._messageComponents()?.find(m => m.message === message || (m.message.id && message.id && m.message.id === message.id));
+    const wrapper = this._messageComponents()?.find(
+      m =>
+        m.message === message ||
+        (m.message.id && message.id && m.message.id === message.id)
+    );
     wrapper?.highlight();
   }
 
   public onDrag(event: CdkDragMove) {
-    if (event.distance.x < 0) { // Solo permitir arrastrar hacia la derecha
+    if (event.distance.x < 0) {
+      // Solo permitir arrastrar hacia la derecha
       event.source.reset();
     }
   }

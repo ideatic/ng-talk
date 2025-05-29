@@ -1,4 +1,12 @@
-import {Directive, ElementRef, inject, OnDestroy, OnInit, output, input} from "@angular/core";
+import {
+  Directive,
+  ElementRef,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  output
+} from '@angular/core';
 
 /**
  * From https://github.com/thisissoon/angular-inviewport
@@ -28,9 +36,9 @@ export class InViewportDirective implements OnDestroy, OnInit {
   private _window = inject(Window);
 
   // Bindings
-  public readonly inViewportOptions = input<IntersectionObserverInit & {
-    delay?: number;
-}>(undefined);
+  public readonly inViewportOptions = input<
+    IntersectionObserverInit & { delay?: number }
+  >();
   public readonly inViewportChange = output<boolean>();
 
   // State
@@ -54,7 +62,6 @@ export class InViewportDirective implements OnDestroy, OnInit {
       } else {
         activateObserver();
       }
-
     } else {
       this._inViewport = true;
       this.inViewportChange.emit(this._inViewport);
@@ -84,10 +91,7 @@ export class InViewportDirective implements OnDestroy, OnInit {
       // Minimal polyfill for Edge 15's lack of `isIntersecting`
       // See: https://github.com/w3c/IntersectionObserver/issues/211
       if (
-        !(
-          'isIntersecting' in
-          window['IntersectionObserverEntry']['prototype']
-        )
+        !('isIntersecting' in window['IntersectionObserverEntry']['prototype'])
       ) {
         Object.defineProperty(
           window['IntersectionObserverEntry']['prototype'],
