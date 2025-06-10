@@ -1,7 +1,15 @@
-import {ChangeDetectorRef, EmbeddedViewRef, Inject, Pipe, PipeTransform} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  EmbeddedViewRef,
+  Inject,
+  Pipe,
+  PipeTransform
+} from '@angular/core';
 
 // https://stackoverflow.com/questions/67605122/obtain-a-slice-of-a-typescript-parameters-tuple
-type ParametersExceptFirst<F> = F extends (arg0: any, ...rest: infer R) => any ? R : never;
+type ParametersExceptFirst<F> = F extends (arg0: any, ...rest: infer R) => any
+  ? R
+  : never;
 
 /**
  * Pipe que permite transformar un valor usando una función, recordando el resultado hasta que el valor cambie.
@@ -22,10 +30,17 @@ export class FnPipe implements PipeTransform {
    *@inject (ChangeDetectorRef) prevents:
    * NullInjectorError: No provider for EmbeddedViewRef!
    */
-  constructor(@Inject(ChangeDetectorRef) private readonly _viewRef: EmbeddedViewRef<unknown>) {
-  }
+  constructor(
+    // eslint-disable-next-line @angular-eslint/prefer-inject
+    @Inject(ChangeDetectorRef)
+    private readonly _viewRef: EmbeddedViewRef<unknown>
+  ) {}
 
-  public transform<T extends (...args: any) => any>(value: Parameters<T>[0], fn: T, ...args: [...ParametersExceptFirst<T>]): ReturnType<T> {
+  public transform<T extends (...args: any) => any>(
+    value: Parameters<T>[0],
+    fn: T,
+    ...args: [...ParametersExceptFirst<T>]
+  ): ReturnType<T> {
     if (args.length) {
       args.unshift(value);
       return fn.apply(this._viewRef.context, args);
@@ -34,5 +49,3 @@ export class FnPipe implements PipeTransform {
     }
   }
 }
-
-
