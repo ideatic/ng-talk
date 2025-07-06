@@ -94,7 +94,7 @@ export class NgTalkBubbleChannelComponent {
   private readonly _bubbleElement = viewChild.required('bubble', {
     read: ElementRef<HTMLElement>
   });
-  private readonly _ngTalkChannel = viewChild.required(NgTalkChannelComponent);
+  private readonly _ngTalkChannel = viewChild(NgTalkChannelComponent);
   private readonly _closeButton = viewChild('closeButton', {
     read: ElementRef<HTMLElement>
   });
@@ -256,7 +256,7 @@ export class NgTalkBubbleChannelComponent {
     this.channelVisible.set(true);
 
     setTimeout(() => {
-      this._ngTalkChannel().scrollToBottom();
+      this._ngTalkChannel()?.scrollToBottom();
       this._documentClickSubscription = fromEvent(document, 'click')
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe(event => this.onDocumentClick(event));
