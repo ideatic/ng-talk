@@ -103,7 +103,7 @@ export class NgTalkBubbleChannelComponent {
 
   protected readonly channelVisible = signal(false);
   protected readonly channelClass = signal('bounceIn');
-  protected channelStyle: { [key: string]: string | number } = {
+  protected channelStyle: Record<string, string | number> = {
     display: 'none'
   };
 
@@ -243,9 +243,9 @@ export class NgTalkBubbleChannelComponent {
 
     if (containerWidth < 400 + 25 + bubbleSize) {
       bubbleStyles.top = '0px'; // Math.max(150 - bubbleWidth - 10, 0) + 'px';
-      this.channelStyle.top = bubbleSize + 10 + 'px';
+      this.channelStyle['top'] = bubbleSize + 10 + 'px';
     } else {
-      this.channelStyle.top = '150px';
+      this.channelStyle['top'] = '150px';
       bubbleStyles.top = '150px';
       bubbleStyles.left = Math.max(channelX - bubbleSize - 25, 0) + 'px';
     }
@@ -277,10 +277,10 @@ export class NgTalkBubbleChannelComponent {
 
     // Fix channel height
     if (containerHeight < 600) {
-      this.channelStyle.height =
+      this.channelStyle['height'] =
         Math.min(Math.max(200, containerHeight - bubbleSize - 10), 400) + 'px';
     } else {
-      this.channelStyle.height = undefined;
+      delete this.channelStyle['height'];
     }
   }
 
