@@ -21,7 +21,6 @@ type ParametersExceptFirst<F> = F extends (arg0: any, ...rest: infer R) => any
  * https://dev.to/this-is-angular/deep-dive-into-angular-pipes-implementation-2g5n
  */
 @Pipe({
-  standalone: true,
   name: 'fn',
   pure: true
 })
