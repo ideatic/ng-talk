@@ -1,7 +1,7 @@
-import {Observable} from 'rxjs';
-import {ChatChannel} from './chat-channel';
-import {ChatMessage} from './chat-message';
-import {ChatUser} from './chat-user';
+import type {Observable} from 'rxjs';
+import type {ChatChannel} from './chat-channel';
+import type {ChatMessage} from './chat-message';
+import type {ChatUser} from './chat-user';
 
 export abstract class ChatAdapter {
   public abstract getChannels(user: ChatUser): Observable<ChatChannel[]>;

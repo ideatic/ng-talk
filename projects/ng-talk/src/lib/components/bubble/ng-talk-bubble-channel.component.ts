@@ -1,4 +1,5 @@
-import { CdkDrag, CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
+import type { CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
+import { CdkDrag } from '@angular/cdk/drag-drop';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { DecimalPipe } from '@angular/common';
 import {
@@ -16,13 +17,14 @@ import {
   viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { fromEvent, Subscription } from 'rxjs';
-import { ChatAdapter } from '../../models/chat-adapter';
-import { ChatChannel } from '../../models/chat-channel';
-import { ChatUser } from '../../models/chat-user';
-import { BubbleChannelRef } from '../../service/bubble-channel-ref';
+import type { Subscription } from 'rxjs';
+import { fromEvent } from 'rxjs';
+import type { ChatAdapter } from '../../models/chat-adapter';
+import type { ChatChannel } from '../../models/chat-channel';
+import type { ChatUser } from '../../models/chat-user';
+import type { BubbleChannelRef } from '../../service/bubble-channel-ref';
 import { NgTalkChannelComponent } from '../channel/ng-talk-channel.component';
-import { NgTalkSettings } from '../ng-talk-settings';
+import type { NgTalkSettings } from '../ng-talk-settings';
 
 @Component({
   selector: 'channel-bubble',
@@ -191,8 +193,8 @@ export class NgTalkBubbleChannelComponent {
 
     bubbleStyles.transform = '';
     bubbleStyles.top =
-      (this.dragPosition() ? this.dragPosition().y : 35) + 'px';
-    bubbleStyles.left = x + 'px';
+      `${this.dragPosition() ? this.dragPosition().y : 35  }px`;
+    bubbleStyles.left = `${x  }px`;
   }
 
   /* Visibility */
@@ -243,11 +245,11 @@ export class NgTalkBubbleChannelComponent {
 
     if (containerWidth < 400 + 25 + bubbleSize) {
       bubbleStyles.top = '0px'; // Math.max(150 - bubbleWidth - 10, 0) + 'px';
-      this.channelStyle['top'] = bubbleSize + 10 + 'px';
+      this.channelStyle['top'] = `${bubbleSize + 10  }px`;
     } else {
       this.channelStyle['top'] = '150px';
       bubbleStyles.top = '150px';
-      bubbleStyles.left = Math.max(channelX - bubbleSize - 25, 0) + 'px';
+      bubbleStyles.left = `${Math.max(channelX - bubbleSize - 25, 0)  }px`;
     }
 
     // Fix height
@@ -278,7 +280,7 @@ export class NgTalkBubbleChannelComponent {
     // Fix channel height
     if (containerHeight < 600) {
       this.channelStyle['height'] =
-        Math.min(Math.max(200, containerHeight - bubbleSize - 10), 400) + 'px';
+        `${Math.min(Math.max(200, containerHeight - bubbleSize - 10), 400)  }px`;
     } else {
       delete this.channelStyle['height'];
     }

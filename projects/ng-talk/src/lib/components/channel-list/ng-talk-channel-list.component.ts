@@ -1,3 +1,9 @@
+import type {
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges
+} from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,21 +15,17 @@ import {
   inject,
   Input,
   input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
   output,
-  signal,
-  SimpleChanges
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import type { Subscription } from 'rxjs';
 import { InViewportDirective } from '../../directives/in-viewport.directive';
-import { ChatAdapter } from '../../models/chat-adapter';
-import { ChatChannel } from '../../models/chat-channel';
-import { ChatMessage } from '../../models/chat-message';
-import { ChatUser } from '../../models/chat-user';
+import type { ChatAdapter } from '../../models/chat-adapter';
+import type { ChatChannel } from '../../models/chat-channel';
+import type { ChatMessage } from '../../models/chat-message';
+import type { ChatUser } from '../../models/chat-user';
 import { FnPipe } from '../../pipes/fn.pipe';
 import { NG_TALK_CHANNEL_LIST_TOKEN } from '../../tokens';
 import { nameof } from '../../utils/utils';

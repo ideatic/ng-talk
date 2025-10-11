@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
-import { inject, LOCALE_ID, Pipe, PipeTransform } from '@angular/core';
-import { NgTalkSettings } from '../components/ng-talk-settings';
+import type { PipeTransform } from '@angular/core';
+import { inject, LOCALE_ID, Pipe } from '@angular/core';
+import type { NgTalkSettings } from '../components/ng-talk-settings';
 import { daysDiff } from '../utils/utils';
 
 @Pipe({

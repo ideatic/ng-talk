@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { ChatMessage } from '../../../../models/chat-message';
+import type { ChatMessage } from '../../../../models/chat-message';
 import { NgTalkChannelMessageBodyComponent } from '../body/ng-talk-channel-message-body.component';
 
 @Component({

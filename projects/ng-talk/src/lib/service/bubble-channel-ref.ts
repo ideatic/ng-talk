@@ -1,8 +1,8 @@
-import {OverlayRef} from "@angular/cdk/overlay";
-import {ComponentRef} from "@angular/core";
+import type {OverlayRef} from "@angular/cdk/overlay";
+import type {ComponentRef} from "@angular/core";
 import type {NgTalkBubbleChannelComponent} from "../components/bubble/ng-talk-bubble-channel.component";
 import {Subject} from "rxjs";
-import {ChatChannel} from "../models/chat-channel";
+import type {ChatChannel} from "../models/chat-channel";
 
 export class BubbleChannelRef {
   public destroyed = new Subject<BubbleChannelRef>();

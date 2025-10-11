@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, inject, Input} from "@angular/core";
 import type Autolinker from 'autolinker';
-import {ChatMessage, ChatMessageType} from '../../../../models/chat-message';
+import type {ChatMessage} from '../../../../models/chat-message';
+import { ChatMessageType} from '../../../../models/chat-message';
 import {FnPipe} from "../../../../pipes/fn.pipe";
 import {AutoLinkerService} from '../../../../service/autolinker.service';
 import {NgTalkChannelComponent} from '../../ng-talk-channel.component';

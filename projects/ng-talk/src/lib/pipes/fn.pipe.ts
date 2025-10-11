@@ -1,9 +1,11 @@
+import type {
+  EmbeddedViewRef,
+  PipeTransform
+} from '@angular/core';
 import {
   ChangeDetectorRef,
-  EmbeddedViewRef,
   Inject,
-  Pipe,
-  PipeTransform
+  Pipe
 } from '@angular/core';
 
 // https://stackoverflow.com/questions/67605122/obtain-a-slice-of-a-typescript-parameters-tuple

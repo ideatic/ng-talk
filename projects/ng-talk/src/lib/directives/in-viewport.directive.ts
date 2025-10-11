@@ -1,10 +1,11 @@
+import type {
+  OnDestroy,
+  OnInit} from '@angular/core';
 import {
   Directive,
   ElementRef,
   inject,
   input,
-  OnDestroy,
-  OnInit,
   output
 } from '@angular/core';
 

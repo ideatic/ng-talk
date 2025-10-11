@@ -1,5 +1,8 @@
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { DatePipe } from '@angular/common';
+import type {
+  OnChanges,
+  OnDestroy} from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,8 +11,6 @@ import {
   inject,
   Input,
   input,
-  OnChanges,
-  OnDestroy,
   viewChild
 } from '@angular/core';
 import {
@@ -19,7 +20,8 @@ import {
   MatMenuTrigger
 } from '@angular/material/menu';
 import { fromEvent } from 'rxjs';
-import { ChatMessage, ChatMessageType } from '../../../models/chat-message';
+import type { ChatMessage} from '../../../models/chat-message';
+import { ChatMessageType } from '../../../models/chat-message';
 import { isSameDay } from '../../../utils/utils';
 import { NgTalkChannelComponent } from '../ng-talk-channel.component';
 import { NgTalkChannelMessageBodyComponent } from './body/ng-talk-channel-message-body.component';

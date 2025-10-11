@@ -1,9 +1,13 @@
 import {ChatAdapter} from '../../../projects/ng-talk/src/lib/models/chat-adapter';
-import {ChatUser, ChatUserStatus} from '../../../projects/ng-talk/src/lib/models/chat-user';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {ChatMessage, ChatMessageType} from '../../../projects/ng-talk/src/lib/models/chat-message';
+import type {ChatUser} from '../../../projects/ng-talk/src/lib/models/chat-user';
+import { ChatUserStatus} from '../../../projects/ng-talk/src/lib/models/chat-user';
+import type { Observable} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
+import type {ChatMessage} from '../../../projects/ng-talk/src/lib/models/chat-message';
+import { ChatMessageType} from '../../../projects/ng-talk/src/lib/models/chat-message';
 import {Injectable} from '@angular/core';
-import {ChatChannel, ChatChannelType} from '../../../projects/ng-talk/src/lib/models/chat-channel';
+import type {ChatChannel} from '../../../projects/ng-talk/src/lib/models/chat-channel';
+import { ChatChannelType} from '../../../projects/ng-talk/src/lib/models/chat-channel';
 
 @Injectable({
   providedIn: 'root'

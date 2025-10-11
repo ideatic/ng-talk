@@ -2,10 +2,11 @@ import {
   createNoopScrollStrategy,
   createOverlayRef
 } from '@angular/cdk/overlay';
+import type {
+  EmbeddedViewRef} from '@angular/core';
 import {
   ApplicationRef,
   createComponent,
-  EmbeddedViewRef,
   EnvironmentInjector,
   inject,
   Injectable,
@@ -13,10 +14,10 @@ import {
   signal
 } from '@angular/core';
 import { NgTalkBubbleChannelComponent } from '../components/bubble/ng-talk-bubble-channel.component';
-import { NgTalkSettings } from '../components/ng-talk-settings';
-import { ChatAdapter } from '../models/chat-adapter';
-import { ChatChannel } from '../models/chat-channel';
-import { ChatUser } from '../models/chat-user';
+import type { NgTalkSettings } from '../components/ng-talk-settings';
+import type { ChatAdapter } from '../models/chat-adapter';
+import type { ChatChannel } from '../models/chat-channel';
+import type { ChatUser } from '../models/chat-user';
 import { BubbleChannelRef } from './bubble-channel-ref';
 
 export const nameof = <T>(name: keyof T) => name;

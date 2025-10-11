@@ -1,9 +1,11 @@
 import {ChangeDetectionStrategy, inject} from "@angular/core";
-import {Component, OnInit} from '@angular/core';
+import type { OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {DemoAdapter} from './adapters/demo-adapter';
-import {ChatUser, ChatUserStatus} from '../../projects/ng-talk/src/lib/models/chat-user';
+import type {ChatUser} from '../../projects/ng-talk/src/lib/models/chat-user';
+import { ChatUserStatus} from '../../projects/ng-talk/src/lib/models/chat-user';
 import {NgTalkSettings} from '../../projects/ng-talk/src/lib/components/ng-talk-settings';
-import {ChatAdapter} from '../../projects/ng-talk/src/lib/models/chat-adapter';
+import type {ChatAdapter} from '../../projects/ng-talk/src/lib/models/chat-adapter';
 import {FormsModule} from "@angular/forms";
 import {NgTalkChannelListComponent} from "../../projects/ng-talk/src/public_api";
 

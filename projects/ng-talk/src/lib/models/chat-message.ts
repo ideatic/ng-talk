@@ -1,5 +1,5 @@
-import {ChatUser} from './chat-user';
-import {Signal} from "@angular/core";
+import type {ChatUser} from './chat-user';
+import type {Signal} from "@angular/core";
 
 export enum ChatMessageType {
   Text = 'text',

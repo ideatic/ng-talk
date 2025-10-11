@@ -5,7 +5,8 @@ import {
   inject,
   Input
 } from '@angular/core';
-import { ChatChannel, ChatChannelType } from '../../../models/chat-channel';
+import type { ChatChannel} from '../../../models/chat-channel';
+import { ChatChannelType } from '../../../models/chat-channel';
 import { ChatMessageType } from '../../../models/chat-message';
 import { NG_TALK_CHANNEL_LIST_TOKEN } from '../../../tokens';
 

@@ -1,8 +1,10 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit, output, signal} from "@angular/core";
+import type { OnInit} from "@angular/core";
+import {ChangeDetectionStrategy, Component, inject, output, signal} from "@angular/core";
 import {AsyncPipe} from "@angular/common";
 import {HttpClient} from '@angular/common/http';
 import {FormsModule} from "@angular/forms";
-import {debounceTime, map, Observable, Subject} from 'rxjs';
+import type { Observable} from 'rxjs';
+import {debounceTime, map, Subject} from 'rxjs';
 import {FnPipe} from "../../../../pipes/fn.pipe";
 import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
 

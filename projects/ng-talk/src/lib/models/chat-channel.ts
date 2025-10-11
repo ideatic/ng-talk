@@ -1,5 +1,5 @@
-import {ChatMessage} from './chat-message';
-import {WritableSignal} from "@angular/core";
+import type {ChatMessage} from './chat-message';
+import type {WritableSignal} from "@angular/core";
 
 export enum ChatChannelType {
   User,

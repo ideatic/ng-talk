@@ -8,8 +8,9 @@ import {
   viewChild
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ChatChannel } from '../../../models/chat-channel';
-import { ChatMessage, ChatMessageType } from '../../../models/chat-message';
+import type { ChatChannel } from '../../../models/chat-channel';
+import type { ChatMessage} from '../../../models/chat-message';
+import { ChatMessageType } from '../../../models/chat-message';
 import { NG_TALK_CHANNEL_LIST_TOKEN } from '../../../tokens';
 import { NgTalkChannelMessageRefComponent } from '../message/ref/ng-talk-channel-message-ref.component';
 import { NgTalkChannelComponent } from '../ng-talk-channel.component';

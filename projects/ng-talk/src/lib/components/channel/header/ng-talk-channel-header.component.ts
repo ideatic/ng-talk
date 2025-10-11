@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ChatChannel } from '../../../models/chat-channel';
+import type { ChatChannel } from '../../../models/chat-channel';
 import type { BubbleChannelRef } from '../../../service/bubble-channel-ref';
 import { BubbleChannelService } from '../../../service/bubble-channel.service';
 import { NG_TALK_CHANNEL_LIST_TOKEN } from '../../../tokens';

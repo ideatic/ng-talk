@@ -1,4 +1,4 @@
-import {DocumentReference} from '@google-cloud/firestore';
+import type {DocumentReference} from '@google-cloud/firestore';
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 

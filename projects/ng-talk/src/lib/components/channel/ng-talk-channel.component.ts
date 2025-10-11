@@ -1,28 +1,31 @@
-import { CdkDrag, CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
+import type { CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
+import { CdkDrag } from '@angular/cdk/drag-drop';
 import { NgComponentOutlet } from '@angular/common';
-import {
+import type {
   AfterViewInit,
+  OnChanges,
+  OnInit,
+  SimpleChanges} from '@angular/core';
+import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
   inject,
   input,
-  OnChanges,
-  OnInit,
   output,
   signal,
-  SimpleChanges,
   viewChild,
   viewChildren
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subscription } from 'rxjs';
+import type { Subscription } from 'rxjs';
 import { InViewportDirective } from '../../directives/in-viewport.directive';
-import { ChatAdapter } from '../../models/chat-adapter';
-import { ChatChannel } from '../../models/chat-channel';
-import { ChatMessage, ChatMessageType } from '../../models/chat-message';
-import { ChatUser } from '../../models/chat-user';
+import type { ChatAdapter } from '../../models/chat-adapter';
+import type { ChatChannel } from '../../models/chat-channel';
+import type { ChatMessage} from '../../models/chat-message';
+import { ChatMessageType } from '../../models/chat-message';
+import type { ChatUser } from '../../models/chat-user';
 import { FnPipe } from '../../pipes/fn.pipe';
 import { RelativeDatePipe } from '../../pipes/relativeDate.pipe';
 import { isSameDay, nameof } from '../../utils/utils';

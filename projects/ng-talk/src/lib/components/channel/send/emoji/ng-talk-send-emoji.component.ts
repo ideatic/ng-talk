@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, inject, output} from "@angular/core";
-import {KeyValue, KeyValuePipe} from '@angular/common';
+import type {KeyValue} from '@angular/common';
+import { KeyValuePipe} from '@angular/common';
 import {FormsModule} from "@angular/forms";
 import {FnPipe} from "../../../../pipes/fn.pipe";
 import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
