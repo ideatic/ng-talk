@@ -28,7 +28,6 @@ import type { ChatMessage } from '../../models/chat-message';
 import type { ChatUser } from '../../models/chat-user';
 import { FnPipe } from '../../pipes/fn.pipe';
 import { NG_TALK_CHANNEL_LIST_TOKEN } from '../../tokens';
-import { nameof } from '../../utils/utils';
 import { NgTalkChannelComponent } from '../channel/ng-talk-channel.component';
 import { NgTalkChannelPreviewComponent } from '../channel/preview/ng-talk-channel-preview.component';
 import { MessageLoadingMethod, NgTalkSettings } from '../ng-talk-settings';
@@ -89,16 +88,13 @@ export class NgTalkChannelListComponent
     this.onResized();
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes[nameof<NgTalkChannelListComponent>('adapter')]) {
+  public ngOnChanges(changes: SimpleChanges<NgTalkChannelListComponent>) {
+    if (changes.adapter) {
       this._channelMessagesSubscriptions.forEach(s => s.unsubscribe());
       this._channelMessagesSubscriptions.clear();
     }
 
-    if (
-      changes[nameof<NgTalkChannelListComponent>('adapter')] ||
-      changes[nameof<NgTalkChannelListComponent>('user')]
-    ) {
+    if (changes.adapter || changes.user) {
       this._channelsSubscription?.unsubscribe();
 
       this._channelsSubscription = this.adapter()

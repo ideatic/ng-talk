@@ -5,7 +5,8 @@ import type {
   AfterViewInit,
   OnChanges,
   OnInit,
-  SimpleChanges} from '@angular/core';
+  SimpleChanges
+} from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -23,12 +24,12 @@ import type { Subscription } from 'rxjs';
 import { InViewportDirective } from '../../directives/in-viewport.directive';
 import type { ChatAdapter } from '../../models/chat-adapter';
 import type { ChatChannel } from '../../models/chat-channel';
-import type { ChatMessage} from '../../models/chat-message';
+import type { ChatMessage } from '../../models/chat-message';
 import { ChatMessageType } from '../../models/chat-message';
 import type { ChatUser } from '../../models/chat-user';
 import { FnPipe } from '../../pipes/fn.pipe';
 import { RelativeDatePipe } from '../../pipes/relativeDate.pipe';
-import { isSameDay, nameof } from '../../utils/utils';
+import { isSameDay } from '../../utils/utils';
 import { NgTalkSettings } from '../ng-talk-settings';
 import { NgTalkChannelMessageComponent } from './message/ng-talk-channel-message.component';
 import { NgTalkSendMessageComponent } from './send/ng-talk-send-message.component';
@@ -103,13 +104,10 @@ export class NgTalkChannelComponent
     }
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
+  public ngOnChanges(changes: SimpleChanges<NgTalkChannelComponent>) {
     const settings = this.settings();
 
-    if (
-      changes[nameof<NgTalkChannelComponent>('adapter')] ||
-      changes[nameof<NgTalkChannelComponent>('channel')]
-    ) {
+    if (changes.adapter || changes.channel) {
       this.messages.set([]);
 
       this._messagesSubscription?.unsubscribe();
