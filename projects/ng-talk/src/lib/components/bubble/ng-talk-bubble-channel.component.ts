@@ -7,14 +7,18 @@ import {
   Component,
   computed,
   DestroyRef,
+  effect,
   ElementRef,
   forwardRef,
   HostListener,
   inject,
+  InjectionToken,
   Input,
-  input,
+  model,
   signal,
-  viewChild
+  untracked,
+  viewChild,
+  type WritableSignal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { Subscription } from 'rxjs';
@@ -25,6 +29,24 @@ import type { ChatUser } from '../../models/chat-user';
 import type { BubbleChannelRef } from '../../service/bubble-channel-ref';
 import { NgTalkChannelComponent } from '../channel/ng-talk-channel.component';
 import type { NgTalkSettings } from '../ng-talk-settings';
+
+/**
+ * Configuración para inicializar NgTalkBubbleChannelComponent mediante inyección de dependencias
+ */
+export interface BubbleChannelConfig {
+  channel: ChatChannel;
+  adapter: ChatAdapter;
+  user: ChatUser;
+  settings?: NgTalkSettings;
+  selfRef?: WritableSignal<BubbleChannelRef>;
+}
+
+/**
+ * Token de inyección para configurar el componente bubble programáticamente
+ */
+export const BUBBLE_CHANNEL_CONFIG = new InjectionToken<BubbleChannelConfig>(
+  'BUBBLE_CHANNEL_CONFIG'
+);
 
 @Component({
   selector: 'channel-bubble',
@@ -80,17 +102,17 @@ import type { NgTalkSettings } from '../ng-talk-settings';
 })
 export class NgTalkBubbleChannelComponent {
   // Deps
-  private _host = inject(ElementRef<HTMLElement>);
-  private _destroyRef = inject(DestroyRef);
-  private _overlayContainer = inject(OverlayContainer);
+  private readonly _host = inject(ElementRef<HTMLElement>);
+  private readonly _destroyRef = inject(DestroyRef);
+  private readonly _overlayContainer = inject(OverlayContainer);
 
   // Bindings
   @Input() public dragBoundarySelector = 'body';
   @Input() public channel: ChatChannel;
-  public readonly adapter = input<ChatAdapter>();
+  public readonly adapter = model<ChatAdapter>();
   @Input() public channelSettings: NgTalkSettings;
-  public readonly user = input<ChatUser>();
-  public readonly selfRef = input<BubbleChannelRef>();
+  public readonly user = model<ChatUser>();
+  public readonly selfRef = model<BubbleChannelRef>();
 
   // State
   private readonly _bubbleElement = viewChild.required('bubble', {
@@ -126,6 +148,25 @@ export class NgTalkBubbleChannelComponent {
   protected readonly closeBtnAnimationClass = signal('');
 
   private _documentClickSubscription: Subscription;
+
+  constructor() {
+    // Configuración por inyección
+    const config = inject(BUBBLE_CHANNEL_CONFIG, { optional: true });
+    if (config) {
+      this.channel = config.channel;
+      this.adapter.set(config.adapter);
+      this.user.set(config.user);
+      if (config.settings) {
+        this.channelSettings = config.settings;
+      }
+      if (config.selfRef) {
+        effect(() => {
+          const selfRef = config.selfRef();
+          untracked(() => this.selfRef.set(selfRef));
+        });
+      }
+    }
+  }
 
   /* Dragging */
 
@@ -192,9 +233,8 @@ export class NgTalkBubbleChannelComponent {
     }
 
     bubbleStyles.transform = '';
-    bubbleStyles.top =
-      `${this.dragPosition() ? this.dragPosition().y : 35  }px`;
-    bubbleStyles.left = `${x  }px`;
+    bubbleStyles.top = `${this.dragPosition() ? this.dragPosition().y : 35}px`;
+    bubbleStyles.left = `${x}px`;
   }
 
   /* Visibility */
@@ -245,11 +285,11 @@ export class NgTalkBubbleChannelComponent {
 
     if (containerWidth < 400 + 25 + bubbleSize) {
       bubbleStyles.top = '0px'; // Math.max(150 - bubbleWidth - 10, 0) + 'px';
-      this.channelStyle['top'] = `${bubbleSize + 10  }px`;
+      this.channelStyle['top'] = `${bubbleSize + 10}px`;
     } else {
       this.channelStyle['top'] = '150px';
       bubbleStyles.top = '150px';
-      bubbleStyles.left = `${Math.max(channelX - bubbleSize - 25, 0)  }px`;
+      bubbleStyles.left = `${Math.max(channelX - bubbleSize - 25, 0)}px`;
     }
 
     // Fix height
@@ -280,7 +320,7 @@ export class NgTalkBubbleChannelComponent {
     // Fix channel height
     if (containerHeight < 600) {
       this.channelStyle['height'] =
-        `${Math.min(Math.max(200, containerHeight - bubbleSize - 10), 400)  }px`;
+        `${Math.min(Math.max(200, containerHeight - bubbleSize - 10), 400)}px`;
     } else {
       delete this.channelStyle['height'];
     }
