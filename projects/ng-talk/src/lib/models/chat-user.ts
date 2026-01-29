@@ -1,4 +1,4 @@
-export enum ChatUserStatus {
+export const enum ChatUserStatus {
   Online,
   Writing,
   Busy,
