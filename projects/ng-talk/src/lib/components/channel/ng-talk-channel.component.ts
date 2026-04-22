@@ -155,7 +155,7 @@ export class NgTalkChannelComponent
     return !prevMessage || !isSameDay(prevMessage.date, message.date);
   }
 
-  public trackMessage(i, message: ChatMessage) {
+  protected trackMessage(i, message: ChatMessage) {
     return message.date.toString() + message.content;
   }
 
@@ -180,14 +180,14 @@ export class NgTalkChannelComponent
 
   // Pagination & History
 
-  public loadOldMessages() {
+  protected loadOldMessages() {
     this.scrollWatcherEnabled.set(false);
     this._visibleMessages += this.settings().pageSize;
 
     this.reloadMessages(false);
   }
 
-  public watcherInViewportChanged(isVisible: boolean) {
+  protected watcherInViewportChanged(isVisible: boolean) {
     if (isVisible) {
       this.loadOldMessages();
     }
@@ -207,7 +207,7 @@ export class NgTalkChannelComponent
     wrapper?.highlight();
   }
 
-  public onDrag(event: CdkDragMove) {
+  protected onDrag(event: CdkDragMove) {
     if (event.distance.x < 0) {
       // Solo permitir arrastrar hacia la derecha
       event.source.reset();

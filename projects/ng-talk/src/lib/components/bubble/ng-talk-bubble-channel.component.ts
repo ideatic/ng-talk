@@ -305,7 +305,7 @@ export class NgTalkBubbleChannelComponent {
     }, 10);
   }
 
-  public onChatDeleted() {
+  protected onChatDeleted() {
     this.close();
     setTimeout(() => this.selfRef().destroy(), 250);
   }
@@ -326,7 +326,7 @@ export class NgTalkBubbleChannelComponent {
     }
   }
 
-  public close() {
+  protected close() {
     if (this.channelVisible()) {
       this.channelClass.set('bounceOut');
 
