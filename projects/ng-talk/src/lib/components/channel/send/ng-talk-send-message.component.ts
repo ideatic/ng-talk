@@ -49,17 +49,17 @@ import { NgTalkSendGifComponent } from './gif/ng-talk-send-gif.component';
       }
 
       <!-- Reply to message -->
-      @if (chat.replyingTo) {
+      @if (chat.replyingTo()) {
         <div
           style="display: flex; align-items: center"
           class="grow-animation"
           animate.leave="leaving"
         >
-          <ng-talk-channel-message-ref [message]="chat.replyingTo" />
+          <ng-talk-channel-message-ref [message]="chat.replyingTo()" />
           <span
             style="cursor: pointer; padding: 0 15px"
             role="button"
-            (click)="chat.replyingTo = null"
+            (click)="chat.replyingTo.set(null)"
           >
             <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24">
               <path
@@ -163,7 +163,7 @@ export class NgTalkSendMessageComponent {
   private _sendMessage(message: Partial<ChatMessage>) {
     if (this.chat.channel() && !this.chat.channel().disabled) {
       const fullMessage = {
-        replyTo: this.chat.replyingTo,
+        replyTo: this.chat.replyingTo(),
         from: signal(this.chat.user()),
         ...message
       } as ChatMessage;
@@ -174,7 +174,7 @@ export class NgTalkSendMessageComponent {
         .then(() => this.chat.messageSent.emit(fullMessage));
 
       this.mediaSelector = null;
-      this.chat.replyingTo = null;
+      this.chat.replyingTo.set(null);
     }
   }
 

@@ -5,7 +5,7 @@ import {
   inject,
   Input
 } from '@angular/core';
-import type { ChatChannel} from '../../../models/chat-channel';
+import type { ChatChannel } from '../../../models/chat-channel';
 import { ChatChannelType } from '../../../models/chat-channel';
 import { ChatMessageType } from '../../../models/chat-message';
 import { NG_TALK_CHANNEL_LIST_TOKEN } from '../../../tokens';
@@ -14,9 +14,10 @@ import { NG_TALK_CHANNEL_LIST_TOKEN } from '../../../tokens';
   selector: 'ng-talk-channel-preview',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DecimalPipe],
-  template: ` @if (channels.settings.showChannelsIcons) {
+  template: `
+    @if (channels.settings().showChannelsIcons) {
       <img
-        [src]="channel.icon || channels.settings.defaultChannelIcon"
+        [src]="channel.icon || channels.settings().defaultChannelIcon"
         [aria-label]="channel.name"
       />
     }
@@ -55,12 +56,16 @@ import { NG_TALK_CHANNEL_LIST_TOKEN } from '../../../tokens';
 
         @if (
           channel.unread() > 0 &&
-          !(channels.activeChannel && channel.id == channels.activeChannel.id)
+          !(
+            channels.activeChannel() &&
+            channel.id == channels.activeChannel().id
+          )
         ) {
           <div class="unread-badge">{{ channel.unread() | number }}</div>
         }
       </div>
-    </div>`,
+    </div>
+  `,
   styleUrl: './ng-talk-channel-preview.component.less'
 })
 export class NgTalkChannelPreviewComponent {

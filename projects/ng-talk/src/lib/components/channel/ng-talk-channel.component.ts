@@ -1,21 +1,18 @@
 import type { CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { NgComponentOutlet } from '@angular/common';
-import type {
-  AfterViewInit,
-  OnChanges,
-  OnInit,
-  SimpleChanges
-} from '@angular/core';
+import type { AfterViewInit, OnInit } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
+  effect,
   inject,
   input,
   output,
   signal,
+  untracked,
   viewChild,
   viewChildren
 } from '@angular/core';
@@ -54,9 +51,7 @@ declare const ngDevMode: boolean;
     './styles/loading-spinner.less'
   ]
 })
-export class NgTalkChannelComponent
-  implements OnInit, OnChanges, AfterViewInit
-{
+export class NgTalkChannelComponent implements OnInit, AfterViewInit {
   // Deps
   private _destroyRef = inject(DestroyRef);
 
@@ -84,10 +79,9 @@ export class NgTalkChannelComponent
 
   private _visibleMessages = 20;
   public readonly messages = signal<ChatMessage[]>([]);
+  public readonly replyingTo = signal<ChatMessage | null>(null);
 
   private _messagesSubscription: Subscription;
-
-  public replyingTo: ChatMessage;
 
   // UI
   protected readonly loading = signal(false);
@@ -98,25 +92,27 @@ export class NgTalkChannelComponent
   // Import types and enums
   protected readonly MessageType = ChatMessageType;
 
+  constructor() {
+    // Reload messages when channel or adapter changes
+    effect(() => {
+      const adapter = this.adapter();
+      const channel = this.channel();
+
+      untracked(() => {
+        this.messages.set([]);
+        this._messagesSubscription?.unsubscribe();
+        this._visibleMessages = this.settings().pageSize;
+
+        if (adapter && channel) {
+          this.reloadMessages();
+        }
+      });
+    });
+  }
+
   public ngOnInit() {
     if (!this.user()) {
       throw new Error('Chat current user must be defined');
-    }
-  }
-
-  public ngOnChanges(changes: SimpleChanges<NgTalkChannelComponent>) {
-    const settings = this.settings();
-
-    if (changes.adapter || changes.channel) {
-      this.messages.set([]);
-
-      this._messagesSubscription?.unsubscribe();
-
-      this._visibleMessages = settings.pageSize;
-
-      if (this.adapter() && this.channel()) {
-        this.reloadMessages();
-      }
     }
   }
 
@@ -194,15 +190,15 @@ export class NgTalkChannelComponent
   }
 
   public replyTo(message: ChatMessage) {
-    this.replyingTo = message;
+    this.replyingTo.set(message);
     this.focus();
   }
 
   public goToMessage(message: ChatMessage) {
     const wrapper = this._messageComponents()?.find(
       m =>
-        m.message === message ||
-        (m.message.id && message.id && m.message.id === message.id)
+        m.message() === message ||
+        (m.message()?.id && message.id && m.message()?.id === message.id)
     );
     wrapper?.highlight();
   }

@@ -1,13 +1,13 @@
-@if (!activeChannel || displayMode == 'desktop') {
+@if (!activeChannel() || displayMode() == 'desktop') {
   <div class="channel-list">
     <!-- Filter -->
-    @if (settings.showFilter) {
+    @if (settings().showFilter) {
       <div class="filter">
         <label>
-          @if (settings.searchIconClass) {
-            <i [class]="settings.searchIconClass"></i>
+          @if (settings().searchIconClass) {
+            <i [class]="settings().searchIconClass"></i>
           }
-          <input type="text" [placeholder]="settings.filterPlaceholder" [(ngModel)]="filterQuery" (ngModelChange)="searched.emit($event)"/>
+          <input type="text" [placeholder]="settings().filterPlaceholder" [(ngModel)]="filterQuery" (ngModelChange)="searched.emit($event)"/>
         </label>
       </div>
     }
@@ -15,9 +15,9 @@
     <!-- Channel list -->
     <ul>
       @for (channel of channels() | fn:filterChannels:filterQuery; track channel.id) {
-        <li [class.active]="activeChannel && channel.id == activeChannel.id">
+        <li [class.active]="activeChannel() && channel.id == activeChannel()!.id">
           <!-- Wait 500ms to enable viewport observer while the component render -->
-          @if (settings.channelMessagesLoading == MessagesLoading.lazy) {
+          @if (settings().channelMessagesLoading == MessagesLoading.lazy) {
             <a inViewport [inViewportOptions]="{delay: 500}" (click)="selectChannel(channel)" (inViewportChange)="inViewportChangedChannel(channel, $event)">
               <ng-talk-channel-preview [channel]="channel"/>
             </a>
@@ -33,17 +33,17 @@
 }
 
 <!-- Single channel -->
-@if (displayMode == 'desktop' || activeChannel) {
+@if (displayMode() == 'desktop' || activeChannel()) {
   <div class="active-channel">
-    @if (activeChannel) {
+    @if (activeChannel()) {
       <ng-talk-channel
         [adapter]="adapter()"
-        [channel]="activeChannel"
+        [channel]="activeChannel()"
         [user]="user()"
-        [settings]="settings"
+        [settings]="settings()"
         (userClicked)="userClicked.emit($event)"
         (messageSent)="messageSent.emit($event)"
-        (deleted)="activeChannel = null"/>
+        (deleted)="activeChannel.set(null)"/>
     }
   </div>
 }
