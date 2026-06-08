@@ -8,7 +8,6 @@ import emojis from './emoji.json';
 
 @Component({
     selector: 'ng-talk-send-emoji',
-
     imports: [FormsModule, KeyValuePipe, FnPipe],
     template: `
     <input type="search" [placeholder]="chat.settings().search" [(ngModel)]="searchQuery"/>

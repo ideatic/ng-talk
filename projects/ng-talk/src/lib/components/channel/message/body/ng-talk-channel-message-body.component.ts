@@ -9,7 +9,6 @@ import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-wr
 
 @Component({
     selector: 'ng-talk-channel-message-body',
-
     imports: [FnPipe, NgTalkChannelMessageWritingComponent],
     template: `
     @switch (message.type) {
