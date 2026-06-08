@@ -1,5 +1,5 @@
 import type { OnDestroy, OnInit } from '@angular/core';
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, ElementRef, forwardRef, inject, input, output, signal, untracked } from '@angular/core';
+import { Component, DestroyRef, effect, ElementRef, forwardRef, inject, input, output, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import type { Subscription } from 'rxjs';
@@ -16,7 +16,6 @@ import { MessageLoadingMethod, NgTalkSettings } from '../ng-talk-settings';
 
 @Component({
   selector: 'ng-talk-channel-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, NgTalkChannelComponent, NgTalkChannelPreviewComponent, FnPipe, InViewportDirective],
   templateUrl: './ng-talk-channel-list.component.html',
   styleUrl: './ng-talk-channel-list.component.less',

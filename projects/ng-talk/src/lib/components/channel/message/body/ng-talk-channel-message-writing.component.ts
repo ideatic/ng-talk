@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import { Component} from '@angular/core';
 
 @Component({
   selector: 'ng-talk-channel-message-writing',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+
   template: `
     <span></span>
     <span></span>

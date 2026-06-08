@@ -2,7 +2,7 @@ import type { CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { NgComponentOutlet } from '@angular/common';
 import type { AfterViewInit, OnInit } from '@angular/core';
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, effect, inject, input, output, signal, untracked, viewChild, viewChildren } from '@angular/core';
+import { Component, DestroyRef, ElementRef, effect, inject, input, output, signal, untracked, viewChild, viewChildren } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { Subscription } from 'rxjs';
 import { InViewportDirective } from '../../directives/in-viewport.directive';
@@ -20,7 +20,6 @@ import { NgTalkSendMessageComponent } from './send/ng-talk-send-message.componen
 
 @Component({
   selector: 'ng-talk-channel',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgComponentOutlet, FnPipe, NgTalkSendMessageComponent, RelativeDatePipe, InViewportDirective, NgTalkChannelMessageComponent, CdkDrag],
   templateUrl: './ng-talk-channel.component.html',
   styleUrls: ['./ng-talk-channel.component.less', './styles/loading-spinner.less']

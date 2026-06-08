@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, output} from "@angular/core";
+import { Component, inject, output} from "@angular/core";
 import type {KeyValue} from '@angular/common';
 import { KeyValuePipe} from '@angular/common';
 import {FormsModule} from "@angular/forms";
@@ -8,7 +8,7 @@ import emojis from './emoji.json';
 
 @Component({
     selector: 'ng-talk-send-emoji',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+
     imports: [FormsModule, KeyValuePipe, FnPipe],
     template: `
     <input type="search" [placeholder]="chat.settings().search" [(ngModel)]="searchQuery"/>

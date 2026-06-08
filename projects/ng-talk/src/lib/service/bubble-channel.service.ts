@@ -3,7 +3,7 @@ import {
   createOverlayRef
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { inject, Injectable, Injector, signal } from '@angular/core';
+import { inject, Service, Injector, signal } from '@angular/core';
 import type { BubbleChannelConfig } from '../components/bubble/ng-talk-bubble-channel.component';
 import {
   BUBBLE_CHANNEL_CONFIG,
@@ -15,9 +15,7 @@ import type { ChatChannel } from '../models/chat-channel';
 import type { ChatUser } from '../models/chat-user';
 import { BubbleChannelRef } from './bubble-channel-ref';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class BubbleChannelService {
   private static readonly _activeInstances = signal<BubbleChannelRef[]>([]);
 

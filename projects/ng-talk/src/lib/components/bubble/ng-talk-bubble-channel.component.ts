@@ -3,7 +3,6 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { DecimalPipe } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
@@ -50,7 +49,7 @@ export const BUBBLE_CHANNEL_CONFIG = new InjectionToken<BubbleChannelConfig>(
 
 @Component({
   selector: 'channel-bubble',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+
   // https://dev.to/loukaskotas/the-power-of-forwardref-to-fix-circular-dependencies-in-angular-337k
   imports: [forwardRef(() => NgTalkChannelComponent), DecimalPipe, CdkDrag],
   template: `

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import type { ChatChannel } from '../../../models/chat-channel';
 import type { BubbleChannelRef } from '../../../service/bubble-channel-ref';
 import { BubbleChannelService } from '../../../service/bubble-channel.service';
@@ -6,7 +6,7 @@ import { NG_TALK_CHANNEL_LIST_TOKEN } from '../../../tokens';
 import { NgTalkChannelComponent } from '../ng-talk-channel.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
+
   template: `
     @if (channelList) {
       <a class="go-back" (click)="channelList.selectChannel(null)"

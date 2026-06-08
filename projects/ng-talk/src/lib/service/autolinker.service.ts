@@ -1,11 +1,8 @@
-import {Injectable} from '@angular/core';
+import { Service } from '@angular/core';
 import Autolinker from 'autolinker';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class AutoLinkerService {
-
   private _autoLinker: any;
 
   public link(text: string): string {

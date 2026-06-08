@@ -1,5 +1,5 @@
 import type { OnInit} from "@angular/core";
-import {ChangeDetectionStrategy, Component, inject, output, signal} from "@angular/core";
+import { Component, inject, output, signal} from "@angular/core";
 import {AsyncPipe} from "@angular/common";
 import {HttpClient} from '@angular/common/http';
 import {FormsModule} from "@angular/forms";
@@ -10,7 +10,6 @@ import {NgTalkChannelComponent} from '../../ng-talk-channel.component';
 
 @Component({
   selector: 'ng-talk-send-gif',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, AsyncPipe, FnPipe],
   template: `
     <div style="display: flex; align-items: center; margin-bottom: 10px">

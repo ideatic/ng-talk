@@ -13,9 +13,7 @@ interface FirestoreRoomMessage {
 
 const nameof = <T>(name: keyof T) => name;
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class FirestoreAdapter extends ChatAdapter {
   constructor(private _firestore: Firestore) {
     super();

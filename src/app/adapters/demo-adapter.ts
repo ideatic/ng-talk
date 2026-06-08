@@ -5,13 +5,10 @@ import type { Observable} from 'rxjs';
 import {BehaviorSubject} from 'rxjs';
 import type {ChatMessage} from '../../../projects/ng-talk/src/lib/models/chat-message';
 import { ChatMessageType} from '../../../projects/ng-talk/src/lib/models/chat-message';
-import {Injectable} from '@angular/core';
 import type {ChatChannel} from '../../../projects/ng-talk/src/lib/models/chat-channel';
 import { ChatChannelType} from '../../../projects/ng-talk/src/lib/models/chat-channel';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class DemoAdapter extends ChatAdapter {
   public static mockedUsers: ChatUser[] = [
     {

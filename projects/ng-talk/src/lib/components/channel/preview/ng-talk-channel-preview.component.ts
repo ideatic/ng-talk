@@ -1,6 +1,5 @@
 import { DecimalPipe } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   inject,
   Input
@@ -12,7 +11,6 @@ import { NG_TALK_CHANNEL_LIST_TOKEN } from '../../../tokens';
 
 @Component({
   selector: 'ng-talk-channel-preview',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DecimalPipe],
   template: `
     @if (channels.settings().showChannelsIcons) {

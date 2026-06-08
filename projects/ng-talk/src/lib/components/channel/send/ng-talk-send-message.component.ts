@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
@@ -19,7 +18,6 @@ import { NgTalkSendGifComponent } from './gif/ng-talk-send-gif.component';
 
 @Component({
   selector: 'ng-talk-send-message',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     NgTalkSendEmojiComponent,

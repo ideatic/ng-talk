@@ -1,7 +1,7 @@
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { DatePipe } from '@angular/common';
 import type { OnDestroy } from '@angular/core';
-import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, signal, viewChild } from '@angular/core';
+import { Component, computed, ElementRef, inject, input, signal, viewChild } from '@angular/core';
 import { MatMenu, MatMenuContent, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { fromEvent } from 'rxjs';
 import type { ChatMessage } from '../../../models/chat-message';
@@ -13,7 +13,6 @@ import { NgTalkChannelMessageRefComponent } from './ref/ng-talk-channel-message-
 
 @Component({
   selector: 'ng-talk-channel-message',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DatePipe, NgTalkChannelMessageRefComponent, NgTalkChannelMessageBodyComponent, MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem],
   host: {
     '[class]': '_className()'

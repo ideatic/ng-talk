@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, inject} from "@angular/core";
+import { inject} from "@angular/core";
 import type { OnInit} from '@angular/core';
 import {Component} from '@angular/core';
 import {DemoAdapter} from './adapters/demo-adapter';
@@ -12,7 +12,6 @@ import {NgTalkChannelListComponent} from "../../projects/ng-talk/src/public_api"
 @Component({
   selector: 'app-root',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, NgTalkChannelListComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']

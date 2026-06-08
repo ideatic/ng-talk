@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import type { ChatMessage } from '../../../../models/chat-message';
 import { NgTalkChannelMessageBodyComponent } from '../body/ng-talk-channel-message-body.component';
 
 @Component({
   selector: 'ng-talk-channel-message-ref',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgTalkChannelMessageBodyComponent],
   template: `
     <strong>{{ message().from().name }}</strong>

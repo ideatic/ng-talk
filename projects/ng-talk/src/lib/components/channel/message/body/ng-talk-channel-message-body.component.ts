@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, Input} from "@angular/core";
+import { Component, inject, Input} from "@angular/core";
 import type Autolinker from 'autolinker';
 import type {ChatMessage} from '../../../../models/chat-message';
 import { ChatMessageType} from '../../../../models/chat-message';
@@ -9,7 +9,7 @@ import {NgTalkChannelMessageWritingComponent} from "./ng-talk-channel-message-wr
 
 @Component({
     selector: 'ng-talk-channel-message-body',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+
     imports: [FnPipe, NgTalkChannelMessageWritingComponent],
     template: `
     @switch (message.type) {
