@@ -2,20 +2,7 @@ import type { CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { NgComponentOutlet } from '@angular/common';
 import type { AfterViewInit, OnInit } from '@angular/core';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  ElementRef,
-  effect,
-  inject,
-  input,
-  output,
-  signal,
-  untracked,
-  viewChild,
-  viewChildren
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, effect, inject, input, output, signal, untracked, viewChild, viewChildren } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { Subscription } from 'rxjs';
 import { InViewportDirective } from '../../directives/in-viewport.directive';
@@ -31,25 +18,12 @@ import { NgTalkSettings } from '../ng-talk-settings';
 import { NgTalkChannelMessageComponent } from './message/ng-talk-channel-message.component';
 import { NgTalkSendMessageComponent } from './send/ng-talk-send-message.component';
 
-declare const ngDevMode: boolean;
-
 @Component({
   selector: 'ng-talk-channel',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    NgComponentOutlet,
-    FnPipe,
-    NgTalkSendMessageComponent,
-    RelativeDatePipe,
-    InViewportDirective,
-    NgTalkChannelMessageComponent,
-    CdkDrag
-  ],
+  imports: [NgComponentOutlet, FnPipe, NgTalkSendMessageComponent, RelativeDatePipe, InViewportDirective, NgTalkChannelMessageComponent, CdkDrag],
   templateUrl: './ng-talk-channel.component.html',
-  styleUrls: [
-    './ng-talk-channel.component.less',
-    './styles/loading-spinner.less'
-  ]
+  styleUrls: ['./ng-talk-channel.component.less', './styles/loading-spinner.less']
 })
 export class NgTalkChannelComponent implements OnInit, AfterViewInit {
   // Deps
@@ -70,12 +44,8 @@ export class NgTalkChannelComponent implements OnInit, AfterViewInit {
   private readonly _chatBox = viewChild('chatBox', {
     read: ElementRef<HTMLElement>
   });
-  private readonly _sendMessageComponent = viewChild(
-    NgTalkSendMessageComponent
-  );
-  private readonly _messageComponents = viewChildren(
-    NgTalkChannelMessageComponent
-  );
+  private readonly _sendMessageComponent = viewChild(NgTalkSendMessageComponent);
+  private readonly _messageComponents = viewChildren(NgTalkChannelMessageComponent);
 
   private _visibleMessages = 20;
   public readonly messages = signal<ChatMessage[]>([]);
@@ -86,8 +56,7 @@ export class NgTalkChannelComponent implements OnInit, AfterViewInit {
   // UI
   protected readonly loading = signal(false);
   protected readonly scrollWatcherEnabled = signal(false);
-  protected readonly viewportDetectionAvailable =
-    InViewportDirective.intersectionObserverFeatureDetection();
+  protected readonly viewportDetectionAvailable = InViewportDirective.intersectionObserverFeatureDetection();
 
   // Import types and enums
   protected readonly MessageType = ChatMessageType;
@@ -144,10 +113,7 @@ export class NgTalkChannelComponent implements OnInit, AfterViewInit {
       });
   }
 
-  protected isSeparatorVisible(
-    message: ChatMessage,
-    prevMessage: ChatMessage | null
-  ): boolean {
+  protected isSeparatorVisible(message: ChatMessage, prevMessage: ChatMessage | null): boolean {
     return !prevMessage || !isSameDay(prevMessage.date, message.date);
   }
 
@@ -159,8 +125,7 @@ export class NgTalkChannelComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       // Wait until new messages are drawn
       if (this._chatBox()) {
-        this._chatBox().nativeElement.scrollTop =
-          this._chatBox().nativeElement.scrollHeight;
+        this._chatBox().nativeElement.scrollTop = this._chatBox().nativeElement.scrollHeight;
 
         if (this.messages().length >= this._visibleMessages) {
           // Enable scroll watcher if there is more messages pending
@@ -195,11 +160,7 @@ export class NgTalkChannelComponent implements OnInit, AfterViewInit {
   }
 
   public goToMessage(message: ChatMessage) {
-    const wrapper = this._messageComponents()?.find(
-      m =>
-        m.message() === message ||
-        (m.message()?.id && message.id && m.message()?.id === message.id)
-    );
+    const wrapper = this._messageComponents()?.find(m => m.message() === message || (m.message()?.id && message.id && m.message()?.id === message.id));
     wrapper?.highlight();
   }
 
