@@ -1,8 +1,7 @@
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'ng-talk-channel-message-writing',
-
   template: `
     <span></span>
     <span></span>
@@ -17,12 +16,12 @@ import { Component} from '@angular/core';
 
     span {
       display: inline-block;
-      background-color: #B6B5BA;
+      animation: bubbles 2s infinite;
+      margin-right: 5px;
+      border-radius: 100%;
+      background-color: #b6b5ba;
       width: 15px;
       height: 15px;
-      border-radius: 100%;
-      margin-right: 5px;
-      animation: bubbles 2s infinite;
     }
 
     span:nth-child(1) {
@@ -41,15 +40,13 @@ import { Component} from '@angular/core';
     @keyframes bubbles {
       10% {
         transform: translateY(-10px);
-        background-color: #9E9DA2;
+        background-color: #9e9da2;
       }
       50% {
         transform: translateY(0);
-        background-color: #B6B5BA;
+        background-color: #b6b5ba;
       }
     }
   `
 })
-export class NgTalkChannelMessageWritingComponent {
-
-}
+export class NgTalkChannelMessageWritingComponent {}
