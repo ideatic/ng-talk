@@ -22,7 +22,7 @@
     "rxjs": "^7.5.6"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^14.2.1",
+    "@angular/build": "^14.2.1",
     "@angular/cli": "^14.2.0",
     "@angular/compiler-cli": "^14.2.0",
     "@angular/language-service": "^14.2.0",
