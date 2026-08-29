@@ -3,6 +3,7 @@ import { DatePipe } from '@angular/common';
 import type { OnDestroy } from '@angular/core';
 import { Component, computed, ElementRef, inject, input, signal, viewChild } from '@angular/core';
 import { MatMenu, MatMenuContent, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import type { Subscription } from 'rxjs';
 import { fromEvent } from 'rxjs';
 import type { ChatMessage } from '../../../models/chat-message';
 import { ChatMessageType } from '../../../models/chat-message';
@@ -112,15 +113,21 @@ export class NgTalkChannelMessageComponent implements OnDestroy {
   }
 
   private _showTimeout: ReturnType<typeof setTimeout>;
+  private _cancelSubscription: Subscription;
 
   private _onTouchStart() {
-    this._touchEventSubscription.add(fromEvent(this._host.nativeElement, 'touchend').subscribe(() => clearTimeout(this._showTimeout)));
-    this._touchEventSubscription.add(fromEvent(this._host.nativeElement, 'touchmove').subscribe(() => clearTimeout(this._showTimeout)));
+    // Una suscripción por pulsación: si se acumulan en `_touchEventSubscription` no se sueltan hasta destruir el mensaje
+    this._cancelSubscription?.unsubscribe();
+    this._cancelSubscription = fromEvent(this._host.nativeElement, 'touchend').subscribe(() => clearTimeout(this._showTimeout));
+    this._cancelSubscription.add(fromEvent(this._host.nativeElement, 'touchmove').subscribe(() => clearTimeout(this._showTimeout)));
 
     this._showTimeout = setTimeout(() => this._toolsMenu()?.openMenu(), 1_000);
   }
 
   public ngOnDestroy() {
+    // Sin esto el menú se abre sobre un inyector ya destruido (NG0911) si el mensaje desaparece antes de 1s
+    clearTimeout(this._showTimeout);
+    this._cancelSubscription?.unsubscribe();
     this._touchEventSubscription?.unsubscribe();
   }
 }
