@@ -1,7 +1,5 @@
-import { Component, inject, output, resource } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, debounced, inject, output, resource, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { debounceTime, Subject } from 'rxjs';
 import { FnPipe } from '../../../../pipes/fn.pipe';
 import { NgTalkChannelComponent } from '../../ng-talk-channel.component';
 
@@ -15,7 +13,6 @@ import { NgTalkChannelComponent } from '../../ng-talk-channel.component';
         style="flex-grow: 1"
         [placeholder]="chat.settings().search"
         [(ngModel)]="searchQuery"
-        (ngModelChange)="searchQueryChanges.next($event ?? '')"
       />
 
       <!-- Atribución -->
@@ -110,14 +107,13 @@ export class NgTalkSendGifComponent {
   public readonly gifSelected = output<string>();
 
   // Estado
-  protected searchQuery = '';
-  protected readonly searchQueryChanges = new Subject<string>();
-  protected readonly debouncedSearchQuery = toSignal(this.searchQueryChanges.pipe(debounceTime(500)), { initialValue: '' });
+  protected readonly searchQuery = signal('');
+  protected readonly debouncedSearchQuery = debounced(this.searchQuery, 500);
 
   protected readonly gifs = resource({
     params: () => {
       const settings = this.chat.settings();
-      const query = this.debouncedSearchQuery();
+      const query = this.debouncedSearchQuery.value();
 
       if (settings.giphyApiKey) {
         if (query) {
@@ -178,7 +174,7 @@ export class NgTalkSendGifComponent {
       fetch(gif.analytics.onclick.url);
     } else if (this.chat.settings().tenorApiKey) {
       fetch(
-        `https://tenor.googleapis.com/v2/registershare?id=16989471141791455574&key=${encodeURIComponent(this.chat.settings().tenorApiKey)}&client_key=ngTalk&q=${encodeURIComponent(this.searchQuery)}`
+        `https://tenor.googleapis.com/v2/registershare?id=16989471141791455574&key=${encodeURIComponent(this.chat.settings().tenorApiKey)}&client_key=ngTalk&q=${encodeURIComponent(this.searchQuery())}`
       );
     }
   }
