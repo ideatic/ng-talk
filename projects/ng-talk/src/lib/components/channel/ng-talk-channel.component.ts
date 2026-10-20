@@ -2,9 +2,7 @@ import type { CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { NgComponentOutlet } from '@angular/common';
 import type { AfterViewInit, OnInit } from '@angular/core';
-import { Component, DestroyRef, ElementRef, effect, inject, input, output, signal, untracked, viewChild, viewChildren } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import type { Subscription } from 'rxjs';
+import { Component, ElementRef, effect, input, linkedSignal, output, signal, untracked, viewChild, viewChildren } from '@angular/core';
 import { InViewportDirective } from '../../directives/in-viewport.directive';
 import type { ChatAdapter } from '../../models/chat-adapter';
 import type { ChatChannel } from '../../models/chat-channel';
@@ -25,9 +23,6 @@ import { NgTalkSendMessageComponent } from './send/ng-talk-send-message.componen
   styleUrls: ['./ng-talk-channel.component.less', './styles/loading-spinner.less']
 })
 export class NgTalkChannelComponent implements OnInit, AfterViewInit {
-  // Deps
-  private _destroyRef = inject(DestroyRef);
-
   // Bindings
   public readonly user = input<ChatUser>();
   public readonly adapter = input<ChatAdapter>();
@@ -50,7 +45,11 @@ export class NgTalkChannelComponent implements OnInit, AfterViewInit {
   public readonly messages = signal<ChatMessage[]>([]);
   public readonly replyingTo = signal<ChatMessage | null>(null);
 
-  private _messagesSubscription: Subscription;
+  // Cada valor nuevo fuerza recargar los mensajes; vuelve a `reset` al cambiar de canal o adapter
+  private readonly _reload = linkedSignal({
+    source: () => ({ adapter: this.adapter(), channel: this.channel() }),
+    computation: () => ({ reset: true, scrollToBottom: true })
+  });
 
   // UI
   protected readonly loading = signal(false);
@@ -61,19 +60,40 @@ export class NgTalkChannelComponent implements OnInit, AfterViewInit {
   protected readonly MessageType = ChatMessageType;
 
   constructor() {
-    // Reload messages when channel or adapter changes
-    effect(() => {
+    // Suscribe a los mensajes al cambiar canal o adapter, o al pedir una recarga
+    effect(onCleanup => {
       const adapter = this.adapter();
       const channel = this.channel();
+      const reload = this._reload();
 
       untracked(() => {
-        this.messages.set([]);
-        this._messagesSubscription?.unsubscribe();
-        this._visibleMessages = this.settings().pageSize;
-
-        if (adapter && channel) {
-          this.reloadMessages();
+        if (reload.reset) {
+          this.messages.set([]);
+          this._visibleMessages = this.settings().pageSize;
         }
+
+        if (!adapter || !channel) {
+          this.loading.set(false);
+          return;
+        }
+
+        this.loading.set(true);
+
+        const subscription = adapter.getMessages(channel, 0, this._visibleMessages).subscribe((messages: ChatMessage[]) => {
+          this.messages.set(messages);
+          this.loading.set(false);
+
+          if (reload.scrollToBottom && !this.disableRendering()) {
+            this.scrollToBottom();
+          }
+
+          // Mark as read if component is focused
+          if (channel.unread() > 0 && document.hasFocus()) {
+            adapter.markAsRead(channel);
+          }
+        });
+
+        onCleanup(() => subscription.unsubscribe());
       });
     });
   }
@@ -89,27 +109,7 @@ export class NgTalkChannelComponent implements OnInit, AfterViewInit {
   }
 
   public reloadMessages(scrollToBottom = true) {
-    this._messagesSubscription?.unsubscribe();
-
-    this.loading.set(true);
-
-    this._messagesSubscription = this.adapter()
-      .getMessages(this.channel(), 0, this._visibleMessages)
-      .pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe((messages: ChatMessage[]) => {
-        this.messages.set(messages);
-        this.loading.set(false);
-
-        if (scrollToBottom && !this.disableRendering()) {
-          this.scrollToBottom();
-        }
-
-        // Mark as read if component is focused
-        const channel = this.channel();
-        if (channel?.unread() > 0 && document.hasFocus()) {
-          this.adapter().markAsRead(channel);
-        }
-      });
+    this._reload.set({ reset: false, scrollToBottom });
   }
 
   protected isSeparatorVisible(message: ChatMessage, prevMessage: ChatMessage | null): boolean {

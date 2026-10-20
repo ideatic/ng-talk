@@ -1,10 +1,6 @@
-import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { DatePipe } from '@angular/common';
-import type { OnDestroy } from '@angular/core';
-import { Component, computed, ElementRef, inject, input, signal, viewChild } from '@angular/core';
+import { Component, computed, DestroyRef, ElementRef, inject, input, signal, viewChild } from '@angular/core';
 import { MatMenu, MatMenuContent, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import type { Subscription } from 'rxjs';
-import { fromEvent } from 'rxjs';
 import type { ChatMessage } from '../../../models/chat-message';
 import { ChatMessageType } from '../../../models/chat-message';
 import { isSameDay } from '../../../utils/utils';
@@ -68,10 +64,11 @@ import { NgTalkChannelMessageRefComponent } from './ref/ng-talk-channel-message-
   `,
   styleUrl: 'ng-talk-channel-message.component.less'
 })
-export class NgTalkChannelMessageComponent implements OnDestroy {
+export class NgTalkChannelMessageComponent {
   // Deps
   protected readonly chat = inject(NgTalkChannelComponent);
   private readonly _host = inject(ElementRef<HTMLElement>);
+  private readonly _destroyRef = inject(DestroyRef);
 
   // Bindings
   public readonly message = input<ChatMessage>();
@@ -96,14 +93,6 @@ export class NgTalkChannelMessageComponent implements OnDestroy {
 
   protected readonly highlighted = signal(false);
 
-  private _touchEventSubscription = fromEvent(
-    this._host.nativeElement,
-    'touchstart',
-    normalizePassiveListenerOptions({
-      passive: true
-    }) as AddEventListenerOptions
-  ).subscribe(() => this._onTouchStart());
-
   protected readonly MessageType = ChatMessageType;
 
   public highlight() {
@@ -113,21 +102,30 @@ export class NgTalkChannelMessageComponent implements OnDestroy {
   }
 
   private _showTimeout: ReturnType<typeof setTimeout>;
-  private _cancelSubscription: Subscription;
+
+  constructor() {
+    // Pulsación larga: abre el menú de acciones si no se suelta ni se mueve el dedo en 1s
+    const abort = new AbortController();
+    const element: HTMLElement = this._host.nativeElement;
+    const options = { passive: true, signal: abort.signal };
+
+    element.addEventListener('touchstart', () => this._onTouchStart(), options);
+    element.addEventListener('touchend', () => this._cancelLongPress(), options);
+    element.addEventListener('touchmove', () => this._cancelLongPress(), options);
+
+    // Sin esto el menú se abre sobre un inyector ya destruido (NG0911) si el mensaje desaparece antes de 1s
+    this._destroyRef.onDestroy(() => {
+      this._cancelLongPress();
+      abort.abort();
+    });
+  }
 
   private _onTouchStart() {
-    // Una suscripción por pulsación: si se acumulan en `_touchEventSubscription` no se sueltan hasta destruir el mensaje
-    this._cancelSubscription?.unsubscribe();
-    this._cancelSubscription = fromEvent(this._host.nativeElement, 'touchend').subscribe(() => clearTimeout(this._showTimeout));
-    this._cancelSubscription.add(fromEvent(this._host.nativeElement, 'touchmove').subscribe(() => clearTimeout(this._showTimeout)));
-
+    this._cancelLongPress();
     this._showTimeout = setTimeout(() => this._toolsMenu()?.openMenu(), 1_000);
   }
 
-  public ngOnDestroy() {
-    // Sin esto el menú se abre sobre un inyector ya destruido (NG0911) si el mensaje desaparece antes de 1s
+  private _cancelLongPress() {
     clearTimeout(this._showTimeout);
-    this._cancelSubscription?.unsubscribe();
-    this._touchEventSubscription?.unsubscribe();
   }
 }

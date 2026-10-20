@@ -19,9 +19,6 @@ import {
   viewChild,
   type WritableSignal
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import type { Subscription } from 'rxjs';
-import { fromEvent } from 'rxjs';
 import type { ChatAdapter } from '../../models/chat-adapter';
 import type { ChatChannel } from '../../models/chat-channel';
 import type { ChatUser } from '../../models/chat-user';
@@ -146,9 +143,12 @@ export class NgTalkBubbleChannelComponent {
   });
   protected readonly closeBtnAnimationClass = signal('');
 
-  private _documentClickSubscription: Subscription;
+  // Controla el listener de click en el documento mientras el canal está abierto
+  private _documentClickAbort: AbortController | null = null;
 
   constructor() {
+    this._destroyRef.onDestroy(() => this._removeDocumentClickListener());
+
     // Configuración por inyección
     const config = inject(BUBBLE_CHANNEL_CONFIG, { optional: true });
     if (config) {
@@ -296,11 +296,18 @@ export class NgTalkBubbleChannelComponent {
 
     this.channelVisible.set(true);
 
+    // Se espera un instante para que el click que abrió el canal no lo cierre
     setTimeout(() => {
+      // Si se cerró o destruyó antes de que venza el retardo, no se registra el listener
+      if (!this.channelVisible() || this._destroyRef.destroyed) {
+        return;
+      }
+
       this._ngTalkChannel()?.scrollToBottom();
-      this._documentClickSubscription = fromEvent(document, 'click')
-        .pipe(takeUntilDestroyed(this._destroyRef))
-        .subscribe(event => this.onDocumentClick(event));
+
+      this._removeDocumentClickListener();
+      this._documentClickAbort = new AbortController();
+      document.addEventListener('click', event => this.onDocumentClick(event), { signal: this._documentClickAbort.signal });
     }, 10);
   }
 
@@ -335,8 +342,12 @@ export class NgTalkBubbleChannelComponent {
       }, 300);
     }
 
-    this._documentClickSubscription?.unsubscribe();
-    this._documentClickSubscription = null;
+    this._removeDocumentClickListener();
+  }
+
+  private _removeDocumentClickListener() {
+    this._documentClickAbort?.abort();
+    this._documentClickAbort = null;
   }
 
   public onDocumentClick($event) {

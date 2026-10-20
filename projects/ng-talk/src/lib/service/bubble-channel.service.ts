@@ -99,7 +99,7 @@ export class BubbleChannelService {
     ]);
     selfRef.set(bubbleRef);
 
-    bubbleRef.destroyed.subscribe(() => {
+    bubbleRef.onDestroy(() => {
       BubbleChannelService._activeInstances.update(active =>
         active.filter(ref => ref.channel.id != channel.id)
       );
