@@ -1,12 +1,13 @@
-import {ChatAdapter} from '../../../projects/ng-talk/src/lib/models/chat-adapter';
-import type {ChatUser} from '../../../projects/ng-talk/src/lib/models/chat-user';
-import { ChatUserStatus} from '../../../projects/ng-talk/src/lib/models/chat-user';
-import type { Observable} from 'rxjs';
-import {BehaviorSubject} from 'rxjs';
-import type {ChatMessage} from '../../../projects/ng-talk/src/lib/models/chat-message';
-import { ChatMessageType} from '../../../projects/ng-talk/src/lib/models/chat-message';
-import type {ChatChannel} from '../../../projects/ng-talk/src/lib/models/chat-channel';
-import { ChatChannelType} from '../../../projects/ng-talk/src/lib/models/chat-channel';
+import { computed, Service, signal } from '@angular/core';
+import type { Signal, WritableSignal } from '@angular/core';
+import { ChatAdapter } from '../../../projects/ng-talk/src/lib/models/chat-adapter';
+import type { ChatChannelsParams, ChatMessagesParams, ChatStream } from '../../../projects/ng-talk/src/lib/models/chat-adapter';
+import type { ChatUser } from '../../../projects/ng-talk/src/lib/models/chat-user';
+import { ChatUserStatus } from '../../../projects/ng-talk/src/lib/models/chat-user';
+import type { ChatMessage } from '../../../projects/ng-talk/src/lib/models/chat-message';
+import { ChatMessageType } from '../../../projects/ng-talk/src/lib/models/chat-message';
+import type { ChatChannel } from '../../../projects/ng-talk/src/lib/models/chat-channel';
+import { ChatChannelType } from '../../../projects/ng-talk/src/lib/models/chat-channel';
 
 @Service()
 export class DemoAdapter extends ChatAdapter {
@@ -73,71 +74,67 @@ export class DemoAdapter extends ChatAdapter {
     }
   ];
 
+  private readonly _channels = signal<ChatChannel[]>(
+    DemoAdapter.mockedUsers.map(user => ({
+      id: user.id,
+      type: ChatChannelType.User,
+      name: user.name,
+      icon: user.avatar,
+      blocked: user.id == 8,
+      lastMessage: signal<ChatMessage | null>({
+        from: signal(user),
+        content: 'Hi there, just type any message bellow to test this Angular module.',
+        date: new Date()
+      }),
+      unread: signal(Math.floor(Math.random() * 10))
+    }))
+  );
 
-  private _channels$: BehaviorSubject<ChatChannel[]>;
+  // Mensajes de cada canal, indexados por el id del canal
+  private readonly _channelMessages: Record<string, WritableSignal<ChatMessage[]>> = {};
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public getChannels(user: ChatUser): Observable<ChatChannel[]> {
-    return (this._channels$ ??= new BehaviorSubject<ChatChannel[]>(DemoAdapter.mockedUsers.map(user => {
-      return {
-        id: user.id,
-        type: ChatChannelType.User,
-        name: user.name,
-        icon: user.avatar,
-        blocked: user.id == 8,
-        lastMessage: {
-          from: user,
-          content: 'Hi there, just type any message bellow to test this Angular module.',
-          date: new Date()
-        },
-        unread: Math.floor(Math.random() * 10)
-      } as ChatChannel;
-    })));
+  public getChannels(params: ChatChannelsParams): ChatStream<ChatChannel[]> {
+    return computed(() => ({ value: this._channels() }));
   }
 
-  private _channelMessages: { [key: string]: BehaviorSubject<ChatMessage[]> } = {};
+  // El adapter de demo no tiene ningún listener real, así que ignora `offset`, `count` y `abortSignal`
+  public getMessages({ channel }: ChatMessagesParams): ChatStream<ChatMessage[]> {
+    let messages = this._channelMessages[channel.id];
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public getMessages(room: ChatChannel, count: number): BehaviorSubject<ChatMessage[]> {
-    if (!this._channelMessages[room.id]) {
-      this._channelMessages[room.id] = new BehaviorSubject<ChatMessage[]>([]);
+    if (!messages) {
+      messages = this._channelMessages[channel.id] = signal<ChatMessage[]>([]);
 
-      setTimeout(() => this._sendMessage(room, {
-        from: DemoAdapter.mockedUsers.find(u => u.id == room.id),
+      setTimeout(() => this._sendMessage(channel, {
+        from: this._userOf(channel),
         content: 'Hi there, just type any message bellow to test this Angular module.'
       }), 1000);
 
-      setTimeout(() => this._sendMessage(room, {
+      setTimeout(() => this._sendMessage(channel, {
         type: ChatMessageType.Writing,
-        from: DemoAdapter.mockedUsers.find(u => u.id == room.id),
+        from: this._userOf(channel),
         content: ''
       }), 1000);
 
       setTimeout(() => {
-        // Remove writing message
-        const messages = this._channelMessages[room.id].getValue();
-        const index = messages.findIndex(m => m.type == ChatMessageType.Writing);
-        if (index >= 0) {
-          messages.splice(index, 1);
-        }
+        // Se quita el mensaje de "escribiendo"
+        messages.update(list => list.filter(m => m.type != ChatMessageType.Writing));
 
-        this._sendMessage(room, {
-          from: DemoAdapter.mockedUsers.find(u => u.id == room.id),
+        this._sendMessage(channel, {
+          from: this._userOf(channel),
           content: 'How are you?'
         });
       }, 5000);
-    } else { // Emit stored messages
-      setTimeout(() => this._channelMessages[room.id].next(this._channelMessages[room.id].getValue()), 10);
     }
 
-    return this._channelMessages[room.id];
+    return computed(() => ({ value: messages() }));
   }
 
-  public sendMessage(room: ChatChannel, message: ChatMessage, replyTo?: ChatMessage): Promise<any> {
-    this._sendMessage(room, message);
+  public sendMessage(channel: ChatChannel, message: ChatMessage, replyTo?: ChatMessage): Promise<any> {
+    this._sendMessage(channel, message);
 
-    setTimeout(() => this._sendMessage(room, {
-      from: DemoAdapter.mockedUsers.find(u => u.id == room.id),
+    setTimeout(() => this._sendMessage(channel, {
+      from: this._userOf(channel),
       content: `You have typed '${message.content}'`,
       replyTo: replyTo
     }), 2000);
@@ -145,18 +142,21 @@ export class DemoAdapter extends ChatAdapter {
     return Promise.resolve();
   }
 
-  private _sendMessage(room: ChatChannel, message: ChatMessage) {
+  private _sendMessage(channel: ChatChannel, message: ChatMessage): void {
     message.id ??= Math.floor(Math.random() * 1000000);
     message.date ??= new Date();
     message.type ??= ChatMessageType.Text;
 
-    const roomMessages = this._channelMessages[room.id].getValue();
-    roomMessages.push(message);
-    this._channelMessages[room.id].next(roomMessages);
+    this._channelMessages[channel.id].update(messages => [...messages, message]);
+  }
+
+  // Usuario simulado que responde en el canal
+  private _userOf(channel: ChatChannel): Signal<ChatUser> {
+    return signal(DemoAdapter.mockedUsers.find(u => u.id == channel.id) as ChatUser);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public markAsRead(channel: ChatChannel): Promise<any> {
+  public markAsRead(channel: ChatChannel): Promise<void> {
     return Promise.resolve();
   }
 
@@ -165,7 +165,7 @@ export class DemoAdapter extends ChatAdapter {
   }
 
   public deleteChannel(channel: ChatChannel): Promise<void> {
-    this._channels$.next(this._channels$.getValue().filter(u => u.id != channel.id));
+    this._channels.update(channels => channels.filter(c => c.id != channel.id));
     return Promise.resolve();
   }
 }

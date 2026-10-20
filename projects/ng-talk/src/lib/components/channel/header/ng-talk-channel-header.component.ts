@@ -55,7 +55,7 @@ export class NgTalkChannelHeaderComponent {
     this.chat
       .adapter()
       .toggleBlock(this.chat.channel())
-      .then(() => this.chat.reloadMessages());
+      .then(() => this.chat.messagesResource.reload());
   }
 
   protected deleteChannel() {

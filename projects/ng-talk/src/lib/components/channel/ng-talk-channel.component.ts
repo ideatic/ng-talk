@@ -2,7 +2,7 @@ import type { CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { NgComponentOutlet } from '@angular/common';
 import type { AfterViewInit, OnInit } from '@angular/core';
-import { Component, ElementRef, effect, input, linkedSignal, output, signal, untracked, viewChild, viewChildren } from '@angular/core';
+import { Component, ElementRef, effect, input, linkedSignal, output, resource, signal, untracked, viewChild, viewChildren } from '@angular/core';
 import { InViewportDirective } from '../../directives/in-viewport.directive';
 import type { ChatAdapter } from '../../models/chat-adapter';
 import type { ChatChannel } from '../../models/chat-channel';
@@ -41,18 +41,29 @@ export class NgTalkChannelComponent implements OnInit, AfterViewInit {
   private readonly _sendMessageComponent = viewChild(NgTalkSendMessageComponent);
   private readonly _messageComponents = viewChildren(NgTalkChannelMessageComponent);
 
-  private _visibleMessages = 20;
-  public readonly messages = signal<ChatMessage[]>([]);
-  public readonly replyingTo = signal<ChatMessage | null>(null);
-
-  // Cada valor nuevo fuerza recargar los mensajes; vuelve a `reset` al cambiar de canal o adapter
-  private readonly _reload = linkedSignal({
+  // Número de mensajes visibles; vuelve al tamaño de página al cambiar de canal o adapter
+  private readonly _visibleMessages = linkedSignal({
     source: () => ({ adapter: this.adapter(), channel: this.channel() }),
-    computation: () => ({ reset: true, scrollToBottom: true })
+    computation: () => this.settings().pageSize
   });
 
+  // El número de mensajes no forma parte de los params, para no vaciar la lista al cargar mensajes antiguos (se recarga)
+  public readonly messagesResource = resource({
+    params: () => {
+      const adapter = this.adapter();
+      const channel = this.channel();
+      return adapter && channel ? { adapter, channel } : undefined;
+    },
+    stream: ({ params, abortSignal }) =>
+      params.adapter.getMessages({ channel: params.channel, offset: 0, count: untracked(this._visibleMessages), abortSignal }),
+    defaultValue: []
+  });
+  public readonly replyingTo = signal<ChatMessage | null>(null);
+
+  // Al cargar mensajes antiguos, mantener la posición del scroll en lugar de bajar al final
+  private _keepScrollPosition = false;
+
   // UI
-  protected readonly loading = signal(false);
   protected readonly scrollWatcherEnabled = signal(false);
   protected readonly viewportDetectionAvailable = InViewportDirective.intersectionObserverFeatureDetection();
 
@@ -60,40 +71,27 @@ export class NgTalkChannelComponent implements OnInit, AfterViewInit {
   protected readonly MessageType = ChatMessageType;
 
   constructor() {
-    // Suscribe a los mensajes al cambiar canal o adapter, o al pedir una recarga
-    effect(onCleanup => {
-      const adapter = this.adapter();
-      const channel = this.channel();
-      const reload = this._reload();
+    // Al recibir mensajes, bajar al final y marcar como leído si la ventana tiene el foco
+    effect(() => {
+      // Solo con mensajes recibidos, no con el valor por defecto mientras carga
+      if (this.messagesResource.status() !== 'resolved') {
+        return;
+      }
+      this.messagesResource.value();
 
       untracked(() => {
-        if (reload.reset) {
-          this.messages.set([]);
-          this._visibleMessages = this.settings().pageSize;
+        if (this._keepScrollPosition) {
+          this._keepScrollPosition = false;
+        } else if (!this.disableRendering()) {
+          this.scrollToBottom();
         }
 
-        if (!adapter || !channel) {
-          this.loading.set(false);
-          return;
+        // Mark as read if component is focused
+        const adapter = this.adapter();
+        const channel = this.channel();
+        if (adapter && channel?.unread() > 0 && document.hasFocus()) {
+          adapter.markAsRead(channel);
         }
-
-        this.loading.set(true);
-
-        const subscription = adapter.getMessages(channel, 0, this._visibleMessages).subscribe((messages: ChatMessage[]) => {
-          this.messages.set(messages);
-          this.loading.set(false);
-
-          if (reload.scrollToBottom && !this.disableRendering()) {
-            this.scrollToBottom();
-          }
-
-          // Mark as read if component is focused
-          if (channel.unread() > 0 && document.hasFocus()) {
-            adapter.markAsRead(channel);
-          }
-        });
-
-        onCleanup(() => subscription.unsubscribe());
       });
     });
   }
@@ -106,10 +104,6 @@ export class NgTalkChannelComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit() {
     this.scrollToBottom();
-  }
-
-  public reloadMessages(scrollToBottom = true) {
-    this._reload.set({ reset: false, scrollToBottom });
   }
 
   protected isSeparatorVisible(message: ChatMessage, prevMessage: ChatMessage | null): boolean {
@@ -126,7 +120,7 @@ export class NgTalkChannelComponent implements OnInit, AfterViewInit {
       if (this._chatBox()) {
         this._chatBox().nativeElement.scrollTop = this._chatBox().nativeElement.scrollHeight;
 
-        if (this.messages().length >= this._visibleMessages) {
+        if (this.messagesResource.hasValue() && this.messagesResource.value().length >= this._visibleMessages()) {
           // Enable scroll watcher if there is more messages pending
           this.scrollWatcherEnabled.set(true);
         }
@@ -142,9 +136,9 @@ export class NgTalkChannelComponent implements OnInit, AfterViewInit {
 
   protected loadOldMessages() {
     this.scrollWatcherEnabled.set(false);
-    this._visibleMessages += this.settings().pageSize;
-
-    this.reloadMessages(false);
+    this._visibleMessages.update(count => count + this.settings().pageSize);
+    this._keepScrollPosition = true;
+    this.messagesResource.reload();
   }
 
   protected watcherInViewportChanged(isVisible: boolean) {

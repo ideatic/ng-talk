@@ -14,19 +14,21 @@
 
     <!-- Channel list -->
     <ul>
-      @for (channel of channels() | fn:filterChannels:filterQuery; track channel.id) {
-        <li [class.active]="activeChannel() && channel.id == activeChannel()!.id">
-          <!-- Wait 500ms to enable viewport observer while the component render -->
-          @if (settings().channelMessagesLoading == MessagesLoading.lazy) {
-            <a inViewport [inViewportOptions]="{delay: 500}" (click)="selectChannel(channel)" (inViewportChange)="inViewportChangedChannel(channel, $event)">
-              <ng-talk-channel-preview [channel]="channel"/>
-            </a>
-          } @else {
-            <a (click)="selectChannel(channel)">
-              <ng-talk-channel-preview [channel]="channel"/>
-            </a>
-          }
-        </li>
+      @if (channelsResource.hasValue()) {
+        @for (channel of channelsResource.value() | fn:filterChannels:filterQuery; track channel.id) {
+          <li [class.active]="activeChannel() && channel.id == activeChannel()!.id">
+            <!-- Wait 500ms to enable viewport observer while the component render -->
+            @if (settings().channelMessagesLoading == MessagesLoading.lazy) {
+              <a inViewport [inViewportOptions]="{delay: 500}" (click)="selectChannel(channel)" (inViewportChange)="inViewportChangedChannel(channel, $event)">
+                <ng-talk-channel-preview [channel]="channel"/>
+              </a>
+            } @else {
+              <a (click)="selectChannel(channel)">
+                <ng-talk-channel-preview [channel]="channel"/>
+              </a>
+            }
+          </li>
+        }
       }
     </ul>
   </div>
